@@ -5,8 +5,8 @@
  */
 (() => {
   const DEPS = {
-    html2canvas: "html2canvas.min.js",
-    fabric: "fabric.min.js"
+    html2canvas: "https://cdn.jsdelivr.net/gh/rubenchodev/open-source-libraries@main/qc_feedback/html2canvas.min.js",
+    fabric: "https://cdn.jsdelivr.net/gh/rubenchodev/open-source-libraries@main/qc_feedback/fabric.min.js"
   };
 
   const loadDependencies = () => {
