@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - QC Feedback Widget</title>
+
+    <!-- Dependencias: html2canvas + fabric.js -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script> -->
+
+    <!-- Librería de feedback -->
+    <script src="qc_feedback.js"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        .navbar {
+            background: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .nav-links a:hover { color: #2563eb; }
+
+        .hero {
+            max-width: 800px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            color: #0f172a;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .card .trend {
+            font-size: 13px;
+            color: #16a34a;
+            margin-top: 8px;
+        }
+
+        .table-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .table-header h2 { margin: 0; }
+        .btn {
+            padding: 10px 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover { background: #1d4ed8; }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 16px;
+            text-align: left;
+        }
+        th {
+            background: #f8fafc;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+        }
+        td { border-top: 1px solid #e2e8f0; }
+        .status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status.activo { background: #dcfce7; color: #16a34a; }
+        .status.inactivo { background: #fee2e2; color: #dc2626; }
+
+        .actions-panel {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+        .actions-panel h2 { margin: 0 0 12px 0; }
+        .actions-panel p { opacity: 0.9; margin-bottom: 20px; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Dashboard Pro</div>
+        <div class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="#">Reportes</a>
+            <a href="#">Usuarios</a>
+            <a href="#">Configuración</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Bienvenido al Panel de Control</h1>
+        <p>Administra tus datos, observa métricas en tiempo real y toma decisiones informadas. Explora todas las funcionalidades disponibles.</p>
+    </section>
+
+    <!-- Dashboard Cards -->
+    <section class="dashboard">
+        <div class="card">
+            <h3>Usuarios Activos</h3>
+            <div class="value">1,247</div>
+            <div class="trend">↑ 12% vs mes anterior</div>
+        </div>
+        <div class="card">
+            <h3>Ventas del Mes</h3>
+            <div class="value">$45,230</div>
+            <div class="trend">↑ 8% vs mes anterior</div>
+        </div>
+        <div class="card">
+            <h3>Tickets Abiertos</h3>
+            <div class="value">23</div>
+            <div class="trend">↓ 5 vs semana anterior</div>
+        </div>
+    </section>
+
+    <!-- Tabla de usuarios -->
+    <div class="table-container">
+        <div class="table-header">
+            <h2>Usuarios Recientes</h2>
+            <button class="btn">Agregar Usuario</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Último acceso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>María González</td>
+                    <td>maria@empresa.com</td>
+                    <td>Administrador</td>
+                    <td><span class="status activo">Activo</span></td>
+                    <td>Hace 5 minutos</td>
+                </tr>
+                <tr>
+                    <td>Carlos Pérez</td>
+                    <td>carlos@empresa.com</td>
+                    <td>Editor</td>
+                    <td><span class="status activo">Activo</span></td>
+                    <td>Hace 2 horas</td>
+                </tr>
+                <tr>
+                    <td>Ana López</td>
+                    <td>ana@empresa.com</td>
+                    <td>Viewer</td>
+                    <td><span class="status inactivo">Inactivo</span></td>
+                    <td>Hace 3 días</td>
+                </tr>
+                <tr>
+                    <td>José Martínez</td>
+                    <td>jose@empresa.com</td>
+                    <td>Editor</td>
+                    <td><span class="status activo">Activo</span></td>
+                    <td>Hace 1 día</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions-panel">
+        <h2>¿Necesitas ayuda?</h2>
+        <p>Usa el widget de feedback en la esquina para reportar cualquier problema o sugerir mejoras.</p>
+    </div>
+
+    <footer>
+        <p>© 2026 Dashboard Pro - Todos los derechos reservados</p>
+    </footer>
+
+    <!-- Widget de Feedback -->
+    <qc-feedback
+        app-name="Dashboard Pro"
+        primary-color="#2563eb"
+        position="bottom-right"
+        endpoint="https://httpbin.org/post"
+        title="Enviar feedback"
+        subtitle="¿Encontraste un problema? Cuéntanos"
+        size="md"
+        theme="light">
+    </qc-feedback>
+
+    <!-- Demo de API -->
+    <script>
+        const feedbackWidget = document.querySelector('qc-feedback');
+
+        // Eventos
+        feedbackWidget.addEventListener('feedback-open', () => console.log('Widget abierto'));
+        feedbackWidget.addEventListener('feedback-close', () => console.log('Widget cerrado'));
+        feedbackWidget.addEventListener('feedback-submit', (e) => {
+            console.log('Feedback enviado:', e.detail);
+            alert('¡Gracias! Tu feedback ha sido enviado.');
+        });
+    </script>
+</body>
+</html>
