@@ -10,23 +10,31 @@ Widget de feedback con captura de pantalla integrada para sitios web.
 - Tema claro/oscuro
 - API pública para control programático
 - Eventos para integración personalizada
+- Carga automática de dependencias (html2canvas + fabric.js)
 
-## Uso Rápido
+## Instalación
 
-1. Incluir las dependencias en tu página:
+### Desde CDN (jsDelivr)
+
+Incluye la librería directamente desde GitHub:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rubenchodev/open-source-libraries@main/qc_feedback/qc_feedback_min.js"></script>
 ```
 
-2. Incluir la librería:
+> **Nota:** Si experimentas problemas de caché, puedes purgar el CDN usando: https://www.jsdelivr.com/tools/purge
+
+### Desarrollo local
+
+Si prefieres usar el archivo local:
 
 ```html
 <script src="qc_feedback.js"></script>
 ```
 
-3. Agregar el componente:
+## Uso Rápido
+
+Agregar el componente:
 
 ```html
 <qc-feedback
