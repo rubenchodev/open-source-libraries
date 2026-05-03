@@ -2,7 +2,7 @@
  * QCFeedback - Componente Web para capturar feedback de usuarios.
  * Chat con captura de pantalla integrada y editor de imágenes.
  * Carga automáticamente html2canvas y fabric.js si no están presentes.
- * @ATRIBUTOS: app-name, primary-color, position, title, subtitle, theme, endpoint, size
+ * @ATRIBUTOS: app-name, primary-color, position, title, subtitle, theme, endpoint, size, modules
  * @EVENTOS: feedback-open, feedback-close, feedback-submit
  */
 (() => {
@@ -68,6 +68,7 @@
       };
     }
 
+    /** Se invoca al añadir el componente al DOM. Carga dependencias e inicializa la UI. */
     connectedCallback() {
       loadDependencies().then(() => {
         this.render();
@@ -81,14 +82,17 @@
     /** Lee los atributos del elemento y devuelve la configuración. */
     get config() {
       return {
-        appName:   this.getAttribute("app-name") || document.title,
-        primary:   this.getAttribute("primary-color") || "#2563eb",
-        endpoint:  this.getAttribute("endpoint") || "",
-        title:     this.getAttribute("title") || "Enviar feedback",
-        subtitle:  this.getAttribute("subtitle") || "¿Qué te ocurrió?",
-        position:  this.getAttribute("position") || "bottom-right",
-        size:      this.getAttribute("size") || "md",   // sm | md | lg
-        theme:     this.getAttribute("theme") || "light",
+        appName: this.getAttribute("app-name") || document.title,
+        primary: this.getAttribute("primary-color") || "#2563eb",
+        endpoint: this.getAttribute("endpoint") || "",
+        title: this.getAttribute("title") || "Enviar feedback",
+        subtitle: this.getAttribute("subtitle") || "¿Qué te ocurrió?",
+        position: this.getAttribute("position") || "bottom-right",
+        size: this.getAttribute("size") || "md",   // sm | md | lg
+        theme: this.getAttribute("theme") || "light",
+        modules: this.getAttribute("modules") || "",
+        imageScale: parseFloat(this.getAttribute("image-scale")) || Math.max(2, window.devicePixelRatio || 1),
+        imageQuality: parseFloat(this.getAttribute("image-quality")) || 0.9,
       };
     }
 
@@ -102,9 +106,10 @@
       return { sm: 20, md: 26, lg: 32 }[this.config.size] || 26;
     }
 
+    /** Genera el HTML y CSS (Shadow DOM) del componente. */
     render() {
       const dark = this.config.theme === "dark";
-      const sz   = this.fabSize;
+      const sz = this.fabSize;
       const colors = {
         primary: this.config.primary,
         panel: dark ? "#1e293b" : "#ffffff",
@@ -121,21 +126,22 @@
           .qc-fab svg { width: 28px; height: 28px; }
           .qc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 999999999; display: none; align-items: flex-end; justify-content: flex-end; padding: 20px; }
           .qc-overlay.active { display: flex; }
-          .qc-chat { width: 380px; max-height: 560px; background: var(--qc-panel); border-radius: 20px; overflow: hidden; border: 1px solid var(--qc-border); box-shadow: 0 20px 60px rgba(0,0,0,.3); display: flex; flex-direction: column; animation: qcSlideIn .3s ease; }
+          .qc-chat { width: 380px; max-height: min(578px, calc(100vh - 40px)); background: var(--qc-panel); border-radius: 20px; overflow: hidden; border: 1px solid var(--qc-border); box-shadow: 0 20px 60px rgba(0,0,0,.3); display: flex; flex-direction: column; animation: qcSlideIn .3s ease; }
           @keyframes qcSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-          .qc-header-chat { padding: 16px 20px; border-bottom: 1px solid var(--qc-border); display: flex; align-items: center; justify-content: space-between; }
+          .qc-header-chat { padding: 10px 16px; border-bottom: 1px solid var(--qc-border); display: flex; align-items: center; justify-content: space-between; }
+          .qc-app-banner { padding: 6px 16px; background: rgba(128,128,128,0.05); border-bottom: 1px solid var(--qc-border); text-align: center; font-size: 11px; font-weight: 700; color: var(--qc-primary); text-transform: uppercase; letter-spacing: 0.5px; }
           .qc-header-title { display: flex; align-items: center; gap: 10px; }
           .qc-header-title svg { width: 20px; height: 20px; color: var(--qc-primary); }
           .qc-title { color: var(--qc-text); font-size: 15px; font-weight: 600; }
           .qc-close { width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; cursor: pointer; color: var(--qc-muted); display: flex; align-items: center; justify-content: center; transition: .2s; }
           .qc-close:hover { background: var(--qc-border); color: var(--qc-text); }
-          .qc-body-chat { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-          .qc-msg { padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; }
+          .qc-body-chat { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+          .qc-msg { padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.4; }
           .qc-msg-bot { background: var(--qc-border); color: var(--qc-text); border-bottom-left-radius: 4px; }
-          .qc-capture-box { border: 2px dashed var(--qc-border); border-radius: 12px; padding: 20px; text-align: center; transition: .2s; }
+          .qc-capture-box { border: 2px dashed var(--qc-border); border-radius: 12px; padding: 12px; text-align: center; transition: .2s; }
           .qc-capture-box:hover { border-color: var(--qc-primary); }
-          .qc-capture-options { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
-          .qc-capture-btn { padding: 10px 16px; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: .2s; }
+          .qc-capture-options { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
+          .qc-capture-btn { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: .2s; }
           .qc-capture-btn:hover { transform: translateY(-1px); }
           .qc-capture-btn.primary { background: var(--qc-primary); color: white; }
           .qc-capture-btn.secondary { background: var(--qc-border); color: var(--qc-text); }
@@ -144,17 +150,24 @@
           .qc-image-preview:hover { opacity: .9; }
           .qc-image-preview img { width: 100%; height: auto; max-height: 300px; object-fit: contain; display: block; background: #f5f5f5; }
           .qc-edit-badge { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; }
-          .qc-field { margin-top: 12px; }
-          .qc-field-label { display: block; color: var(--qc-text); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-          .qc-textarea { width: 100%; border: 1px solid var(--qc-border); border-radius: 12px; background: transparent; color: var(--qc-text); padding: 12px; font-size: 14px; resize: none; outline: none; font-family: inherit; }
+          .qc-field { margin-top: 0; }
+          .qc-field-label { display: block; color: var(--qc-text); font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+          .qc-required { color: #ef4444; margin-left: 3px; }
+          .qc-textarea { width: 100%; border: 1px solid var(--qc-border); border-radius: 10px; background: transparent; color: var(--qc-text); padding: 8px 12px; font-size: 13px; resize: none; outline: none; font-family: inherit; }
           .qc-textarea:focus { border-color: var(--qc-primary); }
-          .qc-select { width: 100%; border: 1px solid var(--qc-border); border-radius: 12px; background: transparent; color: var(--qc-text); padding: 12px; font-size: 14px; outline: none; }
-          .qc-actions-chat { padding: 12px 16px; border-top: 1px solid var(--qc-border); display: flex; gap: 10px; }
+          .qc-select { width: 100%; border: 1px solid var(--qc-border); border-radius: 10px; background: transparent; color: var(--qc-text); padding: 8px 12px; font-size: 13px; outline: none; }
+          .qc-actions-chat { padding: 8px 16px; border-top: 1px solid var(--qc-border); display: flex; gap: 10px; }
           .qc-btn { flex: 1; height: 40px; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
           .qc-btn:hover { transform: translateY(-1px); }
           .qc-btn-primary { background: var(--qc-primary); color: white; }
           .qc-btn-secondary { background: var(--qc-border); color: var(--qc-text); }
           .qc-btn svg { width: 16px; height: 16px; }
+          .qc-author-wrap { position: relative; display: flex; align-items: center; justify-content: center; width: 24px; color: var(--qc-muted); opacity: 0.5; cursor: pointer; transition: .2s; }
+          .qc-author-wrap:hover { opacity: 1; color: var(--qc-text); }
+          .qc-author-wrap svg { width: 14px; height: 14px; }
+          .qc-author-popover { position: absolute; bottom: 100%; left: 0; margin-bottom: 8px; background: var(--qc-text); color: var(--qc-panel); padding: 6px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; opacity: 0; visibility: hidden; transition: .2s; box-shadow: 0 4px 12px rgba(0,0,0,.2); line-height: 1.4; font-weight: 500; pointer-events: none; z-index: 10; }
+          .qc-author-wrap:hover .qc-author-popover { opacity: 1; visibility: visible; transform: translateY(-4px); }
+          .qc-author-popover::after { content: ''; position: absolute; top: 100%; left: 10px; border: 4px solid transparent; border-top-color: var(--qc-text); }
 
           /* Editor */
           .qc-editor-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 9999999999; display: none; align-items: center; justify-content: center; }
@@ -262,6 +275,7 @@
               <div class="qc-header-title">${this.iconMessage()}<span class="qc-title">${this.config.title}</span></div>
               <button class="qc-close" id="qcCloseBtn">${this.iconX()}</button>
             </div>
+            <div class="qc-app-banner">${this.config.appName}</div>
             <div class="qc-body-chat" id="qcBodyChat"></div>
             <div class="qc-actions-chat" id="qcActionsChat"></div>
           </div>
@@ -335,7 +349,7 @@
             <div class="qc-editor-footer">
               <button class="qc-btn qc-btn-dark" id="qcEditorCancel">Cancelar</button>
               <div style="position:relative;">
-                <button class="qc-btn qc-btn-dark" id="qcEditorNewCapture">${this.iconCamera()} Nueva</button>
+                <button class="qc-btn qc-btn-dark" id="qcEditorNewCapture">${this.iconCamera()} Nueva captura</button>
                 <div class="qc-submenu" id="qcNewCaptureMenu">
                   <button class="qc-submenu-btn" id="qcNewCaptureFull">${this.iconCamera()} Completa</button>
                   <button class="qc-submenu-btn" id="qcNewCaptureRegion">${this.iconSelect()} Región</button>
@@ -357,17 +371,27 @@
       const s = this.fabIconSize;
       return `<svg width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
     }
+    /** @returns {string} SVG del ícono de mensaje */
     iconMessage() { return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`; }
+    /** @returns {string} SVG del ícono de cerrar (X) */
     iconX() { return `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>`; }
+    /** @returns {string} SVG del ícono de cámara */
     iconCamera() { return `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`; }
+    /** @returns {string} SVG del ícono de selección de región */
     iconSelect() { return `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>`; }
+    /** @returns {string} SVG del ícono de confirmación (Check) */
     iconCheck() { return `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`; }
+    /** @returns {string} SVG del ícono de enviar */
     iconSend() { return `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`; }
+    /** @returns {string} SVG del ícono de imagen */
     iconImage() { return `<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`; }
+    /** @returns {string} SVG del ícono de información */
+    iconInfo() { return `<svg width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>`; }
 
     // =========================================================================
     // EVENTOS GLOBALES
     // =========================================================================
+    /** Asocia los eventos globales de abrir y cerrar el chat. */
     bindEvents() {
       this.shadowRoot.getElementById("qcFab").onclick = () => this.openFromFab();
       this.shadowRoot.getElementById("qcCloseBtn").onclick = () => this.close();
@@ -408,6 +432,11 @@
     renderForm() {
       const body = this.shadowRoot.getElementById("qcBodyChat");
       const actions = this.shadowRoot.getElementById("qcActionsChat");
+
+      // Limpiar mensajes anteriores si existen
+      const oldMsg = this.shadowRoot.getElementById("qcFormMsg");
+      if (oldMsg) oldMsg.remove();
+
       let html = `<div class="qc-msg qc-msg-bot">${this.config.subtitle}</div>`;
 
       if (this.state.screenshot) {
@@ -427,13 +456,29 @@
           </div>`;
       }
 
+      let modulesHtml = "";
+      if (this.config.modules) {
+        const modulesList = this.config.modules.split(',').map(m => m.trim()).filter(Boolean);
+        if (modulesList.length > 0) {
+          modulesHtml = `
+            <div class="qc-field">
+              <label class="qc-field-label">Módulo<span class="qc-required">*</span></label>
+              <select class="qc-select" id="qcModule">
+                <option value="Todos los módulos">Todos los módulos</option>
+                ${modulesList.map(m => `<option value="${m}">${m}</option>`).join('')}
+              </select>
+            </div>`;
+        }
+      }
+
       html += `
         <div class="qc-field">
-          <label class="qc-field-label">Descripción</label>
-          <textarea class="qc-textarea" id="qcDescription" rows="3" placeholder="Describe el problema..."></textarea>
+          <label class="qc-field-label">Descripción<span class="qc-required">*</span></label>
+          <textarea class="qc-textarea" id="qcDescription" rows="2" placeholder="Describe el problema..."></textarea>
         </div>
+        ${modulesHtml}
         <div class="qc-field">
-          <label class="qc-field-label">Prioridad</label>
+          <label class="qc-field-label">Prioridad<span class="qc-required">*</span></label>
           <select class="qc-select" id="qcPriority">
             <option value="baja">Baja</option>
             <option value="media" selected>Media</option>
@@ -443,7 +488,18 @@
         </div>`;
 
       body.innerHTML = html;
-      actions.innerHTML = `<button class="qc-btn qc-btn-primary" id="qcSendBtn">${this.iconSend()} Enviar</button>`;
+      actions.innerHTML = `
+        <div class="qc-author-wrap">
+          ${this.iconInfo()}
+          <div class="qc-author-popover">
+            <span style="color:var(--qc-muted)">Desarrollado por:</span><br>
+            <strong>Rubén Sánchez</strong><br>
+            rubencho.dev@gmail.com<br><br>
+            <span style="font-size:9px;color:var(--qc-muted)">Todos los derechos reservados</span>
+          </div>
+        </div>
+        <button class="qc-btn qc-btn-primary" id="qcSendBtn">${this.iconSend()} Enviar</button>
+      `;
 
       const fullBtn = this.shadowRoot.getElementById("qcCaptureFullBtn");
       if (fullBtn) fullBtn.onclick = () => this.captureFull();
@@ -469,8 +525,9 @@
           logging: false,
           backgroundColor: "#ffffff",
           ignoreElements: (el) => el === this,
+          scale: this.config.imageScale
         });
-        const imageUrl = canvas.toDataURL("image/png");
+        const imageUrl = canvas.toDataURL("image/jpeg", this.config.imageQuality);
         this.state.screenshot = imageUrl;
         this.state.editorImageUrl = imageUrl;
         this.openEditor(imageUrl);
@@ -482,6 +539,7 @@
       }
     }
 
+    /** Captura la pantalla completa y pasa automáticamente al editor. */
     async captureFullAndEdit() {
       await this.captureFull();
     }
@@ -579,14 +637,28 @@
         this.style.display = "";
         if (rect.width < 20 || rect.height < 20) { this.openFromFab(); return; }
         try {
+          // html2canvas captura todo el body. La resolución se ajusta mediante la configuración.
+          const scale = this.config.imageScale;
           const fullCanvas = await html2canvas(document.body, {
             useCORS: true, logging: false, backgroundColor: "#ffffff",
             ignoreElements: (el) => el === this,
+            scale: scale
           });
+
           const crop = document.createElement("canvas");
-          crop.width = rect.width; crop.height = rect.height;
-          crop.getContext("2d").drawImage(fullCanvas, rect.left, rect.top, rect.width, rect.height, 0, 0, rect.width, rect.height);
-          this.state.screenshot = crop.toDataURL("image/png");
+
+          // Escalamos el canvas de destino para mantener la alta resolución
+          crop.width = rect.width * scale;
+          crop.height = rect.height * scale;
+
+          // rect.left/top son relativos al viewport. Hay que sumar el scroll para la posición absoluta.
+          const sx = (rect.left + window.scrollX) * scale;
+          const sy = (rect.top + window.scrollY) * scale;
+          const sw = rect.width * scale;
+          const sh = rect.height * scale;
+
+          crop.getContext("2d").drawImage(fullCanvas, sx, sy, sw, sh, 0, 0, crop.width, crop.height);
+          this.state.screenshot = crop.toDataURL("image/jpeg", this.config.imageQuality);
           this.state.editorImageUrl = this.state.screenshot;
           this.openEditor(this.state.screenshot);
         } catch (err) {
@@ -614,6 +686,7 @@
     // =========================================================================
     // HISTORIAL
     // =========================================================================
+    /** Guarda el estado actual del canvas para permitir deshacer (undo). */
     saveHistory() {
       if (!this.state.fabricCanvas) return;
       const json = JSON.stringify(this.state.fabricCanvas.toJSON());
@@ -664,10 +737,12 @@
       this.bindEditorEvents();
     }
 
+    /** Cierra la interfaz del editor de imágenes. */
     closeEditor() {
       this.shadowRoot.getElementById("qcEditorOverlay").classList.remove("active");
     }
 
+    /** Limpia y destruye la instancia de Fabric.js para liberar memoria. */
     disposeEditor() {
       if (this.state.fabricCanvas) {
         this.state.fabricCanvas.dispose();
@@ -681,6 +756,7 @@
     // =========================================================================
     // EDITOR — EVENTOS
     // =========================================================================
+    /** Asigna eventos de las herramientas y controles dentro del editor. */
     bindEditorEvents() {
       // Nueva captura
       const newCaptureBtn = this.shadowRoot.getElementById("qcEditorNewCapture");
@@ -793,7 +869,12 @@
           // Deseleccionar antes de exportar para que no aparezcan los handles
           this.state.fabricCanvas.discardActiveObject();
           this.state.fabricCanvas.renderAll();
-          const editedImageUrl = this.state.fabricCanvas.toDataURL({ format: "png", quality: 1 });
+          // Exportar deshaciendo la escala visual del editor para recuperar la calidad original
+          const editedImageUrl = this.state.fabricCanvas.toDataURL({
+            format: "jpeg",
+            quality: this.config.imageQuality,
+            multiplier: 1 / (this.state.editorScale || 1)
+          });
           this.state.screenshot = editedImageUrl;
         }
         this.state.editorImageUrl = null;
@@ -876,6 +957,7 @@
       canvas.renderAll();
     }
 
+    /** Revierte la última acción en el canvas usando el historial. */
     doUndo() {
       const canvas = this.state.fabricCanvas;
       if (!canvas) return;
@@ -950,6 +1032,7 @@
     // =========================================================================
     // EDITOR — CANVAS
     // =========================================================================
+    /** Inicializa el canvas de Fabric.js con la captura de pantalla de fondo. */
     loadEditorCanvas(imageUrl) {
       const canvasEl = this.shadowRoot.getElementById("qcEditorCanvas");
       if (this.state.fabricCanvas) {
@@ -968,6 +1051,7 @@
         const maxW = wrap.clientWidth - 40;
         const maxH = wrap.clientHeight - 40;
         const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+        this.state.editorScale = scale; // Guardamos la escala visual
 
         canvas.setWidth(img.width * scale);
         canvas.setHeight(img.height * scale);
@@ -1192,6 +1276,7 @@
       window.addEventListener("keydown", this._keyHandler);
     }
 
+    /** Maneja la selección de objetos en el canvas para mostrar opciones como "Eliminar". */
     handleSelection(e) {
       const obj = e.selected && e.selected[0];
       if (!obj) return;
@@ -1199,6 +1284,7 @@
       this.showDeleteButton(obj);
     }
 
+    /** Muestra el botón flotante de "Eliminar" junto al objeto seleccionado. */
     showDeleteButton(obj) {
       let deleteBtn = document.getElementById("qcDeleteBtn");
       if (!deleteBtn) {
@@ -1245,6 +1331,7 @@
       deleteBtn.style.display = "block";
     }
 
+    /** Oculta el botón flotante de eliminar. */
     hideDeleteButton() {
       const btn = document.getElementById("qcDeleteBtn");
       if (btn) btn.style.display = "none";
@@ -1253,11 +1340,14 @@
     // =========================================================================
     // DATOS
     // =========================================================================
+    /** Recopila y retorna todos los datos ingresados en el formulario junto con info del navegador. */
     getData() {
       const descEl = this.shadowRoot.getElementById("qcDescription");
       const priorityEl = this.shadowRoot.getElementById("qcPriority");
+      const moduleEl = this.shadowRoot.getElementById("qcModule");
       return {
         app: this.config.appName,
+        module: moduleEl ? moduleEl.value : "Todos los módulos",
         description: descEl ? descEl.value : "",
         priority: priorityEl ? priorityEl.value : "media",
         screenshot: this.state.screenshot,
@@ -1299,14 +1389,18 @@
       try {
         const res = await fetch(this.config.endpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          // no-cors y text/plain son necesarios para evitar el bloqueo de CORS en Google Apps Script
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(data),
         });
 
-        if (!res.ok) {
+        // En modo no-cors la respuesta es opaca (res.type === 'opaque'), lo que significa que
+        // la petición se envió pero no podemos leer la respuesta. Lo damos por válido.
+        if (!res.ok && res.type !== "opaque") {
           // Intentar leer mensaje del servidor
           let serverMsg = "";
-          try { const j = await res.json(); serverMsg = j.message || j.error || ""; } catch (_) {}
+          try { const j = await res.json(); serverMsg = j.message || j.error || ""; } catch (_) { }
           throw new Error(serverMsg || `Error del servidor (${res.status})`);
         }
 
@@ -1352,6 +1446,7 @@
     // =========================================================================
     // POSICIÓN FAB
     // =========================================================================
+    /** Ajusta la posición del botón flotante en la pantalla según la configuración. */
     positionFAB() {
       const fab = this.shadowRoot.querySelector(".qc-fab");
       const p = this.config.position;

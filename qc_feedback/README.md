@@ -32,7 +32,7 @@ Si prefieres usar el archivo local:
 <script src="qc_feedback.js"></script>
 ```
 
-## Uso Rápido
+## Uso rápido
 
 Agregar el componente:
 
@@ -60,8 +60,11 @@ Agregar el componente:
 | `subtitle` | string | `¿Qué te ocurrió?` | Mensaje de bienvenida |
 | `size` | string | `md` | Tamaño del FAB (sm, md, lg) |
 | `theme` | string | `light` | Tema visual (light, dark) |
+| `modules` | string | (vacío) | Módulos separados por coma para el selector (ej: "Dashboard, Reportes") |
+| `image-scale` | number | `2` | Escala de resolución para la captura (ej: 2 = doble resolución) |
+| `image-quality` | number | `0.9` | Calidad de compresión JPEG (de 0 a 1) |
 
-## API Pública
+## API pública
 
 ```javascript
 const widget = document.querySelector('qc-feedback');
@@ -104,16 +107,17 @@ widget.addEventListener('feedback-submit', (e) => {
 });
 ```
 
-## Datos Enviados
+## Datos enviados
 
 Al enviar el feedback, se envía un POST al `endpoint` con el siguiente formato:
 
 ```json
 {
   "app": "Nombre de la App",
+  "module": "Nombre del módulo (si se configuró)",
   "description": "Descripción del problema",
   "priority": "media",
-  "screenshot": "data:image/png;base64,...",
+  "screenshot": "data:image/jpeg;base64,...",
   "url": "https://...",
   "browser": "Mozilla/5.0...",
   "resolution": "1920x1080",
@@ -121,7 +125,7 @@ Al enviar el feedback, se envía un POST al `endpoint` con el siguiente formato:
 }
 ```
 
-## Captura de Pantalla
+## Captura de pantalla
 
 El widget ofrece dos modos de captura:
 
@@ -139,7 +143,7 @@ Después de capturar, se abre el editor donde puedes:
 
 Abre `index.html` en un navegador para ver el ejemplo funcional.
 
-## Navegadores Soportados
+## Navegadores soportados
 
 - Chrome 60+
 - Firefox 60+
