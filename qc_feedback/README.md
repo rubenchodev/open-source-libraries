@@ -7,7 +7,8 @@ Widget de feedback con captura de pantalla integrada para sitios web.
 - Captura de pantalla completa o por región
 - Editor de imágenes integrado (dibujo, formas, texto, flechas)
 - Chat de feedback con descripción y prioridad
-- Tema claro/oscuro
+- Tema claro/oscuro y color principal personalizable
+- Apertura dinámica del panel según la posición configurada (top/bottom/left/right)
 - API pública para control programático
 - Eventos para integración personalizada
 - Carga automática de dependencias (html2canvas + fabric.js)
@@ -53,8 +54,9 @@ Agregar el componente:
 | Atributo | Tipo | Default | Descripción |
 |----------|------|---------|-------------|
 | `app-name` | string | `document.title` | Nombre de la aplicación |
-| `primary-color` | string | `#2563eb` | Color principal del widget |
-| `position` | string | `bottom-right` | Posición del FAB (bottom-right, bottom-left, top-right, top-left) |
+| `primary-color` | string | `#2563eb` | Color principal sólido del widget |
+| `position` | string | `bottom-right` | Posición del FAB y del panel de chat (bottom-right, bottom-left, top-right, top-left) |
+| `top`, `bottom`, `left`, `right` | string/number | `24px` | Margen explícito para sobrescribir la posición por defecto (ej. `450`, `20px`, `10%`) |
 | `endpoint` | string | (vacío) | URL del endpoint para enviar los datos |
 | `title` | string | `Enviar feedback` | Título de la ventana de chat |
 | `subtitle` | string | `¿Qué te ocurrió?` | Mensaje de bienvenida |

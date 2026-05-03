@@ -88,6 +88,10 @@
         title: this.getAttribute("title") || "Enviar feedback",
         subtitle: this.getAttribute("subtitle") || "¿Qué te ocurrió?",
         position: this.getAttribute("position") || "bottom-right",
+        top: this.getAttribute("top") || null,
+        bottom: this.getAttribute("bottom") || null,
+        left: this.getAttribute("left") || null,
+        right: this.getAttribute("right") || null,
         size: this.getAttribute("size") || "md",   // sm | md | lg
         theme: this.getAttribute("theme") || "light",
         modules: this.getAttribute("modules") || "",
@@ -121,13 +125,13 @@
         <style>
           * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
           :host { all: initial; --qc-primary: ${colors.primary}; --qc-panel: ${colors.panel}; --qc-border: ${colors.border}; --qc-text: ${colors.text}; --qc-muted: ${colors.muted}; }
-          .qc-fab { position: fixed; width: ${sz}px; height: ${sz}px; border: none; border-radius: 50%; cursor: pointer; z-index: 99999999; color: white; background: linear-gradient(135deg, var(--qc-primary), #1d4ed8); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,.2); transition: .25s; }
+          .qc-fab { position: fixed; width: ${sz}px; height: ${sz}px; border: none; border-radius: 50%; cursor: pointer; z-index: 99999999; color: white; background: var(--qc-primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,.2); transition: .25s; }
           .qc-fab:hover { transform: scale(1.08); }
           .qc-fab svg { width: 28px; height: 28px; }
-          .qc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 999999999; display: none; align-items: flex-end; justify-content: flex-end; padding: 20px; }
+          .qc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 999999999; display: none; align-items: ${this.config.position.includes('top') ? 'flex-start' : 'flex-end'}; justify-content: ${this.config.position.includes('left') ? 'flex-start' : 'flex-end'}; padding: 20px; }
           .qc-overlay.active { display: flex; }
           .qc-chat { width: 380px; max-height: min(578px, calc(100vh - 40px)); background: var(--qc-panel); border-radius: 20px; overflow: hidden; border: 1px solid var(--qc-border); box-shadow: 0 20px 60px rgba(0,0,0,.3); display: flex; flex-direction: column; animation: qcSlideIn .3s ease; }
-          @keyframes qcSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes qcSlideIn { from { opacity: 0; transform: translateY(${this.config.position.includes('top') ? '-20px' : '20px'}); } to { opacity: 1; transform: translateY(0); } }
           .qc-header-chat { padding: 10px 16px; border-bottom: 1px solid var(--qc-border); display: flex; align-items: center; justify-content: space-between; }
           .qc-app-banner { padding: 6px 16px; background: rgba(128,128,128,0.05); border-bottom: 1px solid var(--qc-border); text-align: center; font-size: 11px; font-weight: 700; color: var(--qc-primary); text-transform: uppercase; letter-spacing: 0.5px; }
           .qc-header-title { display: flex; align-items: center; gap: 10px; }
@@ -1449,11 +1453,15 @@
     /** Ajusta la posición del botón flotante en la pantalla según la configuración. */
     positionFAB() {
       const fab = this.shadowRoot.querySelector(".qc-fab");
-      const p = this.config.position;
-      if (p.includes("bottom")) fab.style.bottom = "24px";
-      if (p.includes("top")) fab.style.top = "24px";
-      if (p.includes("right")) fab.style.right = "24px";
-      if (p.includes("left")) fab.style.left = "24px";
+      const cfg = this.config;
+      const p = cfg.position;
+      
+      const formatVal = (val) => !isNaN(val) ? `${val}px` : val;
+
+      if (p.includes("bottom")) fab.style.bottom = cfg.bottom ? formatVal(cfg.bottom) : "24px";
+      if (p.includes("top")) fab.style.top = cfg.top ? formatVal(cfg.top) : "24px";
+      if (p.includes("right")) fab.style.right = cfg.right ? formatVal(cfg.right) : "24px";
+      if (p.includes("left")) fab.style.left = cfg.left ? formatVal(cfg.left) : "24px";
     }
 
     // =========================================================================
