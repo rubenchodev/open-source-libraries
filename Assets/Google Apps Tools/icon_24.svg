@@ -1,0 +1,11 @@
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="9.5" height="9.5" rx="2" fill="#4285F4"/>
+  <rect x="13.5" y="1" width="9.5" height="9.5" rx="2" fill="#EA4335"/>
+  <rect x="1" y="13.5" width="9.5" height="9.5" rx="2" fill="#34A853"/>
+  <rect x="13.5" y="13.5" width="9.5" height="9.5" rx="2" fill="#FBBC04"/>
+  <circle cx="12" cy="12" r="5.5" fill="white"/>
+  <path d="M12,6.5 L13.2,9 L15.8,8.2 L16.3,10.8 L18.8,11.7 L17.5,12 L18.8,12.3 L16.3,13.2 L15.8,15.8 L13.2,15 L12,17.5 L10.8,15 L8.2,15.8 L7.7,13.2 L5.2,12.3 L6.5,12 L5.2,11.7 L7.7,10.8 L8.2,8.2 L10.8,9 Z" fill="#5F6368" opacity="0.15"/>
+  <path d="M12,6.5 L13.2,9 L15.8,8.2 L16.3,10.8 L18.8,11.7 L17.5,12 L18.8,12.3 L16.3,13.2 L15.8,15.8 L13.2,15 L12,17.5 L10.8,15 L8.2,15.8 L7.7,13.2 L5.2,12.3 L6.5,12 L5.2,11.7 L7.7,10.8 L8.2,8.2 L10.8,9 Z" fill="none" stroke="#5F6368" stroke-width="0.8"/>
+  <circle cx="12" cy="12" r="2.2" fill="#5F6368"/>
+  <circle cx="12" cy="12" r="1" fill="white"/>
+</svg>
