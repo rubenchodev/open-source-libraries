@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agrocity Kit — Documentación</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    /* ── Layout ── */
+    .ak-docs { display: flex; min-height: 100vh; }
+    .ak-docs-main { flex: 1; min-width: 0; padding: 32px 40px 80px; max-width: 960px; box-sizing: border-box; }
+    .ak-docs-mobile-bar { display: none; }
+    /* ── Contenido ── */
+    .ak-docs h2 { font-size: 1.6rem; font-weight: 700; margin: 32px 0 8px; color: var(--ak-primary); }
+    .ak-docs h2:first-child { margin-top: 0; }
+    .ak-docs h3 { font-size: 1.15rem; font-weight: 600; margin: 24px 0 8px; }
+    .ak-docs p, .ak-docs li { color: var(--ak-text); line-height: 1.6; }
+    .ak-docs code {
+      background: var(--ak-surface-alt); padding: 1px 6px; border-radius: 4px;
+      font-size: 0.85em; color: var(--ak-primary);
+    }
+    pre.ak-docs-code {
+      background: #1e2a38; color: #c9d1d9; padding: 16px; border-radius: var(--ak-radius);
+      font-size: 0.82rem; overflow-x: auto; margin: 12px 0;
+    }
+    .ak-docs-card {
+      background: var(--ak-surface-alt); border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius); padding: 20px; margin: 12px 0;
+    }
+    .ak-docs-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .ak-icon-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr));
+      gap: 8px; margin: 12px 0;
+    }
+    .ak-icon-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 12px 4px; border: 1px solid var(--ak-border); border-radius: var(--ak-radius);
+      background: var(--ak-surface); cursor: default;
+    }
+    .ak-icon-item:hover { border-color: var(--ak-primary); }
+    .ak-icon-item span { font-size: 0.68rem; color: var(--ak-text-muted); text-align: center; word-break: break-all; }
+    table.ak-docs-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    table.ak-docs-table th, table.ak-docs-table td {
+      padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--ak-border);
+      font-size: 0.85rem;
+    }
+    table.ak-docs-table th { background: var(--ak-surface-alt); font-weight: 600; }
+
+    @media (max-width: 767px) {
+      .ak-docs-mobile-bar { display: flex; }
+      .ak-docs-main { padding: 16px; }
+      .ak-drawer#docsDrawer .ak-drawer-content { width: 300px; }
+    }
+    @media (min-width: 768px) {
+      .ak-drawer#docsDrawer {
+        display: block !important;
+        position: sticky;
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: auto;
+        flex-shrink: 0;
+        overflow-x: hidden;
+      }
+      .ak-drawer#docsDrawer .ak-drawer-backdrop { display: none; }
+      .ak-drawer#docsDrawer .ak-drawer-content {
+        position: static; transform: none; width: auto; height: 100%;
+        box-shadow: none; z-index: auto; border-right: 1px solid var(--ak-border);
+      }
+      .ak-drawer#docsDrawer .ak-drawer-header { display: none; }
+    }
+  </style>
+</head>
+<body class="ak-body">
+
+<!-- Mobile top bar -->
+<div class="ak-docs-mobile-bar" style="position:sticky;top:0;z-index:100;background:var(--ak-surface);border-bottom:1px solid var(--ak-border);padding:8px 16px;align-items:center;gap:12px;">
+  <button class="ak-btn ak-btn-sm" data-ak-toggle="drawer" data-ak-target="#docsDrawer" style="background:transparent;border:none;font-size:1.3rem;">☰</button>
+  <strong style="font-size:0.95rem;">🌱 Agrocity Kit</strong>
+</div>
+
+<div class="ak-docs">
+
+  <!-- ─── SIDEBAR (drawer en móvil, fijo en desktop) ─── -->
+  <div class="ak-drawer" id="docsDrawer">
+    <div class="ak-drawer-backdrop"></div>
+    <div class="ak-drawer-content">
+      <div class="ak-drawer-header">
+        <div class="ak-drawer-header-avatar">AK</div>
+        <div>
+          <div class="ak-drawer-header-title">Agrocity Kit</div>
+          <div class="ak-drawer-header-subtitle">v1.2.0</div>
+        </div>
+        <button class="ak-btn-close" data-ak-dismiss="drawer" style="margin-left:auto;"></button>
+      </div>
+      <div class="ak-drawer-body" id="docsSidebar">
+      <nav id="docsNav">
+        <a href="#intro" class="ak-drawer-item" style="margin-top:4px;">
+          <span class="ak-drawer-item-icon">🏠</span>
+          <span class="ak-drawer-item-text">Inicio</span>
+        </a>
+
+        <div class="ak-drawer-subheader">Componentes</div>
+        <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subComponentes">
+          <span class="ak-drawer-item-icon">🧩</span>
+          <span class="ak-drawer-item-text">Componentes</span>
+          <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div id="subComponentes" class="ak-drawer-sub">
+          <a class="ak-drawer-sub-item" href="#botones">Botones</a>
+          <a class="ak-drawer-sub-item" href="#formularios">Formularios</a>
+          <a class="ak-drawer-sub-item" href="#select">Select</a>
+          <a class="ak-drawer-sub-item" href="#datatable">DataTable</a>
+          <a class="ak-drawer-sub-item" href="#modal">Modal</a>
+          <a class="ak-drawer-sub-item" href="#drawer">Drawer / Panel</a>
+          <a class="ak-drawer-sub-item" href="#tabs">Tabs</a>
+          <a class="ak-drawer-sub-item" href="#collapse">Collapse / Acordeón</a>
+          <a class="ak-drawer-sub-item" href="#alertas">Alertas</a>
+          <a class="ak-drawer-sub-item" href="#toast">Toast</a>
+          <a class="ak-drawer-sub-item" href="#tooltip">Tooltip / Popover</a>
+          <a class="ak-drawer-sub-item" href="#dropdown">Dropdown</a>
+          <a class="ak-drawer-sub-item" href="#switch">Switch</a>
+          <a class="ak-drawer-sub-item" href="#checkbox">Checkbox / Radio</a>
+          <a class="ak-drawer-sub-item" href="#timepicker">TimePicker</a>
+          <a class="ak-drawer-sub-item" href="#datepicker">DatePicker</a>
+          <a class="ak-drawer-sub-item" href="#loader">Loader</a>
+          <a class="ak-drawer-sub-item" href="#placeholders">Placeholders</a>
+          <a class="ak-drawer-sub-item" href="#dialog">Dialog</a>
+          <a class="ak-drawer-sub-item" href="#carousel">Carrusel</a>
+          <a class="ak-drawer-sub-item" href="#card">Card</a>
+          <a class="ak-drawer-sub-item" href="#badge">Badge</a>
+          <a class="ak-drawer-sub-item" href="#progress">Progress</a>
+          <a class="ak-drawer-sub-item" href="#spinner">Spinner</a>
+          <a class="ak-drawer-sub-item" href="#pagination">Paginación</a>
+          <a class="ak-drawer-sub-item" href="#breadcrumb">Breadcrumb</a>
+          <a class="ak-drawer-sub-item" href="#listgroup">List group</a>
+          <a class="ak-drawer-sub-item" href="#table">Tabla simple</a>
+          <a class="ak-drawer-sub-item" href="#layout">Layout / Grid</a>
+          <a class="ak-drawer-sub-item" href="#tipografia">Tipografía</a>
+          <a class="ak-drawer-sub-item" href="#imagenes">Imágenes</a>
+          <a class="ak-drawer-sub-item" href="#navbar">Navbar</a>
+          <a class="ak-drawer-sub-item" href="#nav">Nav / Pills</a>
+          <a class="ak-drawer-sub-item" href="#scrollspy">ScrollSpy</a>
+          <a class="ak-drawer-sub-item" href="#utilidades">Utilidades CSS</a>
+          <a class="ak-drawer-sub-item" href="#init-dinamico">Init dinámico</a>
+        </div>
+
+        <div class="ak-drawer-subheader">API</div>
+        <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subAk">
+          <span class="ak-drawer-item-icon">⚡</span>
+          <span class="ak-drawer-item-text">Ak() jQuery-lite</span>
+          <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div id="subAk" class="ak-drawer-sub">
+          <a class="ak-drawer-sub-item" href="#ak-selectores">Selectores</a>
+          <a class="ak-drawer-sub-item" href="#ak-dom">Manipulación DOM</a>
+          <a class="ak-drawer-sub-item" href="#ak-eventos">Eventos</a>
+          <a class="ak-drawer-sub-item" href="#ak-navegacion">Navegación</a>
+          <a class="ak-drawer-sub-item" href="#ak-clases">Clases CSS</a>
+          <a class="ak-drawer-sub-item" href="#ak-utilidades">Utilidades</a>
+        </div>
+
+        <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subIconos">
+          <span class="ak-drawer-item-icon">🎨</span>
+          <span class="ak-drawer-item-text">Iconos</span>
+          <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div id="subIconos" class="ak-drawer-sub">
+          <a class="ak-drawer-sub-item" href="#iconos">Galería</a>
+          <a class="ak-drawer-sub-item" href="#iconos-uso">Cómo usar</a>
+        </div>
+      </nav>
+    </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN ─── -->
+  <main class="ak-docs-main">
+
+    <!-- ================================================================
+         INTRO
+         ================================================================ -->
+    <section id="intro">
+      <h2>Introducción</h2>
+      <p>Framework UI ligero, sin dependencias runtime. CSS + JS vanilla. Tema claro/oscuro. Inspirado en Bootstrap 5 y Material Design.</p>
+
+      <h3>CDN</h3>
+      <pre class="ak-docs-code">&lt;link rel="stylesheet" href="https://cdn.example.com/agrocity-kit.min.css" /&gt;
+&lt;script src="https://cdn.example.com/agrocity-kit.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.example.com/agrocity-icons.min.js"&gt;&lt;/script&gt;</pre>
+
+      <h3>Estructura base</h3>
+      <pre class="ak-docs-code">&lt;!DOCTYPE html&gt;
+&lt;html lang="es" data-theme="light"&gt;
+&lt;head&gt;
+  &lt;link rel="stylesheet" href="agrocity-kit.min.css" /&gt;
+&lt;/head&gt;
+&lt;body class="ak-body"&gt;
+  ...
+  &lt;script src="agrocity-kit.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+      <h3>Tema oscuro</h3>
+      <p>Cambia a <code>data-theme="dark"</code> en el <code>&lt;html&gt;</code> o usa <code>AgrocityKit.theme('toggle')</code>.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" onclick="AgrocityKit.theme('light')">☀️ Claro</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" onclick="AgrocityKit.theme('dark')">🌙 Oscuro</button>
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.theme('toggle')">↕️ Alternar</button>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         BOTONES
+         ================================================================ -->
+    <section id="botones">
+      <h2>Botones</h2>
+      <p>Clase <code>.ak-btn</code> con variantes de color y tamaño. Efecto hover con elevación y translateY.</p>
+
+      <div class="ak-docs-card">
+        <div class="ak-docs-row">
+          <button class="ak-btn ak-btn-primary">Primary</button>
+          <button class="ak-btn ak-btn-secondary">Secondary</button>
+          <button class="ak-btn ak-btn-success">Success</button>
+          <button class="ak-btn ak-btn-danger">Danger</button>
+          <button class="ak-btn ak-btn-warning">Warning</button>
+          <button class="ak-btn ak-btn-info">Info</button>
+          <button class="ak-btn ak-btn-light">Light</button>
+          <button class="ak-btn ak-btn-dark">Dark</button>
+          <button class="ak-btn ak-btn-link">Link</button>
+        </div>
+        <div class="ak-docs-row" style="margin-top:12px;">
+          <button class="ak-btn ak-btn-primary ak-btn-sm">Sm</button>
+          <button class="ak-btn ak-btn-primary">Normal</button>
+          <button class="ak-btn ak-btn-primary ak-btn-lg">Lg</button>
+          <button class="ak-btn ak-btn-primary ak-btn-block" style="max-width:200px;">Block</button>
+          <button class="ak-btn ak-btn-primary" disabled>Disabled</button>
+        </div>
+        <div class="ak-docs-row" style="margin-top:12px;">
+          <button class="ak-btn ak-btn-outline-primary">Outline primary</button>
+          <button class="ak-btn ak-btn-outline-secondary">Outline secondary</button>
+          <button class="ak-btn ak-btn-outline-success">Outline success</button>
+          <button class="ak-btn ak-btn-outline-danger">Outline danger</button>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;button class="ak-btn ak-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="ak-btn ak-btn-danger ak-btn-sm"&gt;Small danger&lt;/button&gt;
+&lt;button class="ak-btn ak-btn-outline-primary"&gt;Outline primary&lt;/button&gt;
+&lt;button class="ak-btn ak-btn-primary ak-btn-lg" disabled&gt;Large disabled&lt;/button&gt;</pre>
+
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-btn</code></td><td>Base para todo botón</td></tr>
+        <tr><td><code>.ak-btn-primary</code></td><td>Variante primaria (verde)</td></tr>
+        <tr><td><code>.ak-btn-secondary</code></td><td>Variante secundaria (azul)</td></tr>
+        <tr><td><code>.ak-btn-success</code></td><td>Variante éxito</td></tr>
+        <tr><td><code>.ak-btn-danger</code></td><td>Variante peligro</td></tr>
+        <tr><td><code>.ak-btn-warning</code></td><td>Variante advertencia</td></tr>
+        <tr><td><code>.ak-btn-info</code></td><td>Variante información</td></tr>
+        <tr><td><code>.ak-btn-light</code></td><td>Variante clara</td></tr>
+        <tr><td><code>.ak-btn-dark</code></td><td>Variante oscura</td></tr>
+        <tr><td><code>.ak-btn-link</code></td><td>Estilo link (subrayado)</td></tr>
+        <tr><td><code>.ak-btn-outline</code></td><td>Outline genérico (borde azul)</td></tr>
+        <tr><td><code>.ak-btn-outline-primary</code></td><td>Outline con color primario</td></tr>
+        <tr><td><code>.ak-btn-outline-secondary</code></td><td>Outline con color secundario</td></tr>
+        <tr><td><code>.ak-btn-outline-success</code></td><td>Outline éxito</td></tr>
+        <tr><td><code>.ak-btn-outline-danger</code></td><td>Outline peligro</td></tr>
+        <tr><td><code>.ak-btn-sm</code></td><td>Tamaño pequeño</td></tr>
+        <tr><td><code>.ak-btn-lg</code></td><td>Tamaño grande</td></tr>
+        <tr><td><code>.ak-btn-block</code></td><td>Ancho completo (flex)</td></tr>
+        <tr><td><code>.ak-btn-group</code></td><td>Agrupa botones horizontalmente</td></tr>
+        <tr><td><code>.ak-btn-close</code></td><td>Botón de cierre (×) para alerts/modals</td></tr>
+        <tr><td><code>.ak-active</code></td><td>Estado activo (toggle)</td></tr>
+      </table>
+      </details>
+
+      <h3>Button Group</h3>
+      <p>Agrupa botones con <code>.ak-btn-group</code>. Los extremos mantienen radio, los internos se fusionan.</p>
+      <div class="ak-btn-group">
+        <button class="ak-btn ak-btn-primary ak-btn-sm">Izquierda</button>
+        <button class="ak-btn ak-btn-primary ak-btn-sm">Centro</button>
+        <button class="ak-btn ak-btn-primary ak-btn-sm">Derecha</button>
+      </div>
+      <pre class="ak-docs-code" style="margin-top:8px;">&lt;div class="ak-btn-group"&gt;
+  &lt;button class="ak-btn ak-btn-primary ak-btn-sm"&gt;Izquierda&lt;/button&gt;
+  &lt;button class="ak-btn ak-btn-primary ak-btn-sm"&gt;Centro&lt;/button&gt;
+  &lt;button class="ak-btn ak-btn-primary ak-btn-sm"&gt;Derecha&lt;/button&gt;
+&lt;/div&gt;</pre>
+
+      <h3>Botones de acción (plugin)</h3>
+      <p>Con <code>data-ak-toggle="button"</code> para toggle active/checked (ideal para toolbars).</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-outline-primary" data-ak-toggle="button">Toggle</button>
+        <button class="ak-btn ak-btn-primary" data-ak-toggle="button">👍 Like</button>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         FORMULARIOS
+         ================================================================ -->
+    <section id="formularios">
+      <h2>Formularios</h2>
+      <p>Inputs, selects, textareas, file uploads, floating labels, input groups y validación.</p>
+
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-6">
+            <label class="ak-form-label">Texto</label>
+            <input class="ak-form-control" placeholder="Ingrese texto" />
+          </div>
+          <div class="ak-col-12 ak-col-md-6">
+            <label class="ak-form-label">Email</label>
+            <input type="email" class="ak-form-control" placeholder="email@ejemplo.com" />
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <label class="ak-form-label">Número</label>
+            <input type="number" class="ak-form-control" placeholder="0" />
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <label class="ak-form-label">Teléfono</label>
+            <input type="tel" class="ak-form-control" placeholder="+56 9 1234 5678" />
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <label class="ak-form-label">Fecha</label>
+            <input type="date" class="ak-form-control" />
+          </div>
+          <div class="ak-col-12 ak-col-md-6">
+            <label class="ak-form-label" for="inp-password">Contraseña</label>
+            <input type="password" id="inp-password" class="ak-form-control" placeholder="••••••••" />
+          </div>
+
+          <div class="ak-col-12 ak-col-md-6">
+            <label class="ak-form-label">Select</label>
+            <select class="ak-form-select">
+              <option>Opción 1</option><option>Opción 2</option><option>Opción 3</option>
+            </select>
+          </div>
+          <div class="ak-col-12">
+            <label class="ak-form-label">Textarea</label>
+            <textarea class="ak-form-control" rows="2" placeholder="Comentarios..."></textarea>
+          </div>
+          <div class="ak-col-12">
+            <div class="ak-input-group">
+              <span class="ak-input-group-text">@</span>
+              <input class="ak-form-control" placeholder="Usuario" />
+              <button class="ak-btn ak-btn-primary">Verificar</button>
+            </div>
+          </div>
+          <div class="ak-col-12">
+            <label class="ak-form-label">Rango</label>
+            <input type="range" class="ak-form-range" min="0" max="100" value="60" />
+          </div>
+          <div class="ak-col-12">
+            <div class="ak-form-floating">
+              <input class="ak-form-control" id="floatingInput" placeholder="Nombre" />
+              <label for="floatingInput">Floating label</label>
+            </div>
+          </div>
+          <div class="ak-col-12" style="display:flex;gap:16px;flex-wrap:wrap;">
+            <label class="ak-form-check">
+              <input type="checkbox" class="ak-form-check-input" checked />
+              <span class="ak-form-check-label">Checkbox</span>
+            </label>
+            <label class="ak-form-check">
+              <input type="radio" name="r" class="ak-form-check-input" checked />
+              <span class="ak-form-check-label">Radio 1</span>
+            </label>
+            <label class="ak-form-check">
+              <input type="radio" name="r" class="ak-form-check-input" />
+              <span class="ak-form-check-label">Radio 2</span>
+            </label>
+            <label class="ak-form-check ak-form-switch">
+              <input type="checkbox" class="ak-form-switch-input" checked />
+              <span class="ak-form-switch-toggle"><span></span></span>
+              <span class="ak-form-check-label">Switch</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;!-- Tipos de input --&gt;
+&lt;input class="ak-form-control" placeholder="Texto" /&gt;
+&lt;input type="email" class="ak-form-control" /&gt;
+&lt;input type="number" class="ak-form-control" /&gt;
+&lt;input type="date" class="ak-form-control" /&gt;
+&lt;input type="password" class="ak-form-control" /&gt;
+&lt;select class="ak-form-select"&gt;...&lt;/select&gt;
+&lt;textarea class="ak-form-control"&gt;&lt;/textarea&gt;
+&lt;input type="range" class="ak-form-range" /&gt;
+
+&lt;!-- Floating label --&gt;
+&lt;div class="ak-form-floating"&gt;
+  &lt;input class="ak-form-control" id="f1" placeholder="Label" /&gt;
+  &lt;label for="f1"&gt;Label&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Input group --&gt;
+&lt;div class="ak-input-group"&gt;
+  &lt;span class="ak-input-group-text"&gt;@&lt;/span&gt;
+  &lt;input class="ak-form-control" /&gt;
+  &lt;button class="ak-btn"&gt;Btn&lt;/button&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-form-control</code></td><td>Input / textarea / file base</td></tr>
+        <tr><td><code>.ak-form-control-sm</code></td><td>Input pequeño</td></tr>
+        <tr><td><code>.ak-form-control-lg</code></td><td>Input grande</td></tr>
+        <tr><td><code>.ak-form-select</code></td><td>Select nativo estilizado</td></tr>
+        <tr><td><code>.ak-form-label</code></td><td>Label independiente</td></tr>
+        <tr><td><code>.ak-form-text</code></td><td>Texto de ayuda</td></tr>
+        <tr><td><code>.ak-form-floating</code></td><td>Wrapper para floating label</td></tr>
+        <tr><td><code>.ak-input-group</code></td><td>Grupo input + texto/botón</td></tr>
+        <tr><td><code>.ak-input-group-text</code></td><td>Texto/prefijo del grupo</td></tr>
+        <tr><td><code>.ak-form-file</code></td><td>File upload custom</td></tr>
+        <tr><td><code>.ak-form-range</code></td><td>Input range estilizado</td></tr>
+        <tr><td><code>.ak-password-wrap</code></td><td>Wrapper para password toggle</td></tr>
+        <tr><td><code>.ak-is-valid</code></td><td>Estado válido (verde)</td></tr>
+        <tr><td><code>.ak-is-invalid</code></td><td>Estado inválido (rojo)</td></tr>
+        <tr><td><code>.ak-valid-feedback</code></td><td>Mensaje de validación exitoso</td></tr>
+        <tr><td><code>.ak-invalid-feedback</code></td><td>Mensaje de error</td></tr>
+      </table>
+      </details>
+
+      <h3>Password toggle</h3>
+      <p>Se activa automáticamente al iniciar el kit. Solo necesitas un <code>&lt;input type="password"&gt;</code>.</p>
+      <div style="max-width:300px;">
+        <input type="password" class="ak-form-control" placeholder="••••••••" />
+      </div>
+      <pre class="ak-docs-code" style="margin-top:8px;">&lt;input type="password" class="ak-form-control" /&gt;
+&lt;script&gt;AgrocityKit.autoInit();&lt;/script&gt;</pre>
+
+      <h3>Range slider</h3>
+      <input type="range" class="ak-form-range" min="0" max="100" value="60" style="max-width:300px;" />
+
+      <h3>File input custom</h3>
+      <p>Soporta drag &amp; drop, múltiples archivos y validación. Inicializado con JS automáticamente.</p>
+      <div class="ak-form-file ak-mt-2" data-ak-file-list="" data-ak-max-files="3" data-ak-max-size="2MB" data-ak-accept=".pdf,.doc,.docx,.jpg,.png,.csv" style="max-width:400px;">
+        <input type="file" id="file2" class="ak-form-file-input" multiple />
+        <div class="ak-form-file-field">
+          <svg class="ak-form-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span class="ak-form-file-text" data-placeholder="Máx. 3 archivos, 2MB c/u">Máx. 3 archivos, 2MB c/u</span>
+          <button class="ak-form-file-clear" type="button" aria-label="Limpiar">×</button>
+          <button class="ak-form-file-list-btn" type="button" aria-label="Ver lista">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="ak-form-file-popover"></div>
+        <div class="ak-form-file-error"></div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-form-file" data-ak-file-list data-ak-max-files="3" data-ak-max-size="2MB" data-ak-accept=".pdf,.doc,.jpg"&gt;
+  &lt;input type="file" class="ak-form-file-input" multiple /&gt;
+  &lt;div class="ak-form-file-field"&gt;
+    &lt;svg class="ak-form-file-icon"&gt;...&lt;/svg&gt;
+    &lt;span class="ak-form-file-text"&gt;Arrastra archivos&lt;/span&gt;
+    &lt;button class="ak-form-file-clear"&gt;×&lt;/button&gt;
+    &lt;button class="ak-form-file-list-btn"&gt;
+      &lt;svg&gt;...&lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="ak-form-file-popover"&gt;&lt;/div&gt;
+  &lt;div class="ak-form-file-error"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+      <h3>Validación</h3>
+      <p>Clases de estado <code>.ak-is-valid</code> / <code>.ak-is-invalid</code> con feedback.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:400px;">
+        <div>
+          <input class="ak-form-control ak-is-valid" value="ok@email.com" />
+          <div class="ak-valid-feedback">¡Correcto!</div>
+        </div>
+        <div>
+          <input class="ak-form-control ak-is-invalid" value="email-invalido" />
+          <div class="ak-invalid-feedback">Correo inválido.</div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;input class="ak-form-control ak-is-valid" /&gt;
+&lt;div class="ak-valid-feedback"&gt;Correcto&lt;/div&gt;
+
+&lt;input class="ak-form-control ak-is-invalid" /&gt;
+&lt;div class="ak-invalid-feedback"&gt;Error&lt;/div&gt;</pre>
+
+      <h3>Tamaños</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:300px;">
+        <input class="ak-form-control ak-form-control-sm" placeholder="Small (.ak-form-control-sm)" />
+        <input class="ak-form-control" placeholder="Normal" />
+        <input class="ak-form-control ak-form-control-lg" placeholder="Large (.ak-form-control-lg)" />
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SELECT
+         ================================================================ -->
+    <section id="select">
+      <h2>Select</h2>
+      <p>Inicializa con <code>AgrocityKit.select(selector, opciones)</code> o <code>data-ak-select</code>. Soporta búsqueda, múltiple, agrupación, bottom-sheet en móvil.</p>
+      <div class="ak-docs-card">
+        <select id="demoSelect" style="width:260px;">
+          <option value="">Seleccione fruta...</option>
+          <option value="manzana">Manzana</option>
+          <option value="banana">Banana</option>
+          <option value="naranja">Naranja</option>
+          <option value="uva">Uva</option>
+          <option value="pera">Pera</option>
+          <option value="sandia">Sandía</option>
+        </select>
+      </div>
+
+      <h3>Select múltiple</h3>
+      <select id="demoSelectMulti" multiple data-ak-select data-ak-search="true" data-ak-placeholder="Selecciona varios..." style="width:320px;">
+        <optgroup label="Cereales">
+          <option value="maiz">Maíz</option>
+          <option value="trigo">Trigo</option>
+          <option value="arroz">Arroz</option>
+        </optgroup>
+        <optgroup label="Legumbres">
+          <option value="soya">Soya</option>
+          <option value="frijol">Frijol</option>
+        </optgroup>
+      </select>
+
+      <pre class="ak-docs-code">&lt;select id="demoSelect"&gt;
+  &lt;option value=""&gt;Seleccione...&lt;/option&gt;
+  &lt;option value="manzana"&gt;Manzana&lt;/option&gt;
+&lt;/select&gt;
+&lt;script&gt;AgrocityKit.select('#demoSelect', { liveSearch: true });&lt;/script&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-select</code></td><td>Contenedor del custom select</td></tr>
+        <tr><td><code>.ak-select__control</code></td><td>Control visible (como un botón)</td></tr>
+        <tr><td><code>.ak-select__placeholder</code></td><td>Texto placeholder</td></tr>
+        <tr><td><code>.ak-select__single-value</code></td><td>Valor seleccionado (single)</td></tr>
+        <tr><td><code>.ak-select__chips</code></td><td>Contenedor de chips (multiple)</td></tr>
+        <tr><td><code>.ak-select__chip</code></td><td>Chip de selección múltiple</td></tr>
+        <tr><td><code>.ak-select__dropdown</code></td><td>Dropdown con opciones</td></tr>
+        <tr><td><code>.ak-select__search</code></td><td>Input de búsqueda interna</td></tr>
+        <tr><td><code>.ak-select__option</code></td><td>Opción individual</td></tr>
+        <tr><td><code>.ak-select__optgroup-label</code></td><td>Etiqueta de grupo</td></tr>
+        <tr><td><code>.ak-select__checkbox</code></td><td>Checkbox visual (multiple)</td></tr>
+        <tr><td><code>.ak-select__no-results</code></td><td>Mensaje sin resultados</td></tr>
+        <tr><td><code>.ak-select__backdrop</code></td><td>Backdrop para bottom-sheet</td></tr>
+        <tr><td><code>.ak-select__spinner</code></td><td>Spinner de carga</td></tr>
+        <tr><td><code>.ak-is-open</code></td><td>Estado abierto</td></tr>
+        <tr><td><code>.ak-has-error</code></td><td>Estado error</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         DATATABLE
+         ================================================================ -->
+    <section id="datatable">
+      <h2>DataTable</h2>
+      <p>Inicializa con <code>AgrocityKit.dataTable(selector, opciones)</code> o <code>data-ak-datatable</code>. Soporta búsqueda, ordenación, paginación y exportación.</p>
+
+      <div data-ak-datatable data-ak-page-size="5" data-ak-search="true" data-ak-export-csv="true" style="max-width:700px;">
+        <table class="ak-table ak-table-striped ak-table-hover">
+          <thead>
+            <tr>
+              <th data-ak-sortable="true">Cultivo</th>
+              <th data-ak-sortable="true">Región</th>
+              <th data-type="number" data-ak-sortable="true">Área (ha)</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Maíz</td><td>Jalisco</td><td>12.5</td><td>Activo</td></tr>
+            <tr><td>Trigo</td><td>Sonora</td><td>8.0</td><td>Pendiente</td></tr>
+            <tr><td>Soya</td><td>Sinaloa</td><td>20.0</td><td>Alerta</td></tr>
+            <tr><td>Arroz</td><td>Veracruz</td><td>15.3</td><td>Proceso</td></tr>
+            <tr><td>Café</td><td>Chiapas</td><td>5.8</td><td>Activo</td></tr>
+            <tr><td>Cacao</td><td>Tabasco</td><td>9.2</td><td>Activo</td></tr>
+            <tr><td>Frijol</td><td>Zacatecas</td><td>7.4</td><td>Pendiente</td></tr>
+            <tr><td>Sorgo</td><td>Tamaulipas</td><td>18.0</td><td>Activo</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-dt</code></td><td>Contenedor del DataTable</td></tr>
+        <tr><td><code>.ak-dt__toolbar</code></td><td>Barra de herramientas (búsqueda + exportar)</td></tr>
+        <tr><td><code>.ak-dt__search</code></td><td>Input de búsqueda</td></tr>
+        <tr><td><code>.ak-dt__export</code></td><td>Botón de exportación</td></tr>
+        <tr><td><code>.ak-dt__table-wrap</code></td><td>Wrapper con scroll</td></tr>
+        <tr><td><code>.ak-dt__table</code></td><td>Tabla con estilo DataTable</td></tr>
+        <tr><td><code>.ak-dt__th-sortable</code></td><td>Cabecera ordenable</td></tr>
+        <tr><td><code>.ak-dt__th-content</code></td><td>Contenido flex del header</td></tr>
+        <tr><td><code>.ak-dt__sort-icon</code></td><td>Icono de ordenación (▲▼)</td></tr>
+        <tr><td><code>.ak-dt__footer</code></td><td>Footer con paginación</td></tr>
+        <tr><td><code>.ak-dt__info</code></td><td>Texto informativo (total registros)</td></tr>
+        <tr><td><code>.ak-dt__page-size</code></td><td>Selector de tamaño de página</td></tr>
+        <tr><td><code>.ak-dt__pagination</code></td><td>Controles de paginación</td></tr>
+        <tr><td><code>.ak-dt__page-btn</code></td><td>Botón de página</td></tr>
+        <tr><td><code>.ak-dt__empty</code></td><td>Estado vacío</td></tr>
+        <tr><td><code>.ak-dt__skeleton-row</code></td><td>Fila de carga esqueleto</td></tr>
+        <tr><td><code>.ak-dt--sticky</code></td><td>Header sticky</td></tr>
+        <tr><td><code>.ak-dt--cards</code></td><td>Vista tarjetas en móvil</td></tr>
+      </table>
+      </details>
+      <pre class="ak-docs-code">&lt;table data-ak-datatable data-ak-page-size="5" data-ak-search="true"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th data-ak-sortable&gt;Nombre&lt;/th&gt;&lt;th&gt;Edad&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Juan&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+    </section>
+
+    <!-- ================================================================
+         MODAL
+         ================================================================ -->
+    <section id="modal">
+      <h2>Modal</h2>
+      <p>Con <code>data-ak-toggle="modal"</code> y <code>data-ak-target="#id"</code>. Cierre con <code>data-ak-dismiss="modal"</code>.</p>
+      <div class="ak-docs-card">
+        <div class="ak-docs-row">
+          <button class="ak-btn ak-btn-primary" data-ak-toggle="modal" data-ak-target="#modalDemo">Abrir modal</button>
+          <button class="ak-btn ak-btn-secondary" data-ak-toggle="modal" data-ak-target="#modalDemoLg">Modal grande</button>
+          <button class="ak-btn ak-btn-secondary" data-ak-toggle="modal" data-ak-target="#modalDemoSm">Modal pequeño</button>
+          <button class="ak-btn ak-btn-secondary" data-ak-toggle="modal" data-ak-target="#modalScroll">Modal scroll body</button>
+        </div>
+
+        <div class="ak-modal" id="modalDemo" tabindex="-1" aria-labelledby="modalDemoLabel" aria-hidden="true">
+          <div class="ak-modal-dialog ak-modal-dialog-centered">
+            <div class="ak-modal-content">
+              <div class="ak-modal-header">
+                <h5 class="ak-modal-title" id="modalDemoLabel">Registrar nuevo cultivo</h5>
+                <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="ak-modal-body">
+                <div class="ak-row ak-g-3">
+                  <div class="ak-col-12 ak-col-md-6">
+                    <label class="ak-form-label">Cultivo</label>
+                    <input type="text" class="ak-form-control" placeholder="Nombre del cultivo" />
+                  </div>
+                  <div class="ak-col-12 ak-col-md-6">
+                    <label class="ak-form-label">Área (ha)</label>
+                    <input type="number" class="ak-form-control" placeholder="0.0" min="0" />
+                  </div>
+                </div>
+              </div>
+              <div class="ak-modal-footer">
+                <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cancelar</button>
+                <button class="ak-btn ak-btn-primary">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ak-modal" id="modalDemoLg" tabindex="-1" aria-hidden="true">
+          <div class="ak-modal-dialog ak-modal-dialog-lg">
+            <div class="ak-modal-content">
+              <div class="ak-modal-header">
+                <h5 class="ak-modal-title">Modal grande (800px)</h5>
+                <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="ak-modal-body">
+                <p>Contenido del modal grande. Ideal para formularios extensos.</p>
+              </div>
+              <div class="ak-modal-footer">
+                <button class="ak-btn ak-btn-primary" data-ak-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ak-modal" id="modalDemoSm" tabindex="-1" aria-hidden="true">
+          <div class="ak-modal-dialog ak-modal-dialog-sm ak-modal-dialog-centered">
+            <div class="ak-modal-content">
+              <div class="ak-modal-header">
+                <h5 class="ak-modal-title">Confirmar acción</h5>
+                <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="ak-modal-body">
+                <p>¿Estás seguro?</p>
+              </div>
+              <div class="ak-modal-footer">
+                <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cancelar</button>
+                <button class="ak-btn ak-btn-danger" data-ak-dismiss="modal">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ak-modal" id="modalScroll" tabindex="-1" aria-hidden="true">
+          <div class="ak-modal-dialog">
+            <div class="ak-modal-content" style="max-height:80vh;">
+              <div class="ak-modal-header" style="flex-shrink:0;">
+                <h5 class="ak-modal-title">Modal con scroll interno</h5>
+                <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="ak-modal-body" style="overflow-y:auto;min-height:200px;flex:1;">
+                <p>Header y footer fijos. Solo el body hace scroll.</p>
+                <p>Item 1</p><p>Item 2</p><p>Item 3</p><p>Item 4</p><p>Item 5</p>
+                <p>Item 6</p><p>Item 7</p><p>Item 8</p><p>Item 9</p><p>Item 10</p>
+              </div>
+              <div class="ak-modal-footer" style="flex-shrink:0;">
+                <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cerrar</button>
+                <button class="ak-btn ak-btn-primary">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;button data-ak-toggle="modal" data-ak-target="#miModal"&gt;Abrir&lt;/button&gt;
+&lt;button data-ak-toggle="modal" data-ak-target="#miModalLg"&gt;Grande&lt;/button&gt;
+
+&lt;div class="ak-modal" id="miModal"&gt;
+  &lt;div class="ak-modal-dialog ak-modal-dialog-centered"&gt;
+    &lt;div class="ak-modal-content"&gt;
+      &lt;div class="ak-modal-header"&gt;
+        &lt;h5 class="ak-modal-title"&gt;Título&lt;/h5&gt;
+        &lt;button class="ak-btn-close" data-ak-dismiss="modal"&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="ak-modal-body"&gt;Contenido&lt;/div&gt;
+      &lt;div class="ak-modal-footer"&gt;
+        &lt;button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal"&gt;Cerrar&lt;/button&gt;
+        &lt;button class="ak-btn ak-btn-primary"&gt;Guardar&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Tamaños: .ak-modal-dialog-lg (800px), .ak-modal-dialog-sm (340px) --&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-modal</code></td><td>Overlay fijo del modal</td></tr>
+        <tr><td><code>.ak-modal-backdrop</code></td><td>Fondo oscuro semitransparente</td></tr>
+        <tr><td><code>.ak-modal-dialog</code></td><td>Caja centrada (con animación slide)</td></tr>
+        <tr><td><code>.ak-modal-dialog-lg</code></td><td>Modal grande (800px)</td></tr>
+        <tr><td><code>.ak-modal-dialog-sm</code></td><td>Modal pequeño (340px)</td></tr>
+        <tr><td><code>.ak-modal-dialog-centered</code></td><td>Centrado verticalmente</td></tr>
+        <tr><td><code>.ak-modal-content</code></td><td>Contenido con border-radius + shadow</td></tr>
+        <tr><td><code>.ak-modal-header</code></td><td>Encabezado con título + close</td></tr>
+        <tr><td><code>.ak-modal-title</code></td><td>Título del modal</td></tr>
+        <tr><td><code>.ak-modal-body</code></td><td>Cuerpo del modal</td></tr>
+        <tr><td><code>.ak-modal-footer</code></td><td>Footer con acciones (flex end)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         OFFCANVAS
+         ================================================================ -->
+    <!-- Offcanvas merged into Drawer section -->
+
+    <!-- ================================================================
+         DRAWER (Navigation Drawer — Material Design 3)
+         ================================================================ -->
+    <section id="drawer">
+      <h2>Drawer / Panel lateral</h2>
+      <p>Drawer de navegación estilo Material Design 3 y panel deslizante para contenido no navegable.</p>
+
+      <div class="ak-docs-card">
+        <button class="ak-btn ak-btn-primary" data-ak-toggle="drawer" data-ak-target="#demoDrawer">Abrir drawer</button>
+
+        <div class="ak-drawer" id="demoDrawer">
+          <div class="ak-drawer-backdrop"></div>
+          <div class="ak-drawer-content">
+            <div class="ak-drawer-header">
+              <div class="ak-drawer-header-avatar">AK</div>
+              <div>
+                <div class="ak-drawer-header-title">App</div>
+                <div class="ak-drawer-header-subtitle">usuario@email.com</div>
+              </div>
+            </div>
+            <div class="ak-drawer-body">
+              <div class="ak-drawer-subheader">General</div>
+              <button class="ak-drawer-item ak-active">
+                <span class="ak-drawer-item-icon">📊</span>
+                <span>Dashboard</span>
+              </button>
+              <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subCultivos">
+                <span class="ak-drawer-item-icon">🌾</span>
+                <span>Cultivos</span>
+                <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+              <div id="subCultivos" class="ak-drawer-sub">
+                <a class="ak-drawer-sub-item">Maíz</a>
+                <a class="ak-drawer-sub-item">Trigo</a>
+              </div>
+              <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subReportes">
+                <span class="ak-drawer-item-icon">📈</span>
+                <span>Reportes</span>
+                <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+              <div id="subReportes" class="ak-drawer-sub">
+                <a class="ak-drawer-sub-item">Gráficos</a>
+                <a class="ak-drawer-sub-item">Exportar datos</a>
+              </div>
+            </div>
+            <div class="ak-drawer-footer">
+              <button class="ak-drawer-item">🚪 Cerrar sesión</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Panel deslizante</h3>
+      <p>Para contenido no navegable como ajustes o filtros. Usa <code>data-ak-toggle="offcanvas"</code>.</p>
+      <div class="ak-docs-card">
+        <button class="ak-btn ak-btn-primary" data-ak-toggle="offcanvas" data-ak-target="#demoSlidePanel">Abrir panel</button>
+        <div class="ak-offcanvas ak-offcanvas-end" id="demoSlidePanel">
+          <div class="ak-offcanvas-header">
+            <h5 class="ak-offcanvas-title">Ajustes rápidos</h5>
+            <button class="ak-btn-close" data-ak-dismiss="offcanvas"></button>
+          </div>
+          <div class="ak-offcanvas-body">
+            <p>Contenido del panel deslizante.</p>
+          </div>
+        </div>
+      </div>
+
+      <pre class="ak-docs-code">&lt;button data-ak-toggle="drawer" data-ak-target="#miDrawer"&gt;Abrir drawer&lt;/button&gt;
+
+&lt;div class="ak-drawer" id="miDrawer"&gt;
+  &lt;div class="ak-drawer-backdrop"&gt;&lt;/div&gt;
+  &lt;div class="ak-drawer-content"&gt;
+    &lt;div class="ak-drawer-header"&gt;
+      &lt;div class="ak-drawer-header-avatar"&gt;AK&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div class="ak-drawer-header-title"&gt;App&lt;/div&gt;
+        &lt;div class="ak-drawer-header-subtitle"&gt;usuario@email.com&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ak-drawer-body"&gt;
+      &lt;div class="ak-drawer-subheader"&gt;General&lt;/div&gt;
+      &lt;button class="ak-drawer-item ak-active"&gt;
+        &lt;span class="ak-drawer-item-icon"&gt;📊&lt;/span&gt;
+        &lt;span&gt;Dashboard&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subDemo"&gt;
+        &lt;span class="ak-drawer-item-icon"&gt;🌾&lt;/span&gt;
+        &lt;span&gt;Cultivos&lt;/span&gt;
+        &lt;svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"&gt;&lt;path d="M9 18l6-6-6-6"/&gt;&lt;/svg&gt;
+      &lt;/button&gt;
+      &lt;div id="subDemo" class="ak-drawer-sub"&gt;
+        &lt;a class="ak-drawer-sub-item"&gt;Maíz&lt;/a&gt;
+        &lt;a class="ak-drawer-sub-item"&gt;Trigo&lt;/a&gt;
+      &lt;/div&gt;
+      &lt;button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subReportes"&gt;
+        &lt;span class="ak-drawer-item-icon"&gt;📈&lt;/span&gt;
+        &lt;span&gt;Reportes&lt;/span&gt;
+        &lt;svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"&gt;&lt;path d="M9 18l6-6-6-6"/&gt;&lt;/svg&gt;
+      &lt;/button&gt;
+      &lt;div id="subReportes" class="ak-drawer-sub"&gt;
+        &lt;a class="ak-drawer-sub-item"&gt;Gráficos&lt;/a&gt;
+        &lt;a class="ak-drawer-sub-item"&gt;Exportar datos&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="ak-drawer-footer"&gt;
+      &lt;button class="ak-drawer-item"&gt;🚪 Cerrar sesión&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- No se necesita JS manual — el framework maneja el toggle con data-ak-toggle="drawer-sub".
+     Si creas el drawer dinámicamente, llama a AgrocityKit.initElement(contenedor) para cablear los data-attributes. --&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-drawer</code></td><td>Contenedor principal (overlay fijo)</td></tr>
+        <tr><td><code>.ak-drawer-backdrop</code></td><td>Fondo oscuro semitransparente</td></tr>
+        <tr><td><code>.ak-drawer-content</code></td><td>Panel lateral (320px, slide desde izquierda)</td></tr>
+        <tr><td><code>.ak-drawer-header</code></td><td>Header fijo con avatar + datos de usuario</td></tr>
+        <tr><td><code>.ak-drawer-header-avatar</code></td><td>Círculo con iniciales o imagen</td></tr>
+        <tr><td><code>.ak-drawer-header-title</code></td><td>Nombre en el header</td></tr>
+        <tr><td><code>.ak-drawer-header-subtitle</code></td><td>Subtítulo (email/rol)</td></tr>
+        <tr><td><code>.ak-drawer-body</code></td><td>Área scrollable con items</td></tr>
+        <tr><td><code>.ak-drawer-footer</code></td><td>Footer fijo (logout, settings link)</td></tr>
+        <tr><td><code>.ak-drawer-subheader</code></td><td>Etiqueta de sección (mayúscula)</td></tr>
+        <tr><td><code>.ak-drawer-divider</code></td><td>Separador horizontal</td></tr>
+        <tr><td><code>.ak-drawer-item</code></td><td>Elemento de navegación (icono + texto)</td></tr>
+        <tr><td><code>.ak-drawer-item-icon</code></td><td>Icono del item</td></tr>
+        <tr><td><code>.ak-drawer-item-text</code></td><td>Texto del item (opcional, puede usarse &lt;span&gt; sin clase)</td></tr>
+        <tr><td><code>.ak-drawer-sub</code></td><td>Submenú colapsable</td></tr>
+        <tr><td><code>.ak-drawer-sub-item</code></td><td>Item de submenú</td></tr>
+        <tr><td><code>data-ak-toggle="drawer-sub"</code></td><td>Toggle para submenú</td></tr>
+      </table>
+      </details>
+
+      <h3>Ejemplo completo: Navbar + Drawer responsive</h3>
+      <p>Combinación de <code>.ak-navbar</code> + <code>.ak-drawer</code> que funciona como sidebar en desktop y panel deslizante en móvil.</p>
+      <div class="ak-docs-card">
+        <a href="navbar-drawer.html" class="ak-btn ak-btn-primary" target="_blank">Abrir ejemplo →</a>
+      </div>
+
+      <h3>Inicialización dinámica</h3>
+      <p>Si creas un drawer con submenús dinámicamente, llama a <code>AgrocityKit.initElement(contenedor)</code> para cablear los <code>data-ak-toggle</code>.</p>
+      <div class="ak-docs-card">
+        <button class="ak-btn ak-btn-primary ak-btn-sm" onclick="crearDrawerDinamico()">Crear drawer dinámico</button>
+        <div id="drawerDynamicContainer" style="margin-top:8px;"></div>
+      </div>
+      <pre class="ak-docs-code" style="margin-top:4px;">function crearDrawerDinamico() {
+  var html = '&lt;button class="ak-btn" data-ak-toggle="drawer" data-ak-target="#dynDrawer"&gt;Abrir&lt;/button&gt;' +
+    '&lt;div class="ak-drawer" id="dynDrawer"&gt;' +
+      '&lt;div class="ak-drawer-backdrop"&gt;&lt;/div&gt;' +
+      '&lt;div class="ak-drawer-content"&gt;' +
+        '&lt;div class="ak-drawer-body"&gt;' +
+          '&lt;button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#dynSub"&gt;' +
+            '&lt;span class="ak-drawer-item-icon"&gt;📂&lt;/span&gt;' +
+            '&lt;span&gt;Sección&lt;/span&gt;' +
+            '&lt;svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" ' +
+              'fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;"&gt;' +
+              '&lt;path d="M9 18l6-6-6-6"/&gt;&lt;/svg&gt;' +
+          '&lt;/button&gt;' +
+          '&lt;div id="dynSub" class="ak-drawer-sub"&gt;' +
+            '&lt;a class="ak-drawer-sub-item"&gt;Sub 1&lt;/a&gt;' +
+            '&lt;a class="ak-drawer-sub-item"&gt;Sub 2&lt;/a&gt;' +
+          '&lt;/div&gt;' +
+        '&lt;/div&gt;' +
+      '&lt;/div&gt;' +
+    '&lt;/div&gt;';
+  document.getElementById('drawerDynamicContainer').innerHTML = html;
+  AgrocityKit.initElement(document.getElementById('drawerDynamicContainer'));
+}</pre>
+      <script>
+      function crearDrawerDinamico() {
+        var html = '<button class="ak-btn" data-ak-toggle="drawer" data-ak-target="#dynDrawer">Abrir drawer dinámico</button>' +
+          '<div class="ak-drawer" id="dynDrawer">' +
+            '<div class="ak-drawer-backdrop"></div>' +
+            '<div class="ak-drawer-content" style="width:300px;">' +
+              '<div class="ak-drawer-body">' +
+                '<button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#dynSub">' +
+                  '<span class="ak-drawer-item-icon">📂</span>' +
+                  '<span>Sección</span>' +
+                  '<svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>' +
+                '</button>' +
+                '<div id="dynSub" class="ak-drawer-sub">' +
+                  '<a class="ak-drawer-sub-item">Sub 1</a>' +
+                  '<a class="ak-drawer-sub-item">Sub 2</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        document.getElementById('drawerDynamicContainer').innerHTML = html;
+        AgrocityKit.initElement(document.getElementById('drawerDynamicContainer'));
+      }
+      </script>
+    </section>
+
+    <!-- ================================================================
+         TABS
+         ================================================================ -->
+    <section id="tabs">
+      <h2>Tabs</h2>
+      <p>Usa <code>.ak-nav-tabs</code> + <code>.ak-tab-content</code>. Cada tab con <code>data-ak-toggle="tab"</code> y <code>data-ak-target="#id"</code>.</p>
+      <div class="ak-docs-card">
+        <h3 style="font-size:0.95rem;margin:0 0 8px;color:var(--ak-text-muted);">Simples</h3>
+        <ul class="ak-nav ak-nav-tabs" role="tablist">
+          <li class="ak-nav-item" role="presentation">
+            <button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-simp1" role="tab">Pestaña 1</button>
+          </li>
+          <li class="ak-nav-item" role="presentation">
+            <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-simp2" role="tab">Pestaña 2</button>
+          </li>
+          <li class="ak-nav-item" role="presentation">
+            <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-simp3" role="tab">Pestaña 3</button>
+          </li>
+        </ul>
+        <div class="ak-tab-content">
+          <div class="ak-tab-pane ak-active" id="tab-simp1" role="tabpanel"><p>Contenido de la Pestaña 1.</p></div>
+          <div class="ak-tab-pane" id="tab-simp2" role="tabpanel"><p>Contenido de la Pestaña 2.</p></div>
+          <div class="ak-tab-pane" id="tab-simp3" role="tabpanel"><p>Contenido de la Pestaña 3.</p></div>
+        </div>
+
+        <h3 style="font-size:0.95rem;margin:16px 0 8px;color:var(--ak-text-muted);">Con borde</h3>
+        <ul class="ak-nav ak-nav-tabs" role="tablist">
+          <li><button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-b1">Maíz</button></li>
+          <li><button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-b2">Trigo</button></li>
+          <li><button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-b3">Soya</button></li>
+        </ul>
+        <div class="ak-tab-content ak-tab-content-bordered">
+          <div class="ak-tab-pane ak-active" id="tab-b1"><p>Contenido con borde para Maíz.</p></div>
+          <div class="ak-tab-pane" id="tab-b2"><p>Contenido con borde para Trigo.</p></div>
+          <div class="ak-tab-pane" id="tab-b3"><p>Contenido con borde para Soya.</p></div>
+        </div>
+
+        <h3 style="font-size:0.95rem;margin:16px 0 8px;color:var(--ak-text-muted);">Verticales</h3>
+        <div class="ak-nav-tabs-vertical">
+          <ul class="ak-nav ak-nav-tabs" role="tablist">
+            <li><button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-v1">Maíz</button></li>
+            <li><button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-v2">Trigo</button></li>
+            <li><button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-v3">Soya</button></li>
+          </ul>
+          <div class="ak-tab-content">
+            <div class="ak-tab-pane ak-active" id="tab-v1"><p>Vertical Maíz.</p></div>
+            <div class="ak-tab-pane" id="tab-v2"><p>Vertical Trigo.</p></div>
+            <div class="ak-tab-pane" id="tab-v3"><p>Vertical Soya.</p></div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;!-- Simples --&gt;
+&lt;ul class="ak-nav ak-nav-tabs"&gt;
+  &lt;li&gt;&lt;button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#t1"&gt;Tab 1&lt;/button&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="ak-tab-content"&gt;
+  &lt;div class="ak-tab-pane ak-active" id="t1"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Con borde: .ak-tab-content-bordered --&gt;
+&lt;!-- Verticales: .ak-nav-tabs-vertical --&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-nav</code></td><td>Lista de navegación base</td></tr>
+        <tr><td><code>.ak-nav-tabs</code></td><td>Tabs con borde inferior</td></tr>
+        <tr><td><code>.ak-nav-pills</code></td><td>Píldoras con fondo activo</td></tr>
+        <tr><td><code>.ak-nav-link</code></td><td>Elemento de navegación</td></tr>
+        <tr><td><code>.ak-tab-content</code></td><td>Contenedor de paneles</td></tr>
+        <tr><td><code>.ak-tab-content-bordered</code></td><td>Borde envolvente sin borde superior</td></tr>
+        <tr><td><code>.ak-tab-pane</code></td><td>Panel individual</td></tr>
+        <tr><td><code>.ak-nav-tabs-vertical</code></td><td>Tabs verticales (flex row)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         COLLAPSE / ACORDEÓN
+         ================================================================ -->
+    <section id="collapse">
+      <h2>Collapse / Acordeón</h2>
+      <p>Collapse individual con <code>data-ak-toggle="collapse"</code>. Acordeón con <code>data-ak-toggle="accordion"</code> (cierre mutuo).</p>
+      <div class="ak-docs-card" style="max-width:500px;">
+        <button class="ak-btn ak-btn-primary ak-btn-sm" data-ak-toggle="collapse" data-ak-target="#demoCollapse">Alternar</button>
+        <div class="ak-collapse" id="demoCollapse" style="margin-top:8px;">
+          <div class="ak-card ak-card-body">Contenido colapsable.</div>
+        </div>
+      </div>
+      <div class="ak-docs-card" style="max-width:500px;">
+        <div class="ak-accordion">
+          <div class="ak-accordion-item">
+            <button class="ak-accordion-header" data-ak-toggle="accordion" data-ak-target="#acc1" style="width:100%;">Item 1</button>
+            <div class="ak-accordion-body" id="acc1">Contenido 1</div>
+          </div>
+          <div class="ak-accordion-item">
+            <button class="ak-accordion-header" data-ak-toggle="accordion" data-ak-target="#acc2" style="width:100%;">Item 2</button>
+            <div class="ak-accordion-body" id="acc2">Contenido 2</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Acordeón (apertura única)</h3>
+      <div class="ak-accordion" style="max-width:500px;">
+        <div class="ak-accordion-item">
+          <button class="ak-accordion-button" data-ak-toggle="accordion" data-ak-target="#accD1" style="width:100%;font-weight:600;">Item 1</button>
+          <div id="accD1" class="ak-accordion-body ak-show">Contenido del primer ítem.</div>
+        </div>
+        <div class="ak-accordion-item">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#accD2" style="width:100%;font-weight:600;">Item 2</button>
+          <div id="accD2" class="ak-accordion-body ak-collapse">Contenido del segundo ítem.</div>
+        </div>
+        <div class="ak-accordion-item">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#accD3" style="width:100%;font-weight:600;">Item 3</button>
+          <div id="accD3" class="ak-accordion-body ak-collapse">Contenido del tercer ítem.</div>
+        </div>
+      </div>
+
+      <h3>Acordeón múltiple (data-ak-multiple)</h3>
+      <div class="ak-accordion" data-ak-multiple style="max-width:500px;">
+        <div class="ak-accordion-item">
+          <button class="ak-accordion-button" data-ak-toggle="accordion" data-ak-target="#accM1" style="width:100%;font-weight:600;">Panel 1</button>
+          <div id="accM1" class="ak-accordion-body ak-show">Varios abiertos a la vez.</div>
+        </div>
+        <div class="ak-accordion-item">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#accM2" style="width:100%;font-weight:600;">Panel 2</button>
+          <div id="accM2" class="ak-accordion-body ak-collapse">No se cierra al abrir otro.</div>
+        </div>
+      </div>
+
+      <pre class="ak-docs-code">&lt;!-- Collapse individual --&gt;
+&lt;button data-ak-toggle="collapse" data-ak-target="#id"&gt;Alternar&lt;/button&gt;
+&lt;div class="ak-collapse" id="id"&gt;...&lt;/div&gt;
+
+&lt;!-- Acordeón --&gt;
+&lt;div class="ak-accordion"&gt;
+  &lt;div class="ak-accordion-item"&gt;
+    &lt;button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#id1"&gt;Item 1&lt;/button&gt;
+    &lt;div class="ak-accordion-collapse collapse" id="id1"&gt;
+      &lt;div class="ak-accordion-body"&gt;...&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-collapse</code></td><td>Elemento colapsable (oculto)</td></tr>
+        <tr><td><code>.ak-collapsing</code></td><td>Estado de animación (JS)</td></tr>
+        <tr><td><code>.ak-accordion</code></td><td>Contenedor de acordeón</td></tr>
+        <tr><td><code>.ak-accordion-item</code></td><td>Ítem del acordeón</td></tr>
+        <tr><td><code>.ak-accordion-button</code></td><td>Botón header (con flecha chevron)</td></tr>
+        <tr><td><code>.ak-accordion-body</code></td><td>Cuerpo del ítem</td></tr>
+        <tr><td><code>.ak-collapsed</code></td><td>Estado colapsado (rotación flecha)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         ALERTAS
+         ================================================================ -->
+    <section id="alertas">
+      <h2>Alertas</h2>
+      <p>Usa <code>.ak-alert</code> + variante de color. Cierre con <code>data-ak-dismiss="alert"</code>.</p>
+      <div class="ak-docs-card">
+        <div class="ak-alert ak-alert-primary" role="alert"><strong>Info:</strong> Nuevos datos de riego disponibles.</div>
+        <div class="ak-alert ak-alert-secondary" role="alert"><strong>Nota:</strong> Sincronización completada.</div>
+        <div class="ak-alert ak-alert-success" role="alert"><strong>¡Éxito!</strong> Reporte generado correctamente.</div>
+        <div class="ak-alert ak-alert-warning" role="alert"><strong>Advertencia:</strong> Niveles de humedad bajos.</div>
+        <div class="ak-alert ak-alert-danger" role="alert"><strong>Error:</strong> No se pudo conectar con el sensor.</div>
+        <div class="ak-alert ak-alert-info ak-alert-dismissible ak-fade" role="alert" id="alert-demo">
+          <strong>Descartable:</strong> Haz clic en la X para cerrar.
+          <button class="ak-btn-close" data-ak-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-alert ak-alert-primary"&gt;
+  Mensaje
+  &lt;button class="ak-btn-close" data-ak-dismiss="alert"&gt;&lt;/button&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-alert</code></td><td>Base para alerta</td></tr>
+        <tr><td><code>.ak-alert-primary</code></td><td>Variante primaria (verde)</td></tr>
+        <tr><td><code>.ak-alert-secondary</code></td><td>Variante secundaria (azul)</td></tr>
+        <tr><td><code>.ak-alert-success</code></td><td>Variante éxito</td></tr>
+        <tr><td><code>.ak-alert-danger</code></td><td>Variante peligro</td></tr>
+        <tr><td><code>.ak-alert-warning</code></td><td>Variante advertencia</td></tr>
+        <tr><td><code>.ak-alert-info</code></td><td>Variante información</td></tr>
+        <tr><td><code>.ak-alert-dismissible</code></td><td>Padding extra para botón de cierre</td></tr>
+        <tr><td><code>.ak-btn-close</code></td><td>Botón de cierre universal (×)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         TOAST
+         ================================================================ -->
+    <section id="toast">
+      <h2>Toast</h2>
+      <p>Usa <code>AgrocityKit.showToast("mensaje", opciones)</code>. Opciones: <code>type</code> (primary/success/danger/warning/info), <code>delay</code> (ms), <code>title</code>.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.showToast('Toast primary', {type:'primary'})">Primary</button>
+        <button class="ak-btn ak-btn-sm ak-btn-success" onclick="AgrocityKit.showToast('Operación exitosa', {type:'success'})">Success</button>
+        <button class="ak-btn ak-btn-sm ak-btn-danger" onclick="AgrocityKit.showToast('Error simulado', {type:'danger'})">Danger</button>
+        <button class="ak-btn ak-btn-sm ak-btn-warning" onclick="AgrocityKit.showToast('Cuidado', {type:'warning'})">Warning</button>
+      </div>
+      <pre class="ak-docs-code">AgrocityKit.showToast('Mensaje', { type: 'success', delay: 3000, title: 'Éxito' });</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-toast-container</code></td><td>Contenedor fijo (esquina superior derecha)</td></tr>
+        <tr><td><code>.ak-toast</code></td><td>Toast individual con borde lateral de color</td></tr>
+        <tr><td><code>.ak-toast-primary</code></td><td>Borde/icono primario</td></tr>
+        <tr><td><code>.ak-toast-success</code></td><td>Borde/icono éxito</td></tr>
+        <tr><td><code>.ak-toast-danger</code></td><td>Borde/icono peligro</td></tr>
+        <tr><td><code>.ak-toast-warning</code></td><td>Borde/icono advertencia</td></tr>
+        <tr><td><code>.ak-toast-info</code></td><td>Borde/icono información</td></tr>
+        <tr><td><code>.ak-toast-icon-wrap</code></td><td>Círculo de fondo para el icono</td></tr>
+        <tr><td><code>.ak-toast-body</code></td><td>Cuerpo del toast (título + mensaje)</td></tr>
+        <tr><td><code>.ak-toast-title</code></td><td>Título opcional dentro del body</td></tr>
+        <tr><td><code>.ak-btn-close</code></td><td>Botón de cierre (×)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         TOOLTIP / POPOVER
+         ================================================================ -->
+    <section id="tooltip">
+      <h2>Tooltip / Popover</h2>
+      <p>Tooltips con <code>data-ak-tooltip</code>, popovers con <code>data-ak-popover</code>. Placement: top (default), bottom, left, right.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip arriba" data-ak-placement="top">Arriba</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip abajo" data-ak-placement="bottom">Abajo</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip izquierda" data-ak-placement="left">Izquierda</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip derecha" data-ak-placement="right">Derecha</button>
+      </div>
+      <div class="ak-docs-row" style="margin-top:12px;">
+        <button class="ak-btn ak-btn-sm ak-btn-primary" data-ak-popover data-ak-title="Info del sensor" data-ak-content="Sensor SHT31-D. Precisión: ±2% HR." data-ak-placement="top">Popover clic</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" data-ak-popover data-ak-title="Rendimiento" data-ak-content="4.2 ton/ha para maíz." data-ak-placement="bottom" data-ak-trigger="hover">Popover hover</button>
+      </div>
+      <pre class="ak-docs-code">&lt;button data-ak-tooltip data-ak-title="Texto arriba" data-ak-placement="top"&gt;Tooltip&lt;/button&gt;
+&lt;button data-ak-popover data-ak-title="Título" data-ak-content="Contenido" data-ak-placement="bottom"&gt;Popover&lt;/button&gt;
+&lt;button data-ak-tooltip data-ak-title="Izquierda" data-ak-placement="left"&gt;Izq&lt;/button&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-tooltip</code></td><td>Tooltip flotante (creado por JS)</td></tr>
+        <tr><td><code>.ak-popover</code></td><td>Popover con header + body</td></tr>
+        <tr><td><code>.ak-popover-header</code></td><td>Encabezado del popover</td></tr>
+        <tr><td><code>.ak-popover-body</code></td><td>Cuerpo del popover</td></tr>
+        <tr><td><code>.ak-popover-arrow</code></td><td>Flecha decorativa</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         DROPDOWN
+         ================================================================ -->
+    <section id="dropdown">
+      <h2>Dropdown</h2>
+      <p>Menú contextual con <code>data-ak-toggle="dropdown"</code>.</p>
+      <div class="ak-docs-card">
+        <div class="ak-docs-row">
+          <div class="ak-dropdown">
+            <button class="ak-btn ak-btn-primary ak-btn-sm" data-ak-toggle="dropdown">Acciones ▾</button>
+            <div class="ak-dropdown-menu">
+              <span class="ak-dropdown-header">Cultivo</span>
+              <a class="ak-dropdown-item" href="#">Ver detalle</a>
+              <a class="ak-dropdown-item" href="#">Editar</a>
+              <hr class="ak-dropdown-divider" />
+              <a class="ak-dropdown-item" href="#">Eliminar</a>
+            </div>
+          </div>
+          <div class="ak-dropdown">
+            <button class="ak-btn ak-btn-secondary ak-btn-sm" data-ak-toggle="dropdown">Exportar ▾</button>
+            <div class="ak-dropdown-menu ak-dropdown-menu-end">
+              <a class="ak-dropdown-item" href="#">CSV</a>
+              <a class="ak-dropdown-item" href="#">Excel</a>
+              <a class="ak-dropdown-item" href="#">PDF</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-dropdown"&gt;
+  &lt;button data-ak-toggle="dropdown"&gt;Acciones ▾&lt;/button&gt;
+  &lt;div class="ak-dropdown-menu"&gt;
+    &lt;span class="ak-dropdown-header"&gt;Sección&lt;/span&gt;
+    &lt;a class="ak-dropdown-item" href="#"&gt;Acción&lt;/a&gt;
+    &lt;hr class="ak-dropdown-divider" /&gt;
+    &lt;a class="ak-dropdown-item" href="#"&gt;Eliminar&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- Alineado a la derecha --&gt;
+&lt;div class="ak-dropdown-menu ak-dropdown-menu-end"&gt;...&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-dropdown</code></td><td>Contenedor relativo</td></tr>
+        <tr><td><code>.ak-dropdown-menu</code></td><td>Menú desplegable (oculto por defecto)</td></tr>
+        <tr><td><code>.ak-dropdown-item</code></td><td>Elemento del menú</td></tr>
+        <tr><td><code>.ak-dropdown-divider</code></td><td>Separador visual</td></tr>
+        <tr><td><code>.ak-dropdown-header</code></td><td>Encabezado de sección</td></tr>
+        <tr><td><code>.ak-dropdown-menu-end</code></td><td>Alinea el menú a la derecha</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         SWITCH
+         ================================================================ -->
+    <section id="switch">
+      <h2>Switch</h2>
+      <p>Toggle estilo Material Design con animación de onda. Usa <code>.ak-form-check.ak-form-switch</code>.</p>
+      <div class="ak-docs-card">
+        <div class="ak-form-check ak-form-switch">
+          <input class="ak-form-switch-input" type="checkbox" id="swDemo1" checked />
+          <label class="ak-form-switch-toggle" for="swDemo1"><span></span></label>
+          <label class="ak-form-check-label" for="swDemo1">Modo oscuro</label>
+        </div>
+        <div class="ak-form-check ak-form-switch">
+          <input class="ak-form-switch-input" type="checkbox" id="swDemo2" />
+          <label class="ak-form-switch-toggle" for="swDemo2"><span></span></label>
+          <label class="ak-form-check-label" for="swDemo2">Notificaciones</label>
+        </div>
+        <div class="ak-form-check ak-form-switch">
+          <input class="ak-form-switch-input" type="checkbox" id="swDemo3" disabled />
+          <label class="ak-form-switch-toggle" for="swDemo3"><span></span></label>
+          <label class="ak-form-check-label" for="swDemo3">Deshabilitado</label>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-form-check ak-form-switch"&gt;
+  &lt;input class="ak-form-switch-input" type="checkbox" id="sw1" /&gt;
+  &lt;label class="ak-form-switch-toggle" for="sw1"&gt;&lt;span&gt;&lt;/span&gt;&lt;/label&gt;
+  &lt;label class="ak-form-check-label" for="sw1"&gt;Etiqueta&lt;/label&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-form-check.ak-form-switch</code></td><td>Contenedor flex del switch</td></tr>
+        <tr><td><code>.ak-form-switch-input</code></td><td>Checkbox oculto (control)</td></tr>
+        <tr><td><code>.ak-form-switch-toggle</code></td><td>Track + thumb visual</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         CHECKBOX / RADIO
+         ================================================================ -->
+    <section id="checkbox">
+      <h2>Checkbox / Radio</h2>
+      <p>Usa <code>.ak-form-check</code> con <code>.ak-form-check-input</code> + <code>.ak-form-check-label</code> para estilo Material Design.</p>
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-6">
+            <p class="ak-text-muted ak-mb-1">Checkboxes</p>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="checkbox" id="chkDemo1" checked />
+              <label class="ak-form-check-label" for="chkDemo1">Checkbox checked</label>
+            </div>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="checkbox" id="chkDemo2" />
+              <label class="ak-form-check-label" for="chkDemo2">Checkbox unchecked</label>
+            </div>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="checkbox" id="chkDemo3" disabled />
+              <label class="ak-form-check-label" for="chkDemo3">Checkbox disabled</label>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6">
+            <p class="ak-text-muted ak-mb-1">Radios</p>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="radio" name="rdDemo" id="radDemo1" checked />
+              <label class="ak-form-check-label" for="radDemo1">Opción A</label>
+            </div>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="radio" name="rdDemo" id="radDemo2" />
+              <label class="ak-form-check-label" for="radDemo2">Opción B</label>
+            </div>
+            <div class="ak-form-check">
+              <input class="ak-form-check-input" type="radio" name="rdDemo" id="radDemo3" disabled />
+              <label class="ak-form-check-label" for="radDemo3">Opción C (disabled)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-form-check"&gt;
+  &lt;input class="ak-form-check-input" type="checkbox" id="chk1" /&gt;
+  &lt;label class="ak-form-check-label" for="chk1"&gt;Etiqueta&lt;/label&gt;
+&lt;/div&gt;
+
+&lt;div class="ak-form-check"&gt;
+  &lt;input class="ak-form-check-input" type="radio" name="r" id="rad1" /&gt;
+  &lt;label class="ak-form-check-label" for="rad1"&gt;Radio&lt;/label&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-form-check</code></td><td>Contenedor flex con gap</td></tr>
+        <tr><td><code>.ak-form-check-input</code></td><td>Input checkbox/radio con estilo MD</td></tr>
+        <tr><td><code>.ak-form-check-label</code></td><td>Texto de la etiqueta (cambia cursor)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         TIMEPICKER
+         ================================================================ -->
+    <section id="timepicker">
+      <h2>TimePicker</h2>
+      <p>Inicializa con <code>AgrocityKit.timepicker(selector)</code> sobre un <code>&lt;input type="time"&gt;</code>.</p>
+      <div class="ak-docs-card">
+        <input type="time" id="demoTimepicker" class="ak-form-control" value="08:30" style="width:160px;" />
+      </div>
+      <h3>TimeRange</h3>
+      <p>Enlaza dos timepickers con <code>data-ak-time-range</code>. Valida que inicio &lt; fin.</p>
+      <div data-ak-time-range style="display:flex;gap:16px;flex-wrap:wrap;max-width:400px;">
+        <div style="flex:1;">
+          <label class="ak-form-label">Inicio</label>
+          <input type="time" class="ak-form-control" data-ak-timepicker value="08:00" />
+        </div>
+        <div style="flex:1;">
+          <label class="ak-form-label">Fin</label>
+          <input type="time" class="ak-form-control" data-ak-timepicker value="17:00" />
+        </div>
+      </div>
+
+      <pre class="ak-docs-code">&lt;input type="time" id="miTimepicker" class="ak-form-control" /&gt;
+&lt;script&gt;AgrocityKit.timepicker('#miTimepicker');&lt;/script&gt;
+
+&lt;!-- TimeRange --&gt;
+&lt;div data-ak-time-range&gt;
+  &lt;input type="time" data-ak-timepicker value="08:00" /&gt;
+  &lt;input type="time" data-ak-timepicker value="17:00" /&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-timepicker</code></td><td>Contenedor del TimePicker</td></tr>
+        <tr><td><code>.ak-timepicker-input</code></td><td>Input con ícono de reloj</td></tr>
+        <tr><td><code>.ak-timepicker-dropdown</code></td><td>Dropdown con rueda de selección</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         DATEPICKER
+         ================================================================ -->
+    <section id="datepicker">
+      <h2>DatePicker</h2>
+      <p>Inicializa con <code>AgrocityKit.datepicker(selector, opciones)</code> o <code>data-ak-datepicker</code> sobre un <code>&lt;input&gt;</code>. Soporta 3 vistas (días/meses/años), rango de fechas, exclusión y <code>DateRange</code>.</p>
+
+      <div class="ak-docs-row" style="margin-bottom:12px;">
+        <div style="max-width:240px;">
+          <label class="ak-form-label">Fecha simple</label>
+          <input type="text" id="demoDatepicker" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA" />
+        </div>
+        <div style="max-width:240px;">
+          <label class="ak-form-label">Fecha + Hora</label>
+          <input type="text" id="demoDatepicker2" class="ak-form-control" data-ak-datepicker value="2025-12-25" />
+        </div>
+      </div>
+
+      <h3>DateRange</h3>
+      <p>Enlaza dos datepickers con <code>data-ak-date-range</code> (fin no puede ser anterior a inicio).</p>
+      <div data-ak-date-range style="display:flex;gap:16px;flex-wrap:wrap;max-width:520px;">
+        <div style="flex:1;">
+          <label class="ak-form-label">Inicio</label>
+          <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY" data-ak-placeholder="Inicio" />
+        </div>
+        <div style="flex:1;">
+          <label class="ak-form-label">Fin</label>
+          <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY" data-ak-placeholder="Fin" />
+        </div>
+      </div>
+
+      <h3>DatePicker con hora</h3>
+      <p>Combina fecha y hora usando <code>data-ak-datetime</code>. Usa los mismos data-atributos del datepicker más formato con hora.</p>
+      <div style="max-width:240px;">
+        <label class="ak-form-label">Fecha y hora</label>
+        <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm" data-ak-placeholder="DD/MM/AAAA HH:mm" />
+      </div>
+
+      <pre class="ak-docs-code">&lt;!-- DatePicker simple --&gt;
+&lt;input type="text" data-ak-datepicker data-ak-format="DD/MM/YYYY" /&gt;
+
+&lt;!-- DateRange --&gt;
+&lt;div data-ak-date-range&gt;
+  &lt;input type="text" data-ak-datepicker data-ak-placeholder="Inicio" /&gt;
+  &lt;input type="text" data-ak-datepicker data-ak-placeholder="Fin" /&gt;
+&lt;/div&gt;
+
+&lt;!-- JS init --&gt;
+&lt;script&gt;
+  AgrocityKit.datepicker('#miInput', {
+    format: 'YYYY-MM-DD',
+    minDate: '2024-01-01',
+    maxDate: '2026-12-31',
+    autoclose: true,
+    todayHighlight: true
+  });
+&lt;/script&gt;</pre>
+
+      <h4>Opciones JS</h4>
+      <table class="ak-docs-table">
+        <tr><th>Opción</th><th>Default</th><th>Descripción</th></tr>
+        <tr><td><code>format</code></td><td><code>"YYYY-MM-DD"</code></td><td>Formato de fecha</td></tr>
+        <tr><td><code>placeholder</code></td><td><code>"Selecciona fecha..."</code></td><td>Placeholder del input</td></tr>
+        <tr><td><code>minDate</code></td><td><code>null</code></td><td>Fecha mínima seleccionable</td></tr>
+        <tr><td><code>maxDate</code></td><td><code>null</code></td><td>Fecha máxima seleccionable</td></tr>
+        <tr><td><code>excludeDates</code></td><td><code>[]</code></td><td>Array de fechas a deshabilitar</td></tr>
+        <tr><td><code>daysOfWeekDisabled</code></td><td><code>[]</code></td><td>Días de semana deshabilitados (0=Dom, 6=Sáb)</td></tr>
+        <tr><td><code>autoclose</code></td><td><code>true</code></td><td>Cerrar al seleccionar</td></tr>
+        <tr><td><code>todayBtn</code></td><td><code>true</code></td><td>Botón "Hoy" en el footer</td></tr>
+        <tr><td><code>clearBtn</code></td><td><code>true</code></td><td>Botón "Limpiar" en el footer</td></tr>
+        <tr><td><code>todayHighlight</code></td><td><code>true</code></td><td>Resaltar fecha actual</td></tr>
+        <tr><td><code>startView</code></td><td><code>0</code></td><td>0=días, 1=meses, 2=años</td></tr>
+      </table>
+
+      <h4>Eventos</h4>
+      <table class="ak-docs-table">
+        <tr><th>Evento</th><th>Detalle</th><th>Descripción</th></tr>
+        <tr><td><code>ak:datepicker:change</code></td><td><code>{value, date}</code></td><td>Fecha cambiada</td></tr>
+      </table>
+
+      <h4>Atributos data</h4>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>data-ak-datepicker</code></td><td>Inicializa el DatePicker</td></tr>
+        <tr><td><code>data-ak-date-range</code></td><td>Enlaza dos DatePickers como rango</td></tr>
+        <tr><td><code>data-ak-format</code></td><td>Formato de fecha</td></tr>
+        <tr><td><code>data-ak-placeholder</code></td><td>Placeholder</td></tr>
+        <tr><td><code>min</code> / <code>max</code></td><td>Fecha mínima/máxima (atributos nativos)</td></tr>
+        <tr><td><code>data-ak-exclude-dates</code></td><td>Fechas a excluir (separadas por coma)</td></tr>
+        <tr><td><code>data-ak-days-of-week-disabled</code></td><td>Días deshabilitados (ej: "0,6" para fin de semana)</td></tr>
+      </table>
+    </section>
+
+    <!-- ================================================================
+         LOADER
+         ================================================================ -->
+    <section id="loader">
+      <h2>Loader</h2>
+      <p>Pantalla completa con <code>AgrocityKit.loader(true, mensajes)</code>.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.loader(true, ['Cargando...', 'Procesando...']);setTimeout(function(){AgrocityKit.loader(false)},2500)">Mostrar loader 2.5s</button>
+      </div>
+      <pre class="ak-docs-code">AgrocityKit.loader(true, ["Cargando...", "Procesando..."]);
+setTimeout(function(){ AgrocityKit.loader(false); }, 3000);</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-loader</code></td><td>Overlay de carga (creado por JS)</td></tr>
+        <tr><td><code>.ak-spinner</code></td><td>Spinner animado (rotación)</td></tr>
+        <tr><td><code>.ak-spinner-border</code></td><td>Spinner circular estilo Bootstrap</td></tr>
+        <tr><td><code>.ak-spinner-border-sm</code></td><td>Spinner pequeño</td></tr>
+        <tr><td><code>.ak-spinner-grow</code></td><td>Spinner de pulsación</td></tr>
+        <tr><td><code>.ak-skeleton</code></td><td>Placeholder de carga con shimmer</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         PLACEHOLDERS / SKELETON
+         ================================================================ -->
+    <section id="placeholders">
+      <h2>Placeholders (Skeleton loading)</h2>
+      <p>Esqueletos de carga con animación shimmer. Usa <code>.ak-placeholder-glow</code> en el contenedor y <code>.ak-placeholder</code> con clases de columna (<code>.ak-col-6</code>) para el ancho.</p>
+      <div class="ak-card" style="max-width:360px;">
+        <div class="ak-card-body ak-placeholder-glow">
+          <h5 class="ak-card-title">
+            <span class="ak-placeholder ak-col-6"></span>
+          </h5>
+          <p>
+            <span class="ak-placeholder ak-col-7"></span>
+            <span class="ak-placeholder ak-col-4"></span>
+            <span class="ak-placeholder ak-col-4"></span>
+            <span class="ak-placeholder ak-col-6"></span>
+            <span class="ak-placeholder ak-col-8"></span>
+          </p>
+          <a href="#" class="ak-btn ak-btn-primary ak-disabled ak-placeholder ak-col-6"></a>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-card"&gt;
+  &lt;div class="ak-card-body ak-placeholder-glow"&gt;
+    &lt;h5 class="ak-card-title"&gt;
+      &lt;span class="ak-placeholder ak-col-6"&gt;&lt;/span&gt;
+    &lt;/h5&gt;
+    &lt;p&gt;
+      &lt;span class="ak-placeholder ak-col-7"&gt;&lt;/span&gt;
+      &lt;span class="ak-placeholder ak-col-4"&gt;&lt;/span&gt;
+      &lt;span class="ak-placeholder ak-col-4"&gt;&lt;/span&gt;
+      &lt;span class="ak-placeholder ak-col-6"&gt;&lt;/span&gt;
+      &lt;span class="ak-placeholder ak-col-8"&gt;&lt;/span&gt;
+    &lt;/p&gt;
+    &lt;a href="#" class="ak-btn ak-btn-primary ak-disabled ak-placeholder ak-col-6"&gt;&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-placeholder-glow</code></td><td>Contenedor con animación shimmer</td></tr>
+        <tr><td><code>.ak-placeholder</code></td><td>Barra de carga esqueleto</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         DIALOG
+         ================================================================ -->
+    <section id="dialog">
+      <h2>Dialog (Alert / Confirm / Prompt)</h2>
+      <p>Diálogos modales tipo Bootbox. Usan la misma estructura que <code>.ak-modal</code>.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.alert('Mensaje de alerta')">Alert</button>
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.alert('Título','Mensaje con título')">Alert con título</button>
+        <button class="ak-btn ak-btn-sm ak-btn-success" onclick="AgrocityKit.confirm('¿Está seguro?',function(r){AgrocityKit.showToast('Respuesta: '+r,{type:r?'success':'warning'})})">Confirm</button>
+        <button class="ak-btn ak-btn-sm ak-btn-secondary" onclick="AgrocityKit.prompt('Ingrese un valor','',function(r){AgrocityKit.showToast('Ingresó: '+r,{type:r?'success':'warning'})})">Prompt</button>
+      </div>
+      <pre class="ak-docs-code">AgrocityKit.alert("Mensaje");
+AgrocityKit.alert("Título", "Mensaje");
+AgrocityKit.confirm("¿Seguro?", function(resultado){ ... });
+AgrocityKit.prompt("Ingrese valor", "default", function(valor){ ... });</pre>
+    </section>
+
+    <!-- ================================================================
+         CARRUSEL
+         ================================================================ -->
+    <section id="carousel">
+      <h2>Carrusel</h2>
+      <p>Con <code>data-ak-carousel</code>.</p>
+      <div class="ak-docs-card">
+        <div class="ak-carousel" data-ak-carousel data-ak-interval="3000" style="max-width:500px;">
+          <div class="ak-carousel-inner">
+            <div class="ak-carousel-item ak-active" style="background:var(--ak-primary);color:#fff;padding:60px 20px;text-align:center;font-size:1.2rem;">Slide 1</div>
+            <div class="ak-carousel-item" style="background:var(--ak-secondary);color:#fff;padding:60px 20px;text-align:center;font-size:1.2rem;">Slide 2</div>
+            <div class="ak-carousel-item" style="background:var(--ak-success);color:#fff;padding:60px 20px;text-align:center;font-size:1.2rem;">Slide 3</div>
+          </div>
+          <button class="ak-carousel-control-prev" data-ak-carousel-prev><span class="ak-carousel-control-icon">‹</span></button>
+          <button class="ak-carousel-control-next" data-ak-carousel-next><span class="ak-carousel-control-icon">›</span></button>
+          <div class="ak-carousel-indicators"></div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div data-ak-carousel data-ak-interval="4000"&gt;
+  &lt;div class="ak-carousel-inner"&gt;
+    &lt;div class="ak-carousel-item ak-active"&gt;Slide 1&lt;/div&gt;
+    &lt;div class="ak-carousel-item"&gt;Slide 2&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class="ak-carousel-control-prev" data-ak-carousel-prev&gt;&lt;span&gt;‹&lt;/span&gt;&lt;/button&gt;
+  &lt;button class="ak-carousel-control-next" data-ak-carousel-next&gt;&lt;span&gt;›&lt;/span&gt;&lt;/button&gt;
+  &lt;div class="ak-carousel-indicators"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-carousel</code></td><td>Contenedor del carrusel</td></tr>
+        <tr><td><code>.ak-carousel-inner</code></td><td>Wrapper de las diapositivas</td></tr>
+        <tr><td><code>.ak-carousel-item</code></td><td>Diapositiva individual</td></tr>
+        <tr><td><code>.ak-carousel-control-prev</code></td><td>Botón anterior</td></tr>
+        <tr><td><code>.ak-carousel-control-next</code></td><td>Botón siguiente</td></tr>
+        <tr><td><code>.ak-carousel-indicators</code></td><td>Indicadores de posición</td></tr>
+        <tr><td><code>.ak-carousel-caption</code></td><td>Leyenda superpuesta</td></tr>
+        <tr><td><code>.ak-carousel-img</code></td><td>Imagen responsiva del carrusel</td></tr>
+      </table>
+      </details>
+      <p><strong>Atributos data:</strong> <code>data-ak-carousel</code>, <code>data-ak-interval</code> (ms), <code>data-ak-carousel-prev</code>, <code>data-ak-carousel-next</code>.</p>
+    </section>
+
+    <!-- ================================================================
+         CARD
+         ================================================================ -->
+    <section id="card">
+      <h2>Card</h2>
+      <p>Contenedor con borde, sombra y hover elevado.</p>
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card">
+              <div style="background:var(--ak-primary);color:#fff;padding:60px 20px;text-align:center;font-size:2rem;">🌽</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Campo de Maíz</h5>
+                <p class="ak-card-subtitle">Temporada 2025-2026</p>
+                <p class="ak-card-text">Seguimiento del ciclo productivo con métricas de riego y fertilización.</p>
+                <a href="#" class="ak-btn ak-btn-sm ak-btn-primary">Ver detalles</a>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card">
+              <div class="ak-card-header">Reporte semanal</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Rendimiento del cultivo</h5>
+                <p class="ak-card-text">Producción estimada: <strong>4.2 ton/ha</strong>.</p>
+                <a href="#" class="ak-card-link">Ver gráfica</a>
+                <a href="#" class="ak-card-link">Exportar</a>
+              </div>
+              <div class="ak-card-footer ak-text-muted">Actualizado hace 2 horas</div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card" style="border-color:var(--ak-primary);">
+              <div class="ak-card-header" style="background:var(--ak-primary);color:#fff;">Sensor activo</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Temperatura: 28°C</h5>
+                <p class="ak-card-text">Humedad: <strong>72%</strong>. Condiciones óptimas.</p>
+                <div class="ak-progress"><div class="ak-progress-bar" style="width:72%;"></div></div>
+                <small class="ak-text-muted">Humedad 72%</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-card"&gt;
+  &lt;!-- Imagen / icono arriba --&gt;
+  &lt;div class="ak-card-body"&gt;
+    &lt;h5 class="ak-card-title"&gt;Título&lt;/h5&gt;
+    &lt;p class="ak-card-text"&gt;Texto&lt;/p&gt;
+    &lt;a class="ak-btn ak-btn-sm ak-btn-primary" href="#"&gt;Acción&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Con header + footer --&gt;
+&lt;div class="ak-card"&gt;
+  &lt;div class="ak-card-header"&gt;Header&lt;/div&gt;
+  &lt;div class="ak-card-body"&gt;...&lt;/div&gt;
+  &lt;div class="ak-card-footer"&gt;Footer&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-card</code></td><td>Contenedor principal con borde y sombra</td></tr>
+        <tr><td><code>.ak-card-header</code></td><td>Encabezado con fondo alterno</td></tr>
+        <tr><td><code>.ak-card-body</code></td><td>Cuerpo flexible</td></tr>
+        <tr><td><code>.ak-card-footer</code></td><td>Footer con fondo alterno</td></tr>
+        <tr><td><code>.ak-card-title</code></td><td>Título de la tarjeta</td></tr>
+        <tr><td><code>.ak-card-subtitle</code></td><td>Subtítulo (color muted)</td></tr>
+        <tr><td><code>.ak-card-text</code></td><td>Párrafo de texto</td></tr>
+        <tr><td><code>.ak-card-img-top</code></td><td>Imagen en la parte superior</td></tr>
+        <tr><td><code>.ak-card-link</code></td><td>Link con color secundario</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         BADGE
+         ================================================================ -->
+    <section id="badge">
+      <h2>Badge</h2>
+      <p>Píldoras de estado con variantes de color y esquina para notificaciones.</p>
+      <div class="ak-docs-row">
+        <span class="ak-badge ak-badge-primary">Primary</span>
+        <span class="ak-badge ak-badge-success">Success</span>
+        <span class="ak-badge ak-badge-danger">Danger</span>
+        <span class="ak-badge ak-badge-warning">Warning</span>
+        <span class="ak-badge ak-badge-info">Info</span>
+        <span style="position:relative;padding:10px 16px;background:var(--ak-surface-alt);border-radius:var(--ak-radius);margin-left:16px;">
+          Notificaciones
+          <span class="ak-badge ak-badge-danger ak-badge-corner">3</span>
+        </span>
+      </div>
+      <pre class="ak-docs-code">&lt;span class="ak-badge ak-badge-primary"&gt;Primary&lt;/span&gt;
+&lt;span class="ak-badge ak-badge-danger ak-badge-corner"&gt;3&lt;/span&gt;
+&lt;span class="ak-badge-pill"&gt;Pill&lt;/span&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-badge</code></td><td>Píldora base (border-radius 999px)</td></tr>
+        <tr><td><code>.ak-badge-primary</code></td><td>Variante primaria (verde lima)</td></tr>
+        <tr><td><code>.ak-badge-success</code></td><td>Variante éxito</td></tr>
+        <tr><td><code>.ak-badge-danger</code></td><td>Variante peligro</td></tr>
+        <tr><td><code>.ak-badge-warning</code></td><td>Variante advertencia</td></tr>
+        <tr><td><code>.ak-badge-info</code></td><td>Variante información</td></tr>
+        <tr><td><code>.ak-badge-corner</code></td><td>Posición esquina superior derecha</td></tr>
+        <tr><td><code>.ak-badge-pill</code></td><td>Border-radius 999px (para badges genéricos)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         PROGRESS
+         ================================================================ -->
+    <section id="progress">
+      <h2>Progress</h2>
+      <p>Barras de progreso simples, rayadas o animadas.</p>
+      <div class="ak-docs-card" style="max-width:400px;">
+        <div class="ak-progress" style="margin-bottom:8px;">
+          <div class="ak-progress-bar" style="width:40%;">40%</div>
+        </div>
+        <div class="ak-progress" style="margin-bottom:8px;">
+          <div class="ak-progress-bar ak-progress-bar-striped" style="width:65%;">65%</div>
+        </div>
+        <div class="ak-progress">
+          <div class="ak-progress-bar ak-progress-bar-striped ak-progress-bar-animated" style="width:80%;">80%</div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-progress"&gt;
+  &lt;div class="ak-progress-bar" style="width:40%;"&gt;40%&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="ak-progress"&gt;
+  &lt;div class="ak-progress-bar ak-progress-bar-striped ak-progress-bar-animated" style="width:80%;"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-progress</code></td><td>Contenedor de la barra</td></tr>
+        <tr><td><code>.ak-progress-bar</code></td><td>Barra de progreso (color primary)</td></tr>
+        <tr><td><code>.ak-progress-bar-striped</code></td><td>Rayas diagonales</td></tr>
+        <tr><td><code>.ak-progress-bar-animated</code></td><td>Animación de rayas</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         SPINNER
+         ================================================================ -->
+    <section id="spinner">
+      <h2>Spinner</h2>
+      <p>Indicadores de carga circulares o de pulsación.</p>
+      <div class="ak-docs-row">
+        <div class="ak-spinner-border"></div>
+        <div class="ak-spinner-border ak-spinner-border-sm"></div>
+        <div class="ak-spinner-grow"></div>
+        <div class="ak-spinner-grow" style="width:1rem;height:1rem;"></div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-spinner-border"&gt;&lt;/div&gt;
+&lt;div class="ak-spinner-border ak-spinner-border-sm"&gt;&lt;/div&gt;
+&lt;div class="ak-spinner-grow"&gt;&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-spinner-border</code></td><td>Spinner circular rotatorio</td></tr>
+        <tr><td><code>.ak-spinner-border-sm</code></td><td>Spinner circular pequeño</td></tr>
+        <tr><td><code>.ak-spinner-grow</code></td><td>Spinner de pulsación</td></tr>
+        <tr><td><code>.ak-spinner</code></td><td>Spinner inline genérico</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         PAGINACIÓN
+         ================================================================ -->
+    <section id="pagination">
+      <h2>Paginación</h2>
+      <p>Navegación de páginas con estilo botones.</p>
+      <div class="ak-docs-card">
+        <ul class="ak-pagination">
+          <li class="ak-page-item ak-disabled"><span class="ak-page-link">‹</span></li>
+          <li class="ak-page-item ak-active"><span class="ak-page-link">1</span></li>
+          <li class="ak-page-item"><a class="ak-page-link" href="#">2</a></li>
+          <li class="ak-page-item"><a class="ak-page-link" href="#">3</a></li>
+          <li class="ak-page-item"><a class="ak-page-link" href="#">›</a></li>
+        </ul>
+      </div>
+      <pre class="ak-docs-code">&lt;ul class="ak-pagination"&gt;
+  &lt;li class="ak-page-item ak-disabled"&gt;&lt;span class="ak-page-link"&gt;‹&lt;/span&gt;&lt;/li&gt;
+  &lt;li class="ak-page-item ak-active"&gt;&lt;span class="ak-page-link"&gt;1&lt;/span&gt;&lt;/li&gt;
+  &lt;li class="ak-page-item"&gt;&lt;a class="ak-page-link" href="#"&gt;2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- Tamaño pequeño --&gt;
+&lt;ul class="ak-pagination ak-pagination-sm"&gt;...&lt;/ul&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-pagination</code></td><td>Lista de paginación (flex, gap)</td></tr>
+        <tr><td><code>.ak-page-item</code></td><td>Ítem de página</td></tr>
+        <tr><td><code>.ak-page-link</code></td><td>Link/botón de página</td></tr>
+        <tr><td><code>.ak-pagination-sm</code></td><td>Paginación pequeña</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         BREADCRUMB
+         ================================================================ -->
+    <section id="breadcrumb">
+      <h2>Breadcrumb</h2>
+      <p>Migas de pan con separador "/".</p>
+      <div class="ak-docs-card">
+        <ul class="ak-breadcrumb">
+          <li class="ak-breadcrumb-item"><a href="#">Inicio</a></li>
+          <li class="ak-breadcrumb-item"><a href="#">Categoría</a></li>
+          <li class="ak-breadcrumb-item ak-active">Página actual</li>
+        </ul>
+      </div>
+      <pre class="ak-docs-code">&lt;ul class="ak-breadcrumb"&gt;
+  &lt;li class="ak-breadcrumb-item"&gt;&lt;a href="#"&gt;Inicio&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="ak-breadcrumb-item ak-active"&gt;Actual&lt;/li&gt;
+&lt;/ul&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-breadcrumb</code></td><td>Lista de navegación</td></tr>
+        <tr><td><code>.ak-breadcrumb-item</code></td><td>Ítem individual</td></tr>
+        <tr><td><code>.ak-active</code></td><td>Ítem activo (texto normal, sin link)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         LIST GROUP
+         ================================================================ -->
+    <section id="listgroup">
+      <h2>List group</h2>
+      <p>Lista apilada con bordes, activo, disabled y hover.</p>
+      <div class="ak-docs-card" style="max-width:300px;">
+        <div class="ak-list-group">
+          <button class="ak-list-group-item ak-active">Item activo</button>
+          <button class="ak-list-group-item">Item normal</button>
+          <button class="ak-list-group-item">Item normal</button>
+          <button class="ak-list-group-item ak-disabled">Item deshabilitado</button>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-list-group"&gt;
+  &lt;button class="ak-list-group-item ak-active"&gt;Activo&lt;/button&gt;
+  &lt;button class="ak-list-group-item"&gt;Normal&lt;/button&gt;
+  &lt;a class="ak-list-group-item ak-disabled" href="#"&gt;Disabled&lt;/a&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-list-group</code></td><td>Contenedor flex column</td></tr>
+        <tr><td><code>.ak-list-group-item</code></td><td>Ítem con borde</td></tr>
+        <tr><td><code>.ak-active</code></td><td>Estado activo (fondo primary)</td></tr>
+        <tr><td><code>.ak-disabled</code></td><td>Estado deshabilitado</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         TABLA SIMPLE
+         ================================================================ -->
+    <section id="table">
+      <h2>Tabla simple</h2>
+      <p>Tabla base con variantes striped, bordered, hover, compact.</p>
+      <h3>Tabla básica</h3>
+      <div class="ak-table-responsive">
+        <table class="ak-table ak-table-striped ak-table-hover">
+          <thead><tr><th>#</th><th>Cultivo</th><th>Región</th><th>Área (ha)</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Maíz</td><td>Jalisco</td><td>12.5</td><td><span class="ak-badge ak-bg-success">Activo</span></td></tr>
+            <tr><td>2</td><td>Trigo</td><td>Sonora</td><td>8.0</td><td><span class="ak-badge ak-bg-warning ak-text-dark">Pendiente</span></td></tr>
+            <tr><td>3</td><td>Soya</td><td>Sinaloa</td><td>20.0</td><td><span class="ak-badge ak-bg-danger">Alerta</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <pre class="ak-docs-code">&lt;table class="ak-table ak-table-striped ak-table-hover"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Email&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Juan&lt;/td&gt;&lt;td&gt;juan@ejemplo.com&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-table</code></td><td>Tabla base con bordes sutiles</td></tr>
+        <tr><td><code>.ak-table-bordered</code></td><td>Bordes completos en celdas</td></tr>
+        <tr><td><code>.ak-table-striped</code></td><td>Filas alternas con fondo</td></tr>
+        <tr><td><code>.ak-table-hover</code></td><td>Hover con color primary-light</td></tr>
+        <tr><td><code>.ak-table-compact</code></td><td>Padding reducido</td></tr>
+        <tr><td><code>.ak-table-responsive</code></td><td>Wrapper con overflow-x auto</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         LAYOUT / GRID SYSTEM
+         ================================================================ -->
+    <section id="layout">
+      <h2>Layout — Grid System</h2>
+      <p>Sistema de 12 columnas con breakpoints <code>sm</code> (576px), <code>md</code> (768px), <code>lg</code> (992px), <code>xl</code> (1200px), <code>xxl</code> (1400px).</p>
+
+      <div class="ak-docs-card">
+        <p class="ak-text-muted ak-mb-2"><strong>Ejemplo de grilla</strong></p>
+        <div class="ak-row ak-mb-2">
+          <div class="ak-col-12"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-12</div></div>
+        </div>
+        <div class="ak-row ak-mb-2">
+          <div class="ak-col-6"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-6</div></div>
+          <div class="ak-col-6"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-6</div></div>
+        </div>
+        <div class="ak-row ak-mb-2">
+          <div class="ak-col-4"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-4</div></div>
+          <div class="ak-col-4"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-4</div></div>
+          <div class="ak-col-4"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-4</div></div>
+        </div>
+        <div class="ak-row">
+          <div class="ak-col-3"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-3</div></div>
+          <div class="ak-col-3"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-3</div></div>
+          <div class="ak-col-3"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-3</div></div>
+          <div class="ak-col-3"><div class="ak-docs-card ak-text-center ak-py-2" style="margin:0;">col-3</div></div>
+        </div>
+      </div>
+      <div class="ak-docs-card">
+        <p class="ak-text-muted ak-mb-2"><strong>Responsivo</strong> — col-12 en móvil, md-8/md-4 en escritorio</p>
+        <div class="ak-row">
+          <div class="ak-col-12 ak-col-md-8"><div class="ak-docs-card ak-py-2" style="margin:0;">col-12 col-md-8</div></div>
+          <div class="ak-col-12 ak-col-md-4"><div class="ak-docs-card ak-py-2" style="margin:0;">col-12 col-md-4</div></div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-row"&gt;
+  &lt;div class="ak-col-12 ak-col-md-8"&gt;...&lt;/div&gt;
+  &lt;div class="ak-col-12 ak-col-md-4"&gt;...&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-container</code></td><td>Contenedor responsive con max-width por breakpoint</td></tr>
+        <tr><td><code>.ak-container-fluid</code></td><td>Contenedor de ancho completo</td></tr>
+        <tr><td><code>.ak-row</code></td><td>Fila flexbox con gutter negativo</td></tr>
+        <tr><td><code>.ak-col</code></td><td>Columna automática (se reparte equitativamente)</td></tr>
+        <tr><td><code>.ak-col-{1-12}</code></td><td>Columna de ancho fijo (1 a 12)</td></tr>
+        <tr><td><code>.ak-col-{sm|md|lg|xl|xxl}-{1-12}</code></td><td>Columna responsive por breakpoint</td></tr>
+        <tr><td><code>.ak-col-auto</code></td><td>Columna de ancho automático según contenido</td></tr>
+        <tr><td><code>.ak-row-cols-{1-4}</code></td><td>Número de columnas por fila</td></tr>
+        <tr><td><code>.ak-offset-{1-6}</code></td><td>Desplazamiento a la derecha</td></tr>
+        <tr><td><code>.ak-g-{0-4}</code></td><td>Gutter (espacio entre columnas)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         TIPOGRAFÍA
+         ================================================================ -->
+    <section id="tipografia">
+      <h2>Tipografía</h2>
+      <p>Encabezados, display headings, blockquote, links y texto inline.</p>
+
+      <div class="ak-docs-card">
+        <h1 class="ak-h1">Encabezado H1</h1>
+        <h2 class="ak-h2">Encabezado H2</h2>
+        <h3 class="ak-h3">Encabezado H3</h3>
+        <h4 class="ak-h4">Encabezado H4</h4>
+        <h5 class="ak-h5">Encabezado H5</h5>
+        <h6 class="ak-h6">Encabezado H6</h6>
+      </div>
+      <div class="ak-docs-card">
+        <p class="ak-display-1">Display 1</p>
+        <p class="ak-display-2">Display 2</p>
+        <p class="ak-display-3">Display 3</p>
+        <p class="ak-display-4">Display 4</p>
+        <p class="ak-lead">Lead — texto introductorio más grande y ligero.</p>
+        <p>Párrafo normal. <a href="#">Enlace</a> con color secundario.</p>
+        <blockquote class="ak-blockquote">
+          "La agricultura es la base de la civilización."
+          <footer class="ak-blockquote-footer">Cicerón</footer>
+        </blockquote>
+        <p><code>código</code> · <kbd>Ctrl+K</kbd> · <mark class="ak-mark">marcado</mark></p>
+      </div>
+      <pre class="ak-docs-code">&lt;h1 class="ak-h1"&gt;Título&lt;/h1&gt;
+&lt;p class="ak-lead"&gt;Lead&lt;/p&gt;
+&lt;blockquote class="ak-blockquote"&gt;
+  Cita
+  &lt;footer class="ak-blockquote-footer"&gt;Autor&lt;/footer&gt;
+&lt;/blockquote&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-h1</code> – <code>.ak-h6</code></td><td>Encabezados 1–6 (weight 700)</td></tr>
+        <tr><td><code>.ak-display-1</code> – <code>.ak-display-4</code></td><td>Display headings grandes (800 weight)</td></tr>
+        <tr><td><code>.ak-lead</code></td><td>Párrafo destacado (1.15rem, 300 weight)</td></tr>
+        <tr><td><code>.ak-blockquote</code></td><td>Cita con borde izquierdo verde</td></tr>
+        <tr><td><code>.ak-blockquote-footer</code></td><td>Atribución con "—"</td></tr>
+        <tr><td><code>.ak-mark</code></td><td>Texto resaltado (fondo verde lima)</td></tr>
+        <tr><td><code>.ak-small</code></td><td>Texto pequeño (0.85em)</td></tr>
+        <tr><td><code>.ak-list-unstyled</code></td><td>Lista sin viñetas</td></tr>
+        <tr><td><code>.ak-list-inline</code></td><td>Lista horizontal (inline-block)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         IMÁGENES Y FIGURAS
+         ================================================================ -->
+    <section id="imagenes">
+      <h2>Imágenes y Figuras</h2>
+      <p>Clases para imágenes responsivas, thumbnails y figuras con pie de foto.</p>
+
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-3 ak-align-items-end">
+          <div class="ak-col-12 ak-col-md-4">
+            <svg viewBox="0 0 400 250" style="width:100%;border-radius:var(--ak-radius);background:var(--ak-primary-light);"><rect width="400" height="250" fill="var(--ak-primary-light)" rx="6"/><text x="50%" y="50%" text-anchor="middle" fill="#1e3a10" font-size="16" dy=".3em">ak-img-fluid</text></svg>
+            <p class="ak-text-muted ak-mt-1 ak-text-center" style="font-size:0.8rem;">ak-img-fluid</p>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <svg viewBox="0 0 400 250" style="width:100%;border-radius:var(--ak-radius);background:var(--ak-surface);border:4px solid var(--ak-border);box-sizing:border-box;"><rect width="392" height="242" x="4" y="4" fill="var(--ak-gray-light)" rx="4"/><text x="50%" y="50%" text-anchor="middle" fill="var(--ak-text-muted)" font-size="16" dy=".3em">ak-img-thumbnail</text></svg>
+            <p class="ak-text-muted ak-mt-1 ak-text-center" style="font-size:0.8rem;">ak-img-thumbnail</p>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <figure class="ak-figure" style="margin:0;">
+              <svg viewBox="0 0 400 250" style="width:100%;border-radius:var(--ak-radius);background:var(--ak-secondary-light);"><rect width="400" height="250" fill="var(--ak-secondary-light)" rx="6"/><text x="50%" y="50%" text-anchor="middle" fill="#fff" font-size="16" dy=".3em">ak-figure-img</text></svg>
+              <figcaption class="ak-figure-caption">Pie de foto con ak-figure-caption.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;img src="..." class="ak-img-fluid" /&gt;
+&lt;img src="..." class="ak-img-thumbnail" /&gt;
+&lt;figure class="ak-figure"&gt;
+  &lt;img src="..." class="ak-figure-img" /&gt;
+  &lt;figcaption class="ak-figure-caption"&gt;Pie&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-img-fluid</code></td><td>Imagen responsiva (max-width 100%)</td></tr>
+        <tr><td><code>.ak-img-thumbnail</code></td><td>Imagen con borde + padding</td></tr>
+        <tr><td><code>.ak-figure</code></td><td>Contenedor de figura</td></tr>
+        <tr><td><code>.ak-figure-img</code></td><td>Imagen dentro de figura</td></tr>
+        <tr><td><code>.ak-figure-caption</code></td><td>Pie de foto (color muted)</td></tr>
+        <tr><td><code>.ak-rounded-circle</code></td><td>Imagen circular (border-radius 50%)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         NAVBAR
+         ================================================================ -->
+    <section id="navbar">
+      <h2>Navbar</h2>
+      <p>Barra de navegación superior con marca, enlaces, toggler responsive y colapso.</p>
+      <div class="ak-docs-card">
+        <nav class="ak-navbar" style="position:relative;border-radius:var(--ak-radius);">
+          <a href="#" class="ak-navbar-brand">🌱 Agrocity</a>
+          <button class="ak-navbar-toggler" data-ak-target="#navbarDemo">☰</button>
+          <div class="ak-navbar-collapse" id="navbarDemo">
+            <ul class="ak-navbar-nav">
+              <li><a href="#" class="ak-nav-link ak-active">Inicio</a></li>
+              <li><a href="#" class="ak-nav-link">Cultivos</a></li>
+              <li><a href="#" class="ak-nav-link">Reportes</a></li>
+            </ul>
+            <button class="ak-btn ak-btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);margin-left:auto;" onclick="AgrocityKit.theme('toggle')">🌙 Tema</button>
+          </div>
+        </nav>
+      </div>
+      <pre class="ak-docs-code">&lt;nav class="ak-navbar"&gt;
+  &lt;a href="#" class="ak-navbar-brand"&gt;Marca&lt;/a&gt;
+  &lt;button class="ak-navbar-toggler" data-ak-target="#navbarCollapse"&gt;☰&lt;/button&gt;
+  &lt;div class="ak-navbar-collapse" id="navbarCollapse"&gt;
+    &lt;ul class="ak-navbar-nav"&gt;
+      &lt;li&gt;&lt;a href="#" class="ak-nav-link ak-active"&gt;Inicio&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-navbar</code></td><td>Barra de navegación (fondo secondary, texto blanco)</td></tr>
+        <tr><td><code>.ak-navbar-brand</code></td><td>Marca o logo (bold, 1.25rem)</td></tr>
+        <tr><td><code>.ak-navbar-nav</code></td><td>Lista de enlaces (flex, gap)</td></tr>
+        <tr><td><code>.ak-navbar-toggler</code></td><td>Botón hamburguesa (visible en móvil)</td></tr>
+        <tr><td><code>.ak-navbar-collapse</code></td><td>Contenedor colapsable (se oculta en móvil)</td></tr>
+        <tr><td><code>.ak-nav-link</code></td><td>Enlace de navegación (color blanco 85%)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         NAV / PILLS / TABS VERTICALES
+         ================================================================ -->
+    <section id="nav">
+      <h2>Nav / Pills</h2>
+      <p>Navegación base con variantes pills y tabs verticales.</p>
+
+      <div class="ak-docs-card">
+        <p class="ak-text-muted ak-mb-1"><strong>Nav básico</strong></p>
+        <ul class="ak-nav">
+          <li><button class="ak-nav-link ak-active">Activo</button></li>
+          <li><button class="ak-nav-link">Enlace</button></li>
+          <li><button class="ak-nav-link ak-disabled">Deshabilitado</button></li>
+        </ul>
+      </div>
+      <div class="ak-docs-card">
+        <p class="ak-text-muted ak-mb-1"><strong>Nav pills</strong></p>
+        <ul class="ak-nav ak-nav-pills">
+          <li><button class="ak-nav-link ak-active">Activo</button></li>
+          <li><button class="ak-nav-link">Enlace</button></li>
+          <li><button class="ak-nav-link">Otro</button></li>
+        </ul>
+      </div>
+      <pre class="ak-docs-code">&lt;ul class="ak-nav ak-nav-pills"&gt;
+  &lt;li&gt;&lt;a class="ak-nav-link ak-active" href="#"&gt;Activo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a class="ak-nav-link" href="#"&gt;Enlace&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</pre>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-nav</code></td><td>Lista de navegación base (flex)</td></tr>
+        <tr><td><code>.ak-nav-link</code></td><td>Elemento clickeable</td></tr>
+        <tr><td><code>.ak-nav-pills</code></td><td>Variante píldoras (fondo primary al activo)</td></tr>
+        <tr><td><code>.ak-nav-tabs-vertical</code></td><td>Tabs verticales (nav a la izquierda)</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         SCROLLSPY
+         ================================================================ -->
+    <section id="scrollspy">
+      <h2>ScrollSpy</h2>
+      <p>Navegación tipo pills que resalta la sección visible al hacer scroll.</p>
+      <div class="ak-row ak-g-3">
+        <div class="ak-col-12 ak-col-md-3">
+          <nav id="spyNavDocs" style="position:sticky;top:80px;">
+            <ul class="ak-nav ak-nav-pills" style="flex-direction:column;gap:4px;">
+              <li><a class="ak-nav-link" href="#spy-doc1">Sección 1</a></li>
+              <li><a class="ak-nav-link" href="#spy-doc2">Sección 2</a></li>
+              <li><a class="ak-nav-link" href="#spy-doc3">Sección 3</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="ak-col-12 ak-col-md-9">
+          <div data-ak-scrollspy data-ak-target="#spyNavDocs" style="height:200px;overflow-y:auto;border:1px solid var(--ak-border);border-radius:var(--ak-radius);padding:16px;">
+            <h5 id="spy-doc1">Sección 1 — Siembra</h5>
+            <p>Preparación del suelo, selección de semillas y planificación del ciclo de cultivo. Se recomienda realizar análisis de suelo antes de la siembra.</p>
+            <h5 id="spy-doc2" class="ak-mt-4">Sección 2 — Riego</h5>
+            <p>Sistemas de riego por goteo, aspersión y gravedad. Monitoreo de humedad con sensores IoT para optimizar el consumo de agua.</p>
+            <h5 id="spy-doc3" class="ak-mt-4">Sección 3 — Cosecha</h5>
+            <p>Determinación del punto óptimo de cosecha, métodos de recolección y post-cosecha. Almacenamiento en condiciones controladas.</p>
+            <div style="height:60px;"></div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;nav id="miNav"&gt;
+  &lt;ul class="ak-nav ak-nav-pills" style="flex-direction:column;"&gt;
+    &lt;li&gt;&lt;a class="ak-nav-link" href="#sec1"&gt;Sección 1&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+&lt;div data-ak-scrollspy data-ak-target="#miNav" style="height:200px;overflow-y:auto;"&gt;
+  &lt;h5 id="sec1"&gt;Sección 1&lt;/h5&gt;
+  &lt;p&gt;...&lt;/p&gt;
+&lt;/div&gt;</pre>
+    </section>
+
+    <!-- ================================================================
+         INIT DINÁMICO (initElement)
+         ================================================================ -->
+    <section id="init-dinamico">
+      <h2>Init dinámico</h2>
+      <p>Cuando insertas HTML con <code>.innerHTML</code> los componentes nuevos no se inicializan solos. Usa <code>AgrocityKit.initElement(contenedor)</code> para inicializar los data-* dentro.</p>
+      <div class="ak-docs-card">
+        <button class="ak-btn ak-btn-primary ak-btn-sm" onclick="addDynamic()">Agregar select + datepicker</button>
+        <div id="dynamicDemo" style="margin-top:12px;"></div>
+      </div>
+      <pre class="ak-docs-code">var html = '&lt;select data-ak-select&gt;...&lt;/select&gt;';
+document.getElementById("container").innerHTML = html;
+AgrocityKit.initElement(document.getElementById("container"));</pre>
+    </section>
+
+    <!-- ================================================================
+         UTILIDADES CSS
+         ================================================================ -->
+    <section id="utilidades">
+      <h2>Utilidades CSS</h2>
+      <p>Clases utilitarias para display, flex, spacing, texto, bordes, sombras y más.</p>
+
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Categoría</th><th>Clases</th></tr>
+        <tr><td>Display</td><td><code>.ak-d-none</code>, <code>.ak-d-block</code>, <code>.ak-d-inline</code>, <code>.ak-d-inline-block</code>, <code>.ak-d-flex</code>, <code>.ak-d-inline-flex</code>, <code>.ak-d-grid</code></td></tr>
+        <tr><td>Flex</td><td><code>.ak-flex-row</code>, <code>.ak-flex-column</code>, <code>.ak-flex-wrap</code>, <code>.ak-flex-fill</code>, <code>.ak-flex-grow-1</code>, <code>.ak-flex-shrink-0</code></td></tr>
+        <tr><td>Justify</td><td><code>.ak-justify-content-start/center/end/between/around</code></td></tr>
+        <tr><td>Align</td><td><code>.ak-align-items-start/center/end/baseline/stretch</code></td></tr>
+        <tr><td>Gap</td><td><code>.ak-gap-0</code> a <code>.ak-gap-5</code></td></tr>
+        <tr><td>Margin</td><td><code>.ak-m-{0-5}</code>, <code>.ak-mt/mb/ms/me-{0-5}</code>, <code>.ak-mx/my-{0-5}</code>, <code>.ak-mx-auto</code></td></tr>
+        <tr><td>Padding</td><td><code>.ak-p-{0-5}</code>, <code>.ak-pt/pb/ps/pe-{1-5}</code>, <code>.ak-px/py-{0-5}</code></td></tr>
+        <tr><td>Text color</td><td><code>.ak-text-primary/secondary/success/danger/warning/info/muted/white/dark</code></td></tr>
+        <tr><td>Text align</td><td><code>.ak-text-start/center/end</code></td></tr>
+        <tr><td>Text transform</td><td><code>.ak-text-uppercase/lowercase/capitalize</code></td></tr>
+        <tr><td>Font weight</td><td><code>.ak-fw-light/normal/semibold/bold</code></td></tr>
+        <tr><td>Font size</td><td><code>.ak-fs-1</code> a <code>.ak-fs-6</code>, <code>.ak-fs-sm</code>, <code>.ak-fs-lg</code></td></tr>
+        <tr><td>Background</td><td><code>.ak-bg-primary/secondary/success/danger/warning/info/light/dark/white/transparent</code></td></tr>
+        <tr><td>Border</td><td><code>.ak-border</code>, <code>.ak-border-0</code>, <code>.ak-border-top/bottom/start/end</code>, <code>.ak-border-primary/secondary/success/danger</code></td></tr>
+        <tr><td>Border radius</td><td><code>.ak-rounded</code>, <code>.ak-rounded-0/sm/lg/pill/circle</code>, <code>.ak-rounded-top</code></td></tr>
+        <tr><td>Shadow</td><td><code>.ak-shadow-sm</code>, <code>.ak-shadow</code>, <code>.ak-shadow-lg</code>, <code>.ak-shadow-none</code></td></tr>
+        <tr><td>Sizing</td><td><code>.ak-w-25/50/75/100</code>, <code>.ak-h-25/50/75/100</code>, <code>.ak-vw-100</code>, <code>.ak-vh-100</code></td></tr>
+        <tr><td>Position</td><td><code>.ak-position-static/relative/absolute/fixed/sticky</code>, <code>.ak-fixed-top/bottom</code>, <code>.ak-sticky-top</code></td></tr>
+        <tr><td>Overflow</td><td><code>.ak-overflow-auto/hidden/scroll</code>, <code>.ak-overflow-x/y-auto</code></td></tr>
+        <tr><td>Opacity</td><td><code>.ak-opacity-0/25/50/75/100</code></td></tr>
+        <tr><td>Stacks</td><td><code>.ak-vstack</code>, <code>.ak-hstack</code></td></tr>
+        <tr><td>Ratio</td><td><code>.ak-ratio</code>, <code>.ak-ratio-1x1/4x3/16x9/21x9</code></td></tr>
+        <tr><td>Truncate</td><td><code>.ak-text-truncate</code></td></tr>
+        <tr><td>Screen reader</td><td><code>.ak-sr-only</code>, <code>.ak-visually-hidden</code></td></tr>
+      </table>
+      </details>
+    </section>
+
+    <!-- ================================================================
+         AK() JQUERY-LITE
+         ================================================================ -->
+    <section id="ak-selectores">
+      <h2>Ak() — jQuery-lite</h2>
+      <p>Wrapper DOM vanilla sin dependencias. Expuesto como <code>window.Ak</code> y <code>AgrocityKit.Ak</code>.</p>
+
+      <h3>Selectores</h3>
+      <pre class="ak-docs-code">Ak("#id");                     // CSS selector → AkCollection
+Ak(".clase");                  // múltiples elementos
+Ak("&lt;div&gt;...&lt;/div&gt;");          // crear HTML
+Ak(elementoDOM);               // envolver nodo
+Ak([node1, node2]);            // desde array/NodeList
+Ak(function(){ ... });         // DOM ready</pre>
+    </section>
+
+    <section id="ak-dom">
+      <h3>Manipulación DOM</h3>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Método</th><th>Descripción</th></tr>
+        <tr><td>.val(v?)</td><td>Getter/setter value</td></tr>
+        <tr><td>.text(t?)</td><td>Getter/setter textContent</td></tr>
+        <tr><td>.html(h?)</td><td>Getter/setter innerHTML</td></tr>
+        <tr><td>.prop(n, v?)</td><td>Getter/setter de propiedades</td></tr>
+        <tr><td>.attr(n, v?)</td><td>Getter/setter de atributos HTML</td></tr>
+        <tr><td>.removeAttr(n)</td><td>Elimina atributo</td></tr>
+        <tr><td>.data(k, v?)</td><td>Getter/setter data-* (caché interno)</td></tr>
+        <tr><td>.show() / .hide()</td><td>Muestra/oculta (restaura display)</td></tr>
+        <tr><td>.addClass(c) / .removeClass(c) / .toggleClass(c) / .hasClass(c)</td><td>Clases CSS</td></tr>
+        <tr><td>.css(p, v?)</td><td>Getter/setter estilos inline</td></tr>
+        <tr><td>.empty()</td><td>Limpia innerHTML</td></tr>
+        <tr><td>.append(h) / .prepend(h) / .before(h) / .after(h)</td><td>Inserción</td></tr>
+        <tr><td>.appendTo(t)</td><td>Inverso de append</td></tr>
+        <tr><td>.remove()</td><td>Elimina del DOM</td></tr>
+        <tr><td>.replaceWith(h)</td><td>Reemplaza en el DOM</td></tr>
+        <tr><td>.clone()</td><td>Clonado profundo</td></tr>
+        <tr><td>.serialize()</td><td>Serializa formulario a objeto</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <section id="ak-eventos">
+      <h3>Eventos</h3>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Método</th><th>Descripción</th></tr>
+        <tr><td>.on(tipo, fn)</td><td>addEventListener</td></tr>
+        <tr><td>.off(tipo, fn)</td><td>removeEventListener</td></tr>
+        <tr><td>.trigger(tipo, detail)</td><td>Dispara CustomEvent</td></tr>
+        <tr><td>.submit(fn?)</td><td>Bind o dispara submit</td></tr>
+        <tr><td>.focus()</td><td>Enfoca el primer elemento</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <section id="ak-navegacion">
+      <h3>Navegación DOM</h3>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Método</th><th>Descripción</th></tr>
+        <tr><td>.find(sel)</td><td>Busca descendientes</td></tr>
+        <tr><td>.parent()</td><td>Padre directo</td></tr>
+        <tr><td>.children(sel?)</td><td>Hijos directos</td></tr>
+        <tr><td>.siblings(sel?)</td><td>Hermanos</td></tr>
+        <tr><td>.next(sel?) / .prev(sel?)</td><td>Hermano siguiente/anterior</td></tr>
+        <tr><td>.closest(sel)</td><td>Ancestro más cercano</td></tr>
+        <tr><td>.filter(sel) / .not(sel)</td><td>Filtra colección</td></tr>
+        <tr><td>.eq(i) / .first() / .last()</td><td>Sub-colección por índice</td></tr>
+        <tr><td>.slice(s, e)</td><td>Subconjunto por rango</td></tr>
+        <tr><td>.is(sel)</td><td>Coincide con selector?</td></tr>
+        <tr><td>.index()</td><td>Posición respecto al padre</td></tr>
+        <tr><td>.each(fn)</td><td>Itera sobre elementos</td></tr>
+        <tr><td>collection[i]</td><td>Acceso a nodo raw</td></tr>
+        <tr><td>.length</td><td>Cantidad de elementos</td></tr>
+      </table>
+      </details>
+    </section>
+
+    <section id="ak-clases">
+      <h3>Clases CSS</h3>
+      <pre class="ak-docs-code">Ak("#el").addClass("foo bar");
+Ak("#el").removeClass("foo");
+Ak("#el").toggleClass("active");
+Ak("#el").hasClass("active");   // true/false</pre>
+    </section>
+
+    <section id="ak-utilidades">
+      <h3>Utilidades estáticas</h3>
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
+      <table class="ak-docs-table">
+        <tr><th>Método</th><th>Descripción</th></tr>
+        <tr><td>Ak.trim(s)</td><td>Elimina espacios</td></tr>
+        <tr><td>Ak.each(arr, fn)</td><td>Itera array o AkCollection</td></tr>
+        <tr><td>Ak.map(arr, fn)</td><td>Transforma array</td></tr>
+        <tr><td>Ak.extend(deep?, target, ...src)</td><td>Merge de objetos</td></tr>
+        <tr><td>Ak.inArray(val, arr)</td><td>Busca en array</td></tr>
+        <tr><td>Ak.isArray(v)</td><td>True si es array</td></tr>
+        <tr><td>Ak.isFunction(v)</td><td>True si es función</td></tr>
+        <tr><td>Ak.isPlainObject(v)</td><td>True si es objeto plano</td></tr>
+      </table>
+      </details>
+
+      <h4 style="margin-top:24px;">Ejemplo completo</h4>
+      <pre class="ak-docs-code">Ak(function(){
+  // DOM ready
+
+  var valor = Ak("#input").val();
+  Ak("#lista").empty().append(
+    Ak("&lt;li class='item'&gt;").text("Nuevo")
+  );
+
+  Ak("#form").on("submit", function(e){
+    e.preventDefault();
+    var data = Ak(this).serialize();
+    Ak.ajax(...)
+  });
+
+  Ak("#btn").on("click", function(){
+    Ak(this).addClass("active");
+  });
+});</pre>
+    </section>
+
+    <!-- ================================================================
+         ICONOS
+         ================================================================ -->
+    <section id="iconos">
+      <h2>Iconos</h2>
+      <p>+50 iconos SVG inline. Usa <code>AgrocityKit.icon("nombre", tamaño)</code> o <code>&lt;span data-ak-icon="nombre"&gt;&lt;/span&gt;</code>.</p>
+
+      <h3 id="iconos-uso">Cómo usar</h3>
+      <pre class="ak-docs-code">// JS
+btn.innerHTML = AgrocityKit.icon("search", 16) + " Buscar";
+
+// HTML (auto-init)
+&lt;span data-ak-icon="home"&gt;&lt;/span&gt;
+&lt;span data-ak-icon="settings" data-ak-icon-size="24"&gt;&lt;/span&gt;
+&lt;i class="ak-icon" data-ak-icon="user"&gt;&lt;/i&gt;</pre>
+
+      <div class="ak-docs-card">
+        <input id="iconSearch" class="ak-form-control" placeholder="Buscar icono..." style="margin-bottom:12px;" oninput="filterIcons(this.value)" />
+        <div class="ak-icon-grid" id="iconGrid"></div>
+      </div>
+
+      <p style="margin-top:16px;">Usa <code>AgrocityKit.icon("nombre", 20)</code> para obtener el SVG como string.</p>
+    </section>
+
+  </main>
+</div>
+
+<script src="../dist/js/agrocity-kit.min.js"></script>
+<script src="../dist/js/agrocity-icons.min.js"></script>
+<script>
+/* ── Inicializar componentes ── */
+Ak(function(){
+
+  // Select
+  AgrocityKit.select("#demoSelect", { liveSearch: true });
+  AgrocityKit.select("#demoSelectMulti");
+
+  // TimePicker
+  AgrocityKit.timepicker("#demoTimepicker");
+
+  // DatePickers
+  AgrocityKit.datepicker("#demoDatepicker");
+  AgrocityKit.datepicker("#demoDatepicker2");
+
+  // Iconos
+  var iconList = Object.keys(AgrocityKit._icons || {}).sort();
+
+  var grid = document.getElementById("iconGrid");
+  function renderIcons(list) {
+    grid.innerHTML = "";
+    list.forEach(function(name){
+      var svg = AgrocityKit.icon(name, 22);
+      if (!svg) return;
+      var item = document.createElement("div");
+      item.className = "ak-icon-item";
+      item.innerHTML = svg + "<span>" + name + "</span>";
+      item.title = "Haz clic para copiar";
+      item.addEventListener("click", function(){
+        navigator.clipboard.writeText(name).then(function(){
+          AgrocityKit.showToast("Icono copiado: " + name, { type: "success", delay: 1500 });
+        }).catch(function(){});
+      });
+      grid.appendChild(item);
+    });
+  }
+  renderIcons(iconList);
+  window.filterIcons = function(q) {
+    var f = iconList.filter(function(n){ return n.indexOf(q.toLowerCase()) >= 0; });
+    renderIcons(f);
+  };
+
+  // Sidebar: scrollspy con clases del drawer
+  var navLinks = document.querySelectorAll("#docsNav .ak-drawer-item[href^='#'], #docsNav .ak-drawer-sub-item[href^='#']");
+  var sections = document.querySelectorAll(".ak-docs-main section[id]");
+
+  function updateActive() {
+    var scrollY = window.scrollY + 80;
+    var activeId = "intro";
+    sections.forEach(function(sec){
+      if (sec.offsetTop <= scrollY) activeId = sec.id;
+    });
+
+    navLinks.forEach(function(l){
+      var href = l.getAttribute("href");
+      l.classList.toggle("ak-active", href === "#" + activeId);
+    });
+
+    // Abrir submenu que contiene el item activo
+    document.querySelectorAll("#docsNav .ak-drawer-sub").forEach(function(sub){
+      var hasActive = sub.querySelector(".ak-drawer-sub-item.ak-active");
+      sub.classList.toggle("ak-show", !!hasActive);
+      var parentBtn = document.querySelector("[data-ak-target='#" + sub.id + "']");
+      if (parentBtn) {
+        var chevron = parentBtn.querySelector(".bd-chevron");
+        if (chevron) chevron.style.transform = hasActive ? "rotate(90deg)" : "";
+      }
+    });
+  }
+
+  window.addEventListener("scroll", updateActive);
+  updateActive();
+
+  // initDynamic — ejemplo para sección Init dinámico
+  window.addDynamic = function(){
+    var html = '<label class="ak-form-label" for="dynSelect">Cultivo</label>' +
+      '<select id="dynSelect" data-ak-select class="ak-form-control" style="margin-bottom:8px;">' +
+      '<option value="">Seleccione...</option>' +
+      '<option value="maiz">Maíz</option>' +
+      '<option value="trigo">Trigo</option>' +
+      '<option value="soya">Soya</option>' +
+      '</select>' +
+      '<label class="ak-form-label" for="dynDate">Fecha de siembra</label>' +
+      '<input type="date" id="dynDate" data-ak-datepicker class="ak-form-control" />';
+    document.getElementById("dynamicDemo").innerHTML = html;
+    AgrocityKit.initElement(document.getElementById("dynamicDemo"));
+    AgrocityKit.showToast("Componentes inicializados", {type:"success", delay:2000});
+  };
+});
+</script>
+</body>
+</html>

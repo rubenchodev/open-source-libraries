@@ -1,0 +1,86 @@
+/* ============================================================================
+ * AGROCITY ICONS — Utilidades CSS para iconos SVG
+ * Compatible con agrocity-icons.js y uso manual de SVG inline
+ * ============================================================================ */
+
+/* Tamaños predefinidos */
+.ak-icon-xs { width: 12px; height: 12px; min-width: 12px; }
+.ak-icon-sm { width: 16px; height: 16px; min-width: 16px; }
+.ak-icon-md { width: 20px; height: 20px; min-width: 20px; }
+.ak-icon-lg { width: 24px; height: 24px; min-width: 24px; }
+.ak-icon-xl { width: 32px; height: 32px; min-width: 32px; }
+.ak-icon-2xl { width: 40px; height: 40px; min-width: 40px; }
+
+/* Alineación con texto */
+.ak-icon-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+.ak-icon-left { margin-right: 6px; }
+.ak-icon-right { margin-left: 6px; }
+
+/* Colores — usa las variables del tema */
+.ak-icon-primary { color: var(--ak-primary); }
+.ak-icon-secondary { color: var(--ak-secondary); }
+.ak-icon-success { color: var(--ak-success); }
+.ak-icon-danger { color: var(--ak-danger); }
+.ak-icon-warning { color: var(--ak-warning); }
+.ak-icon-info { color: var(--ak-info); }
+.ak-icon-muted { color: var(--ak-text-muted); }
+.ak-icon-white { color: #fff; }
+
+/* Spin (para loading) */
+.ak-icon-spin {
+  animation: ak-icon-spin 1.5s linear infinite;
+}
+@keyframes ak-icon-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Pulse (notificación) */
+.ak-icon-pulse {
+  animation: ak-icon-pulse 2s ease-in-out infinite;
+}
+@keyframes ak-icon-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Botón icono (puro, sin texto) */
+.ak-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 150ms ease, color 150ms ease;
+}
+.ak-icon-btn:hover {
+  background: var(--ak-gray-light);
+  color: var(--ak-primary);
+}
+.ak-icon-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ak-focus-ring);
+}
+
+/* Grupo de iconos alineados */
+.ak-icon-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Contenedor de icono + etiqueta */
+.ak-icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agrocity Kit — Ejemplo completo de componentes</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    /* Estilos de demostración: no forman parte del framework */
+    .demo-section { padding: 48px 0 32px; border-bottom: 1px solid var(--ak-border); }
+    .demo-section:last-child { border-bottom: none; }
+    .demo-title {
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--ak-primary); margin: 0 0 4px;
+    }
+    .demo-subtitle { color: var(--ak-text-muted); margin: 0 0 24px; font-size: 0.9rem; }
+    .demo-box {
+      background: var(--ak-surface-alt);
+      border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .demo-spacer { height: 16px; }
+    pre.demo-code {
+      background: #1e2a38;
+      color: #c9d1d9;
+      padding: 16px;
+      border-radius: var(--ak-radius);
+      font-size: 0.82rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+    /* Secciones de scroll para ScrollSpy */
+    #seccion-uno, #seccion-dos, #seccion-tres { padding-top: 16px; }
+  </style>
+</head>
+<body class="ak-body">
+
+<!-- =====================================================================
+     NAVBAR
+     ===================================================================== -->
+<nav class="ak-navbar" id="main-navbar">
+  <a href="#" class="ak-navbar-brand">🌱 Agrocity Kit</a>
+  <button class="ak-navbar-toggler" data-ak-toggle="collapse" data-ak-target="#navMenu" aria-expanded="false">☰</button>
+  <div class="ak-navbar-collapse" id="navMenu">
+    <ul class="ak-navbar-nav">
+      <li><a href="#layout"       class="ak-nav-link">Layout</a></li>
+      <li><a href="#tipografia"   class="ak-nav-link">Tipografía</a></li>
+      <li><a href="#formularios"  class="ak-nav-link">Formularios</a></li>
+      <li><a href="#botones"      class="ak-nav-link">Botones</a></li>
+      <li><a href="#componentes"  class="ak-nav-link">Componentes</a></li>
+      <li><a href="#navegacion"   class="ak-nav-link">Navegación</a></li>
+      <li><a href="#feedback"     class="ak-nav-link">Feedback</a></li>
+      <li><a href="#init-dinamico" class="ak-nav-link">Dinámicos</a></li>
+      <li><a href="#utilidades"   class="ak-nav-link">Utilidades</a></li>
+    </ul>
+    <div class="ak-hstack" style="gap:8px; margin-left: auto;">
+      <button class="ak-btn ak-btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);"
+              onclick="AgrocityKit.theme('toggle')">🌙 Tema</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header style="background: linear-gradient(135deg, var(--ak-secondary-dark) 0%, var(--ak-primary) 100%); color:#fff; padding: 64px 24px; text-align:center;">
+  <h1 style="margin:0 0 12px; font-size:2.8rem; font-weight:800;">Agrocity Kit</h1>
+  <p style="margin:0 0 24px; font-size:1.2rem; opacity:.85;">Framework UI ligero, sin dependencias · CSS + JS vanilla · Tema claro/oscuro</p>
+  <div class="ak-hstack" style="gap:12px; justify-content:center; flex-wrap:wrap;">
+    <a href="#componentes" class="ak-btn ak-btn-lg" style="background:#fff; color:var(--ak-secondary-dark);">Ver componentes</a>
+    <a href="README.md" class="ak-btn ak-btn-lg" style="background:transparent;border:2px solid #fff;color:#fff;">Documentación</a>
+  </div>
+</header>
+
+<main style="max-width:1140px; margin:0 auto; padding:0 16px;">
+
+<!-- =====================================================================
+     1. LAYOUT
+     ===================================================================== -->
+<section id="layout" class="demo-section">
+  <h2 class="demo-title">1. Layout — Grid System</h2>
+  <p class="demo-subtitle">Contenedores, sistema de 12 columnas y breakpoints (sm / md / lg / xl / xxl)</p>
+
+  <div class="demo-box">
+    <p class="ak-text-muted ak-mb-3"><strong>Grid de 12 columnas</strong></p>
+    <div class="ak-row ak-mb-2">
+      <div class="ak-col-12"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-12</div></div>
+    </div>
+    <div class="ak-row ak-mb-2">
+      <div class="ak-col-6"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-6</div></div>
+      <div class="ak-col-6"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-6</div></div>
+    </div>
+    <div class="ak-row ak-mb-2">
+      <div class="ak-col-4"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-4</div></div>
+      <div class="ak-col-4"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-4</div></div>
+      <div class="ak-col-4"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-4</div></div>
+    </div>
+    <div class="ak-row">
+      <div class="ak-col-3"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-3</div></div>
+      <div class="ak-col-3"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-3</div></div>
+      <div class="ak-col-3"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-3</div></div>
+      <div class="ak-col-3"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-3</div></div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <p class="ak-text-muted ak-mb-3"><strong>Columnas responsivas</strong> — apilan en móvil, lado a lado en ≥ md</p>
+    <div class="ak-row">
+      <div class="ak-col-12 ak-col-md-8"><div class="demo-box ak-py-2 ak-mb-0">col-12 / col-md-8</div></div>
+      <div class="ak-col-12 ak-col-md-4"><div class="demo-box ak-py-2 ak-mb-0">col-12 / col-md-4</div></div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <p class="ak-text-muted ak-mb-3"><strong>Gutters y auto-layout</strong></p>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">auto</div></div>
+      <div class="ak-col"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">auto</div></div>
+      <div class="ak-col-4"><div class="demo-box ak-text-center ak-py-2 ak-mb-0">col-4</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     2. TIPOGRAFÍA
+     ===================================================================== -->
+<section id="tipografia" class="demo-section">
+  <h2 class="demo-title">2. Tipografía</h2>
+  <p class="demo-subtitle">Encabezados, display headings, párrafos y texto de utilidad</p>
+
+  <div class="demo-box">
+    <h1 class="ak-h1">Encabezado H1</h1>
+    <h2 class="ak-h2">Encabezado H2</h2>
+    <h3 class="ak-h3">Encabezado H3</h3>
+    <h4 class="ak-h4">Encabezado H4</h4>
+    <h5 class="ak-h5">Encabezado H5</h5>
+    <h6 class="ak-h6">Encabezado H6</h6>
+  </div>
+
+  <div class="demo-box">
+    <p class="ak-display-1">Display 1</p>
+    <p class="ak-display-2">Display 2</p>
+    <p class="ak-display-3">Display 3</p>
+    <p class="ak-lead">Lead — Párrafo introductorio con fuente ligeramente más grande y peso medio.</p>
+    <p>Párrafo normal con texto de cuerpo. Agrocity Kit usa <strong>fuentes del sistema</strong> para máxima compatibilidad.</p>
+    <p><small class="ak-text-muted">Texto pequeño y atenuado para notas secundarias.</small></p>
+    <blockquote class="ak-blockquote">
+      "La agricultura es la base de la civilización y cualquier arte estable."
+      <footer class="ak-blockquote-footer">Cicerón</footer>
+    </blockquote>
+    <p><a href="#">Enlace normal</a> · <a href="#" class="ak-link-primary">Link primario</a> · <a href="#" class="ak-link-danger">Link peligro</a></p>
+    <p><code>código inline</code> · <kbd>Ctrl+K</kbd> · <mark>texto marcado</mark></p>
+  </div>
+</section>
+
+
+<!-- =====================================================================
+     3. IMÁGENES Y FIGURAS
+     ===================================================================== -->
+<section id="imagenes" class="demo-section">
+  <h2 class="demo-title">3. Imágenes y Figuras</h2>
+  <p class="demo-subtitle">.ak-img-fluid, .ak-img-thumbnail y figura con pie de foto</p>
+
+  <div class="demo-box">
+    <div class="ak-row ak-g-3 ak-align-items-end">
+      <div class="ak-col-12 ak-col-md-4">
+        <img src="https://picsum.photos/seed/agro1/400/250" class="ak-img-fluid ak-rounded" alt="Imagen fluida" />
+        <p class="ak-text-muted ak-mt-2 ak-text-center">ak-img-fluid</p>
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <img src="https://picsum.photos/seed/agro2/400/250" class="ak-img-thumbnail" alt="Thumbnail" />
+        <p class="ak-text-muted ak-mt-2 ak-text-center">ak-img-thumbnail</p>
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <figure class="ak-figure">
+          <img src="https://picsum.photos/seed/agro3/400/250" class="ak-figure-img ak-img-fluid ak-rounded" alt="Figura" />
+          <figcaption class="ak-figure-caption">Campo de cultivo en temporada de cosecha.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     4. FORMULARIOS
+     ===================================================================== -->
+<section id="formularios" class="demo-section">
+  <h2 class="demo-title">4. Formularios</h2>
+  <p class="demo-subtitle">Inputs, select, checks, radios, range, file input (drag & drop + validación), floating labels, validation y input-group</p>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Controles básicos</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="inp-text">Texto</label>
+        <input type="text" id="inp-text" class="ak-form-control" placeholder="Escribe algo..." />
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="inp-email">Email</label>
+        <input type="email" id="inp-email" class="ak-form-control" placeholder="correo@ejemplo.com" />
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="inp-password">Contraseña</label>
+        <input type="password" id="inp-password" class="ak-form-control" placeholder="••••••••" />
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="inp-number">Número</label>
+        <input type="number" id="inp-number" class="ak-form-control" placeholder="0" min="0" />
+      </div>
+      <div class="ak-col-12">
+        <label class="ak-form-label" for="inp-textarea">Área de texto</label>
+        <textarea id="inp-textarea" class="ak-form-control" rows="3" placeholder="Escribe aquí..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Select nativo y Custom Select</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="sel-native">Select nativo</label>
+        <select id="sel-native" class="ak-form-select">
+          <option value="">Elige un cultivo...</option>
+          <option>Maíz</option>
+          <option>Trigo</option>
+          <option>Soya</option>
+          <option>Arroz</option>
+        </select>
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="sel-custom">Custom Select (con búsqueda)</label>
+        <select id="sel-custom" data-ak-select data-ak-search="true" data-ak-placeholder="Buscar cultivo...">
+          <option value="">Elige un cultivo...</option>
+          <option value="maiz">Maíz</option>
+          <option value="trigo">Trigo</option>
+          <option value="soya">Soya</option>
+          <option value="arroz">Arroz</option>
+          <option value="cafe">Café</option>
+          <option value="cacao">Cacao</option>
+        </select>
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <label class="ak-form-label" for="sel-multi">Custom Select múltiple</label>
+        <select id="sel-multi" data-ak-select multiple data-ak-search="true" data-ak-placeholder="Selecciona varios...">
+          <optgroup label="Cereales">
+            <option value="maiz">Maíz</option>
+            <option value="trigo">Trigo</option>
+            <option value="arroz">Arroz</option>
+          </optgroup>
+          <optgroup label="Legumbres">
+            <option value="soya">Soya</option>
+            <option value="frijol">Frijol</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Checks, Radios y Switch</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-4">
+        <p class="ak-text-muted ak-mb-2">Checkboxes</p>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="checkbox" id="chk1" checked />
+          <label class="ak-form-check-label" for="chk1">Maíz</label>
+        </div>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="checkbox" id="chk2" />
+          <label class="ak-form-check-label" for="chk2">Trigo</label>
+        </div>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="checkbox" id="chk3" disabled />
+          <label class="ak-form-check-label" for="chk3">Soya (deshabilitado)</label>
+        </div>
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <p class="ak-text-muted ak-mb-2">Radios</p>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="radio" name="radio1" id="rad1" checked />
+          <label class="ak-form-check-label" for="rad1">Opción A</label>
+        </div>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="radio" name="radio1" id="rad2" />
+          <label class="ak-form-check-label" for="rad2">Opción B</label>
+        </div>
+        <div class="ak-form-check">
+          <input class="ak-form-check-input" type="radio" name="radio1" id="rad3" />
+          <label class="ak-form-check-label" for="rad3">Opción C</label>
+        </div>
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <p class="ak-text-muted ak-mb-2">Switches</p>
+        <div class="ak-form-check ak-form-switch">
+          <input class="ak-form-switch-input" type="checkbox" id="sw1" checked />
+          <label class="ak-form-switch-toggle" for="sw1"><span></span></label>
+          <label class="ak-form-check-label" for="sw1">Activo</label>
+        </div>
+        <div class="ak-form-check ak-form-switch">
+          <input class="ak-form-switch-input" type="checkbox" id="sw2" />
+          <label class="ak-form-switch-toggle" for="sw2"><span></span></label>
+          <label class="ak-form-check-label" for="sw2">Inactivo</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Range</h5>
+    <label class="ak-form-label" for="rng1">Humedad del suelo: <span id="rng1Val">60</span>%</label>
+    <input type="range" id="rng1" class="ak-form-range" min="0" max="100" value="60"
+           oninput="document.getElementById('rng1Val').textContent=this.value" />
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">DatePicker (Selector de fecha) — 3 vistas</h5>
+    <p class="ak-text-muted ak-mb-3">
+      Haz clic en el mes/año para cambiar entre vistas de días, meses y años.
+      Soporta <code>min</code>, <code>max</code> y <code>data-ak-exclude-dates</code>.
+    </p>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="dp1">Fecha de siembra</label>
+        <input type="text" id="dp1" class="ak-form-control" data-ak-datepicker
+               data-ak-placeholder="Selecciona fecha..." />
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="dp2">Con límites (2025–2027)</label>
+        <input type="text" id="dp2" class="ak-form-control" data-ak-datepicker
+               min="2025-01-01" max="2027-12-31"
+               data-ak-placeholder="Entre 2025 y 2027..." />
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="dp3">Con fechas excluidas</label>
+        <input type="text" id="dp3" class="ak-form-control" data-ak-datepicker
+               data-ak-exclude-dates="2026-07-04,2026-07-18,2026-12-25"
+               data-ak-placeholder="Fines de semana festivos..." />
+      </div>
+    </div>
+    <div class="ak-mt-2">
+      <button class="ak-btn ak-btn-sm ak-btn-outline" onclick="AgrocityKit.datepicker('#dp1').setValue('2026-07-15')">dp1 = 2026-07-15</button>
+      <button class="ak-btn ak-btn-sm ak-btn-outline" onclick="AgrocityKit.datepicker('#dp2').setValue('')">Limpiar dp2</button>
+      <button class="ak-btn ak-btn-sm ak-btn-outline" onclick="AgrocityKit.datepicker('#dp3').setValue('2026-12-25')">dp3 = Navidad</button>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">DateRange — Rango de fechas vinculado</h5>
+    <p class="ak-text-muted ak-mb-3">
+      Los campos se validan automáticamente: la fecha fin no puede ser menor que la inicio, y viceversa.
+    </p>
+    <div data-ak-date-range class="ak-date-range">
+      <div class="ak-flex-fill">
+        <label class="ak-form-label" for="dr1">Fecha inicio</label>
+        <input type="text" id="dr1" class="ak-form-control" data-ak-datepicker
+               data-ak-placeholder="Inicio..." />
+      </div>
+      <div class="ak-flex-fill">
+        <label class="ak-form-label" for="dr2">Fecha fin</label>
+        <input type="text" id="dr2" class="ak-form-control" data-ak-datepicker
+               data-ak-placeholder="Fin..." />
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">TimePicker (Selector de hora)</h5>
+    <p class="ak-text-muted ak-mb-3" style="font-size:0.85rem;">
+      Hacé clic en hora o minuto para editarlo &middot; <kbd>&uarr;</kbd><kbd>&darr;</kbd> cambiar valor &middot; <kbd>&larr;</kbd><kbd>&rarr;</kbd> cambiar segmento
+    </p>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="tp1">Hora (24h)</label>
+        <input type="text" id="tp1" class="ak-form-control" data-ak-timepicker
+               data-ak-placeholder="Selecciona hora..." />
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="tp2">Hora (12h AM/PM)</label>
+        <input type="text" id="tp2" class="ak-form-control" data-ak-timepicker
+               data-ak-ampm="true" data-ak-placeholder="Selecciona hora..." />
+      </div>
+      <div class="ak-col-12 ak-col-md-4">
+        <label class="ak-form-label" for="tp3">Paso cada 15 min</label>
+        <input type="text" id="tp3" class="ak-form-control" data-ak-timepicker
+               data-ak-minute-step="15" data-ak-placeholder="Cada 15 min..." />
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">TimeRange — Rango de horas vinculado</h5>
+    <p class="ak-text-muted ak-mb-3">
+      Los campos se validan mutuamente.
+    </p>
+    <p class="ak-text-muted ak-mb-3" style="font-size:0.85rem;">
+      &#9650;&#9660; Flechas para cambiar valor &middot; &#9664;&#9654; para cambiar segmento (hora/minuto) &middot; <kbd>Esc</kbd> cerrar
+    </p>
+    <div data-ak-time-range class="ak-date-range">
+      <div class="ak-flex-fill">
+        <label class="ak-form-label" for="tr1">Hora inicio</label>
+        <input type="text" id="tr1" class="ak-form-control" data-ak-timepicker
+               data-ak-placeholder="Inicio..." />
+      </div>
+      <div class="ak-flex-fill">
+        <label class="ak-form-label" for="tr2">Hora fin</label>
+        <input type="text" id="tr2" class="ak-form-control" data-ak-timepicker
+               data-ak-placeholder="Fin..." />
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">
+      File input — arrastra archivos, popover,
+      <code>data-ak-max-files</code>, <code>data-ak-max-size</code>,
+      <code>data-ak-accept</code>
+    </h5>
+    <div class="ak-form-file">
+      <input type="file" id="file1" class="ak-form-file-input" accept=".pdf,.doc,.docx,.xls,.csv,.png,.jpg" />
+      <div class="ak-form-file-field">
+        <svg class="ak-form-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span class="ak-form-file-text" data-placeholder="Suelta o selecciona archivo...">Suelta o selecciona archivo...</span>
+        <button class="ak-form-file-clear" type="button" aria-label="Limpiar">&times;</button>
+      </div>
+    </div>
+    <div class="ak-form-file ak-mt-2"
+         data-ak-file-list
+         data-ak-max-files="3"
+         data-ak-max-size="2MB"
+         data-ak-accept=".pdf,.doc,.docx,.jpg,.png,.csv">
+      <input type="file" id="file2" class="ak-form-file-input" multiple />
+      <div class="ak-form-file-field">
+        <svg class="ak-form-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="ak-form-file-text" data-placeholder="Máx. 3 archivos, 2MB c/u">Máx. 3 archivos, 2MB c/u</span>
+        <button class="ak-form-file-clear" type="button" aria-label="Limpiar">&times;</button>
+        <button class="ak-form-file-list-btn" type="button" aria-label="Ver lista">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="ak-form-file-popover"></div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Input Group</h5>
+    <div class="ak-input-group ak-mb-3">
+      <span class="ak-input-group-text">@</span>
+      <input type="text" class="ak-form-control" placeholder="Usuario" />
+    </div>
+    <div class="ak-input-group ak-mb-3">
+      <input type="text" class="ak-form-control" placeholder="Buscar cultivo..." />
+      <button class="ak-btn ak-btn-primary" type="button">Buscar</button>
+    </div>
+    <div class="ak-input-group">
+      <span class="ak-input-group-text">$</span>
+      <input type="number" class="ak-form-control" placeholder="0.00" />
+      <span class="ak-input-group-text">MXN</span>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Floating Labels</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-6">
+        <div class="ak-form-floating">
+          <input type="text" id="fl-nombre" class="ak-form-control" placeholder="Nombre" />
+          <label for="fl-nombre">Nombre del productor</label>
+        </div>
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <div class="ak-form-floating">
+          <select id="fl-region" class="ak-form-select">
+            <option value="">Seleccionar...</option>
+            <option>Norte</option>
+            <option>Centro</option>
+            <option>Sur</option>
+          </select>
+          <label for="fl-region">Región</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Validación</h5>
+    <form novalidate>
+      <div class="ak-row ak-g-3">
+        <div class="ak-col-12 ak-col-md-6">
+          <label class="ak-form-label" for="val-ok">Campo válido</label>
+          <input type="text" id="val-ok" class="ak-form-control ak-is-valid" value="Valor correcto" />
+          <div class="ak-valid-feedback">¡Se ve bien!</div>
+        </div>
+        <div class="ak-col-12 ak-col-md-6">
+          <label class="ak-form-label" for="val-err">Campo inválido</label>
+          <input type="text" id="val-err" class="ak-form-control ak-is-invalid" value="" />
+          <div class="ak-invalid-feedback">Este campo es requerido.</div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+<!-- =====================================================================
+     5. BOTONES
+     ===================================================================== -->
+<section id="botones" class="demo-section">
+  <h2 class="demo-title">5. Botones</h2>
+  <p class="demo-subtitle">Variantes, tamaños, outline, grupos y estados</p>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Variantes sólidas</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px;">
+      <button class="ak-btn ak-btn-primary">Primary</button>
+      <button class="ak-btn ak-btn-secondary">Secondary</button>
+      <button class="ak-btn ak-btn-success">Success</button>
+      <button class="ak-btn ak-btn-danger">Danger</button>
+      <button class="ak-btn ak-btn-warning">Warning</button>
+      <button class="ak-btn ak-btn-info">Info</button>
+      <button class="ak-btn ak-btn-light">Light</button>
+      <button class="ak-btn ak-btn-link">Link</button>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Outline</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px;">
+      <button class="ak-btn ak-btn-outline-primary">Outline Primary</button>
+      <button class="ak-btn ak-btn-outline-secondary">Outline Secondary</button>
+      <button class="ak-btn ak-btn-outline-success">Outline Success</button>
+      <button class="ak-btn ak-btn-outline-danger">Outline Danger</button>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tamaños y estados</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px; align-items:center;">
+      <button class="ak-btn ak-btn-primary ak-btn-lg">Grande</button>
+      <button class="ak-btn ak-btn-primary">Normal</button>
+      <button class="ak-btn ak-btn-primary ak-btn-sm">Pequeño</button>
+      <button class="ak-btn ak-btn-primary" disabled>Deshabilitado</button>
+      <button class="ak-btn ak-btn-primary ak-active">Activo</button>
+    </div>
+    <div class="ak-mt-3">
+      <button class="ak-btn ak-btn-primary ak-btn-block">Botón bloque (100%)</button>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Grupos de botones</h5>
+    <div class="ak-btn-group ak-mb-3">
+      <button class="ak-btn ak-btn-secondary">Izquierda</button>
+      <button class="ak-btn ak-btn-secondary">Centro</button>
+      <button class="ak-btn ak-btn-secondary">Derecha</button>
+    </div>
+    <br />
+    <div class="ak-btn-group">
+      <button class="ak-btn ak-btn-primary">1</button>
+      <button class="ak-btn ak-btn-primary">2</button>
+      <button class="ak-btn ak-btn-primary">3</button>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Botón close</h5>
+    <button class="ak-btn-close" aria-label="Cerrar"></button>
+  </div>
+</section>
+
+<!-- =====================================================================
+     6. BADGES
+     ===================================================================== -->
+<section id="badges" class="demo-section">
+  <h2 class="demo-title">6. Badges</h2>
+  <p class="demo-subtitle">Etiquetas de estado, contadores y posicionados</p>
+
+  <div class="demo-box">
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px;">
+      <span class="ak-badge ak-bg-primary">Primary</span>
+      <span class="ak-badge ak-bg-secondary">Secondary</span>
+      <span class="ak-badge ak-bg-success">Success</span>
+      <span class="ak-badge ak-bg-danger">Danger</span>
+      <span class="ak-badge ak-bg-warning ak-text-dark">Warning</span>
+      <span class="ak-badge ak-bg-info">Info</span>
+      <span class="ak-badge ak-bg-light ak-text-dark">Light</span>
+      <span class="ak-badge ak-bg-dark">Dark</span>
+    </div>
+    <div class="ak-mt-3 ak-hstack" style="flex-wrap:wrap; gap:8px;">
+      <span class="ak-badge ak-badge-pill ak-bg-primary">Pill Primary</span>
+      <span class="ak-badge ak-badge-pill ak-bg-success">42</span>
+      <span class="ak-badge ak-badge-pill ak-bg-danger">99+</span>
+    </div>
+    <div class="ak-mt-3 ak-hstack" style="gap:16px;">
+      <button class="ak-btn ak-btn-primary">
+        Notificaciones
+        <span class="ak-badge ak-bg-danger ak-badge-corner">5</span>
+      </button>
+      <button class="ak-btn ak-btn-outline">
+        Alertas
+        <span class="ak-badge ak-bg-warning ak-text-dark ak-badge-corner">3</span>
+      </button>
+      <button class="ak-btn ak-btn-success">
+        Mensajes
+        <span class="ak-badge ak-bg-danger ak-badge-corner">99+</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     7. ALERTAS
+     ===================================================================== -->
+<section id="alertas" class="demo-section">
+  <h2 class="demo-title">7. Alertas</h2>
+  <p class="demo-subtitle">Mensajes de estado y alertas descartables</p>
+
+  <div class="demo-box">
+    <div class="ak-alert ak-alert-primary" role="alert">
+      <strong>Info:</strong> Nuevos datos de riego disponibles para tu cultivo.
+    </div>
+    <div class="ak-alert ak-alert-success" role="alert">
+      <strong>¡Éxito!</strong> El reporte ha sido generado correctamente.
+    </div>
+    <div class="ak-alert ak-alert-warning" role="alert">
+      <strong>Advertencia:</strong> Los niveles de humedad están por debajo del umbral.
+    </div>
+    <div class="ak-alert ak-alert-danger" role="alert">
+      <strong>Error:</strong> No se pudo conectar con el sensor de temperatura.
+    </div>
+    <div class="ak-alert ak-alert-info ak-alert-dismissible ak-fade" role="alert" id="alert-demo">
+      <strong>Descartable:</strong> Haz clic en la X para cerrar esta alerta.
+      <button class="ak-btn-close" data-ak-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     8. CARDS
+     ===================================================================== -->
+<section id="cards" class="demo-section">
+  <h2 class="demo-title">8. Cards</h2>
+  <p class="demo-subtitle">Tarjetas con imagen, header, body, footer y variantes</p>
+
+  <div class="ak-row ak-g-3">
+    <div class="ak-col-12 ak-col-md-4">
+      <div class="ak-card">
+        <img src="https://picsum.photos/seed/card1/400/200" class="ak-card-img-top" alt="..." />
+        <div class="ak-card-body">
+          <h5 class="ak-card-title">Campo de Maíz</h5>
+          <p class="ak-card-subtitle ak-text-muted">Temporada 2025–2026</p>
+          <p class="ak-card-text">Seguimiento del ciclo productivo con métricas de riego y fertilización automatizada.</p>
+          <a href="#" class="ak-btn ak-btn-primary">Ver detalles</a>
+        </div>
+      </div>
+    </div>
+    <div class="ak-col-12 ak-col-md-4">
+      <div class="ak-card">
+        <div class="ak-card-header">Reporte semanal</div>
+        <div class="ak-card-body">
+          <h5 class="ak-card-title">Rendimiento del cultivo</h5>
+          <p class="ak-card-text">Producción estimada: <strong>4.2 ton/ha</strong>. Por encima del promedio regional.</p>
+          <a href="#" class="ak-card-link">Ver gráfica</a>
+          <a href="#" class="ak-card-link">Exportar</a>
+        </div>
+        <div class="ak-card-footer ak-text-muted">Actualizado hace 2 horas</div>
+      </div>
+    </div>
+    <div class="ak-col-12 ak-col-md-4">
+      <div class="ak-card" style="border-color: var(--ak-primary);">
+        <div class="ak-card-header" style="background: var(--ak-primary); color:#fff;">Sensor activo</div>
+        <div class="ak-card-body">
+          <h5 class="ak-card-title">Temperatura: 28°C</h5>
+          <p class="ak-card-text">Humedad relativa: <strong>72%</strong>. Condiciones óptimas para maíz.</p>
+          <div class="ak-progress ak-mt-2">
+            <div class="ak-progress-bar" style="width:72%;"></div>
+          </div>
+          <small class="ak-text-muted">Humedad 72%</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     9. TABLAS
+     ===================================================================== -->
+<section id="tablas" class="demo-section">
+  <h2 class="demo-title">9. Tablas</h2>
+  <p class="demo-subtitle">Básica, rayada, hover, con borde y responsiva</p>
+
+  <div class="demo-box">
+    <div class="ak-table-responsive">
+      <table class="ak-table ak-table-striped ak-table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cultivo</th>
+            <th>Región</th>
+            <th>Área (ha)</th>
+            <th>Rendimiento</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Maíz</td>
+            <td>Jalisco</td>
+            <td>12.5</td>
+            <td>4.2 ton/ha</td>
+            <td><span class="ak-badge ak-badge-pill ak-bg-success">Activo</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Trigo</td>
+            <td>Sonora</td>
+            <td>8.0</td>
+            <td>3.8 ton/ha</td>
+            <td><span class="ak-badge ak-badge-pill ak-bg-warning ak-text-dark">Pendiente</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Soya</td>
+            <td>Sinaloa</td>
+            <td>20.0</td>
+            <td>2.9 ton/ha</td>
+            <td><span class="ak-badge ak-badge-pill ak-bg-danger">Alerta</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Arroz</td>
+            <td>Veracruz</td>
+            <td>15.3</td>
+            <td>5.1 ton/ha</td>
+            <td><span class="ak-badge ak-badge-pill ak-bg-primary">En proceso</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3">Total</th>
+            <th>55.8 ha</th>
+            <th colspan="2"></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Data Table (con búsqueda, orden y paginación)</h5>
+    <table data-ak-datatable class="ak-table ak-table-striped ak-table-hover">
+      <thead>
+        <tr>
+          <th>Cultivo</th>
+          <th>Región</th>
+          <th data-type="number">Área (ha)</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Maíz</td><td>Jalisco</td><td>12.5</td><td>Activo</td></tr>
+        <tr><td>Trigo</td><td>Sonora</td><td>8.0</td><td>Pendiente</td></tr>
+        <tr><td>Soya</td><td>Sinaloa</td><td>20.0</td><td>Alerta</td></tr>
+        <tr><td>Arroz</td><td>Veracruz</td><td>15.3</td><td>Proceso</td></tr>
+        <tr><td>Café</td><td>Chiapas</td><td>5.8</td><td>Activo</td></tr>
+        <tr><td>Cacao</td><td>Tabasco</td><td>9.2</td><td>Activo</td></tr>
+        <tr><td>Frijol</td><td>Zacatecas</td><td>7.4</td><td>Pendiente</td></tr>
+        <tr><td>Sorgo</td><td>Tamaulipas</td><td>18.0</td><td>Activo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- =====================================================================
+     10. NAVEGACIÓN
+     ===================================================================== -->
+<section id="navegacion" class="demo-section">
+  <h2 class="demo-title">10. Navegación</h2>
+  <p class="demo-subtitle">Navs, tabs, pills, breadcrumb, paginación y list group</p>
+
+  <!-- Breadcrumb -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Breadcrumb</h5>
+    <nav aria-label="breadcrumb">
+      <ol class="ak-breadcrumb">
+        <li class="ak-breadcrumb-item"><a href="#">Inicio</a></li>
+        <li class="ak-breadcrumb-item"><a href="#">Cultivos</a></li>
+        <li class="ak-breadcrumb-item"><a href="#">Maíz</a></li>
+        <li class="ak-breadcrumb-item ak-active" aria-current="page">Ciclo 2025</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Navs -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Nav básico y Pills</h5>
+    <ul class="ak-nav ak-mb-3">
+      <li class="ak-nav-item"><a class="ak-nav-link ak-active" href="#">Activo</a></li>
+      <li class="ak-nav-item"><a class="ak-nav-link" href="#">Enlace</a></li>
+      <li class="ak-nav-item"><a class="ak-nav-link" href="#">Otro</a></li>
+      <li class="ak-nav-item"><a class="ak-nav-link ak-disabled">Deshabilitado</a></li>
+    </ul>
+    <ul class="ak-nav ak-nav-pills">
+      <li class="ak-nav-item"><a class="ak-nav-link ak-active" href="#">Pills activo</a></li>
+      <li class="ak-nav-item"><a class="ak-nav-link" href="#">Pills enlace</a></li>
+      <li class="ak-nav-item"><a class="ak-nav-link" href="#">Pills otro</a></li>
+    </ul>
+  </div>
+
+  <!-- Tabs simples (sin borde, sin íconos) -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tabs simples</h5>
+    <ul class="ak-nav ak-nav-tabs" id="tabSimple" role="tablist">
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-simple1" role="tab">Pestaña 1</button>
+      </li>
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-simple2" role="tab">Pestaña 2</button>
+      </li>
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-simple3" role="tab">Pestaña 3</button>
+      </li>
+    </ul>
+    <div class="ak-tab-content">
+      <div class="ak-tab-pane ak-active" id="tab-simple1" role="tabpanel">
+        <p>Contenido de la <strong>Pestaña 1</strong>. Este es el ejemplo más básico de tabs sin borde envolvente ni íconos.</p>
+      </div>
+      <div class="ak-tab-pane" id="tab-simple2" role="tabpanel">
+        <p>Contenido de la <strong>Pestaña 2</strong>. Ideal para secciones simples donde no se necesita un contenedor con borde.</p>
+      </div>
+      <div class="ak-tab-pane" id="tab-simple3" role="tabpanel">
+        <p>Contenido de la <strong>Pestaña 3</strong>. Los tabs simples heredan el fondo del contenedor padre.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs con íconos y borde -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tabs con íconos y borde</h5>
+    <ul class="ak-nav ak-nav-tabs" id="tabDemo2" role="tablist">
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-maiz2" role="tab">
+          <span data-ak-icon="seed" data-ak-icon-size="16" class="ak-icon-inline"></span> Maíz
+        </button>
+      </li>
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-trigo2" role="tab">
+          <span data-ak-icon="sprout" data-ak-icon-size="16" class="ak-icon-inline"></span> Trigo
+        </button>
+      </li>
+      <li class="ak-nav-item" role="presentation">
+        <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-soya2" role="tab">
+          <span data-ak-icon="sun" data-ak-icon-size="16" class="ak-icon-inline"></span> Soya
+        </button>
+      </li>
+    </ul>
+    <div class="ak-tab-content ak-tab-content-bordered">
+      <div class="ak-tab-pane ak-active" id="tab-maiz2" role="tabpanel">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-8">
+            <h6 class="ak-fw-semibold ak-mb-2">🌽 Maíz (Zea mays)</h6>
+            <p class="ak-text-muted ak-fs-sm">Cultivo de ciclo corto (90-120 días). Requiere temperaturas entre 18-30 °C y riego cada 5-7 días en temporada seca.</p>
+            <div class="ak-table-responsive ak-mt-3">
+              <table class="ak-table ak-table-compact ak-m-0" style="min-width:auto;">
+                <tbody>
+                  <tr><td class="ak-fw-semibold">Rendimiento</td><td>4.2 ton/ha</td><td class="ak-text-success">+8% vs temporada anterior</td></tr>
+                  <tr><td class="ak-fw-semibold">Superficie</td><td>12.5 ha</td><td><span class="ak-badge ak-bg-primary">Activo</span></td></tr>
+                  <tr><td class="ak-fw-semibold">Próximo riego</td><td>12 jul 2026</td><td class="ak-text-warning">En 2 días</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-d-flex ak-flex-column ak-justify-center">
+            <div class="ak-card ak-p-3 ak-text-center" style="background:rgba(43,123,65,0.06);border-color:rgba(43,123,65,0.12);">
+              <div class="ak-h3 ak-text-success ak-m-0">75%</div>
+              <div class="ak-fs-sm ak-text-muted">Progreso de cosecha</div>
+              <div class="ak-progress ak-mt-2" style="height:6px;">
+                <div class="ak-progress-bar ak-bg-success" style="width:75%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ak-tab-pane" id="tab-trigo2" role="tabpanel">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-8">
+            <h6 class="ak-fw-semibold ak-mb-2">🌾 Trigo (Triticum)</h6>
+            <p class="ak-text-muted ak-fs-sm">Cultivo de invierno, siembra en mayo-junio. Tolera temperaturas de hasta -5 °C. Ciclo de 120-150 días según variedad.</p>
+            <div class="ak-table-responsive ak-mt-3">
+              <table class="ak-table ak-table-compact ak-m-0" style="min-width:auto;">
+                <tbody>
+                  <tr><td class="ak-fw-semibold">Rendimiento</td><td>3.8 ton/ha</td><td class="ak-text-success">+12% vs temporada anterior</td></tr>
+                  <tr><td class="ak-fw-semibold">Superficie</td><td>8.3 ha</td><td><span class="ak-badge ak-bg-success">Óptimo</span></td></tr>
+                  <tr><td class="ak-fw-semibold">Fertilización</td><td>Completada</td><td class="ak-text-success">✔ Hace 3 días</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-d-flex ak-flex-column ak-justify-center">
+            <div class="ak-card ak-p-3 ak-text-center" style="background:rgba(47,85,151,0.06);border-color:rgba(47,85,151,0.12);">
+              <div class="ak-h3 ak-text-secondary ak-m-0">90%</div>
+              <div class="ak-fs-sm ak-text-muted">Progreso de cultivo</div>
+              <div class="ak-progress ak-mt-2" style="height:6px;">
+                <div class="ak-progress-bar" style="width:90%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ak-tab-pane" id="tab-soya2" role="tabpanel">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-8">
+            <h6 class="ak-fw-semibold ak-mb-2">🫘 Soya (Glycine max)</h6>
+            <p class="ak-text-muted ak-fs-sm">Leguminosa que fija nitrógeno en el suelo, ideal para rotación con maíz. Ciclo de 100-130 días. Requiere precipitación >500 mm.</p>
+            <div class="ak-table-responsive ak-mt-3">
+              <table class="ak-table ak-table-compact ak-m-0" style="min-width:auto;">
+                <tbody>
+                  <tr><td class="ak-fw-semibold">Rendimiento</td><td>2.9 ton/ha</td><td class="ak-text-success">+5% vs temporada anterior</td></tr>
+                  <tr><td class="ak-fw-semibold">Superficie</td><td>15.0 ha</td><td><span class="ak-badge ak-bg-secondary">En desarrollo</span></td></tr>
+                  <tr><td class="ak-fw-semibold">Control de plagas</td><td>Programado</td><td class="ak-text-warning">⚠ En 7 días</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-d-flex ak-flex-column ak-justify-center">
+            <div class="ak-card ak-p-3 ak-text-center" style="background:rgba(192,57,43,0.06);border-color:rgba(192,57,43,0.12);">
+              <div class="ak-h3 ak-text-danger ak-m-0">35%</div>
+              <div class="ak-fs-sm ak-text-muted">Ciclo completado</div>
+              <div class="ak-progress ak-mt-2" style="height:6px;">
+                <div class="ak-progress-bar ak-bg-warning" style="width:35%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs verticales -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tabs verticales</h5>
+    <div class="ak-nav-tabs-vertical">
+      <ul class="ak-nav ak-nav-tabs" id="tabVertical" role="tablist">
+        <li class="ak-nav-item" role="presentation">
+          <button class="ak-nav-link ak-active" data-ak-toggle="tab" data-ak-target="#tab-vert1" role="tab">
+<span data-ak-icon="seed" data-ak-icon-size="16" class="ak-icon-inline"></span> Maíz
+          </button>
+        </li>
+        <li class="ak-nav-item" role="presentation">
+          <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-vert2" role="tab">
+            <span data-ak-icon="sprout" data-ak-icon-size="16" class="ak-icon-inline"></span> Trigo
+          </button>
+        </li>
+        <li class="ak-nav-item" role="presentation">
+          <button class="ak-nav-link" data-ak-toggle="tab" data-ak-target="#tab-vert3" role="tab">
+            <span data-ak-icon="sun" data-ak-icon-size="16" class="ak-icon-inline"></span> Soya
+          </button>
+        </li>
+      </ul>
+      <div class="ak-tab-content">
+        <div class="ak-tab-pane ak-active" id="tab-vert1" role="tabpanel">
+          <h6 class="ak-fw-semibold ak-mb-2">🌽 Maíz</h6>
+          <p class="ak-text-muted ak-fs-sm ak-mb-0">Cultivo de ciclo corto (90-120 días). Rendimiento promedio: 4.2 ton/ha. Requiere riego cada 5-7 días en temporada seca. Temperatura óptima: 18-30 °C.</p>
+        </div>
+        <div class="ak-tab-pane" id="tab-vert2" role="tabpanel">
+          <h6 class="ak-fw-semibold ak-mb-2">🌾 Trigo</h6>
+          <p class="ak-text-muted ak-fs-sm ak-mb-0">Cultivo de invierno, siembra en mayo-junio. Tolera temperaturas de hasta -5 °C. Ciclo de 120-150 días. Rendimiento: 3.8 ton/ha.</p>
+        </div>
+        <div class="ak-tab-pane" id="tab-vert3" role="tabpanel">
+          <h6 class="ak-fw-semibold ak-mb-2">🫘 Soya</h6>
+          <p class="ak-text-muted ak-fs-sm ak-mb-0">Leguminosa que fija nitrógeno en el suelo. Ideal para rotación con maíz. Ciclo de 100-130 días. Rendimiento: 2.9 ton/ha.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Paginación</h5>
+    <nav aria-label="Paginación">
+      <ul class="ak-pagination">
+        <li class="ak-page-item ak-disabled"><a class="ak-page-link" href="#">«</a></li>
+        <li class="ak-page-item ak-active"><a class="ak-page-link" href="#">1</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">2</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">3</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">4</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">5</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">»</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Paginación pequeña" class="ak-mt-3">
+      <ul class="ak-pagination ak-pagination-sm">
+        <li class="ak-page-item"><a class="ak-page-link" href="#">Anterior</a></li>
+        <li class="ak-page-item ak-active"><a class="ak-page-link" href="#">2</a></li>
+        <li class="ak-page-item"><a class="ak-page-link" href="#">Siguiente</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- List Group -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">List Group</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-6">
+        <ul class="ak-list-group">
+          <li class="ak-list-group-item">Ítem básico</li>
+          <li class="ak-list-group-item ak-active">Ítem activo</li>
+          <li class="ak-list-group-item">Otro ítem</li>
+          <li class="ak-list-group-item ak-disabled">Deshabilitado</li>
+        </ul>
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <div class="ak-list-group">
+          <a href="#" class="ak-list-group-item">🌽 Maíz — Jalisco</a>
+          <a href="#" class="ak-list-group-item ak-active">🌾 Trigo — Sonora</a>
+          <a href="#" class="ak-list-group-item">🫘 Soya — Sinaloa</a>
+          <a href="#" class="ak-list-group-item">🍚 Arroz — Veracruz</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     11. COMPONENTES AVANZADOS
+     ===================================================================== -->
+<section id="componentes" class="demo-section">
+  <h2 class="demo-title">11. Componentes avanzados</h2>
+  <p class="demo-subtitle">Accordion, Collapse, Dropdown, Modal, Offcanvas</p>
+
+  <!-- Accordion -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Accordion <span class="ak-badge ak-bg-primary ak-fs-xs" style="vertical-align:middle">solo uno a la vez</span></h5>
+    <div class="ak-accordion" id="accordionDemo">
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button" data-ak-toggle="accordion" data-ak-target="#acc1">
+            ¿Qué cultivos son compatibles con el sistema?
+          </button>
+        </h2>
+        <div id="acc1" class="ak-accordion-body">
+          El sistema es compatible con maíz, trigo, soya, arroz, café, cacao, frijol, sorgo y más de 50 variedades adicionales registradas en nuestra base de datos.
+        </div>
+      </div>
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#acc2">
+            ¿Cómo se conectan los sensores?
+          </button>
+        </h2>
+        <div id="acc2" class="ak-accordion-body ak-collapse">
+          Los sensores se conectan vía protocolo LoRaWAN o WiFi. La configuración inicial tarda menos de 10 minutos usando la app móvil o el panel web.
+        </div>
+      </div>
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#acc3">
+            ¿Qué datos se recopilan?
+          </button>
+        </h2>
+        <div id="acc3" class="ak-accordion-body ak-collapse">
+          Temperatura, humedad relativa, humedad del suelo, luminosidad, CO₂ y velocidad del viento. Todos los datos se almacenan con marca de tiempo y geolocalización.
+        </div>
+      </div>
+    </div>
+    <h5 class="ak-h5 ak-mt-4 ak-mb-3">Accordion múltiple <span class="ak-badge ak-bg-secondary ak-fs-xs" style="vertical-align:middle">varios abiertos a la vez</span></h5>
+    <div class="ak-accordion" data-ak-multiple>
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button" data-ak-toggle="accordion" data-ak-target="#accMulti1">
+            Panel 1 — siempre abierto
+          </button>
+        </h2>
+        <div id="accMulti1" class="ak-accordion-body">
+          Este panel permanece abierto aunque abras otro.
+        </div>
+      </div>
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#accMulti2">
+            Panel 2 — puedes abrirme junto al 1
+          </button>
+        </h2>
+        <div id="accMulti2" class="ak-accordion-body ak-collapse">
+          Con <code>data-ak-multiple</code> los paneles no se cierran entre sí.
+        </div>
+      </div>
+      <div class="ak-accordion-item">
+        <h2 class="ak-accordion-header">
+          <button class="ak-accordion-button ak-collapsed" data-ak-toggle="accordion" data-ak-target="#accMulti3">
+            Panel 3 — y yo también puedo estar abierto
+          </button>
+        </h2>
+        <div id="accMulti3" class="ak-accordion-body ak-collapse">
+          Ideal para secciones independientes donde cada panel es una categoría distinta.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapse -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Collapse</h5>
+    <button class="ak-btn ak-btn-secondary" data-ak-toggle="collapse" data-ak-target="#collapseDemo">
+      Mostrar / Ocultar información adicional
+    </button>
+    <div id="collapseDemo" class="ak-collapse ak-mt-3">
+      <div class="ak-card">
+        <div class="ak-card-body">
+          Este es el contenido colapsable. Puede contener cualquier HTML: textos, imágenes, formularios, etc.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dropdown -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Dropdowns</h5>
+    <div class="ak-hstack" style="gap:12px; flex-wrap:wrap;">
+      <div class="ak-dropdown">
+        <button class="ak-btn ak-btn-primary" data-ak-toggle="dropdown">
+          Acciones ▾
+        </button>
+        <ul class="ak-dropdown-menu">
+          <li><span class="ak-dropdown-header">Cultivo</span></li>
+          <li><a class="ak-dropdown-item" href="#">Ver detalle</a></li>
+          <li><a class="ak-dropdown-item" href="#">Editar</a></li>
+          <li><hr class="ak-dropdown-divider" /></li>
+          <li><a class="ak-dropdown-item" href="#">Eliminar</a></li>
+        </ul>
+      </div>
+      <div class="ak-dropdown">
+        <button class="ak-btn ak-btn-secondary" data-ak-toggle="dropdown">
+          Exportar ▾
+        </button>
+        <ul class="ak-dropdown-menu ak-dropdown-menu-end">
+          <li><a class="ak-dropdown-item" href="#">CSV</a></li>
+          <li><a class="ak-dropdown-item" href="#">Excel (.xlsx)</a></li>
+          <li><a class="ak-dropdown-item" href="#">PDF</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Modal</h5>
+    <div class="ak-hstack" style="gap:8px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-primary" data-ak-toggle="modal" data-ak-target="#modalDemo">
+        Abrir modal
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-toggle="modal" data-ak-target="#modalDemoLg">
+        Modal grande
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-toggle="modal" data-ak-target="#modalDemoSm">
+        Modal pequeño
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal definitions -->
+  <div class="ak-modal" id="modalDemo" tabindex="-1" aria-labelledby="modalDemoLabel" aria-hidden="true">
+    <div class="ak-modal-dialog ak-modal-dialog-centered">
+      <div class="ak-modal-content">
+        <div class="ak-modal-header">
+          <h5 class="ak-modal-title" id="modalDemoLabel">Registrar nuevo cultivo</h5>
+          <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="ak-modal-body">
+          <div class="ak-row ak-g-3">
+            <div class="ak-col-12 ak-col-md-6">
+              <label class="ak-form-label" for="m-cultivo">Cultivo</label>
+              <input type="text" id="m-cultivo" class="ak-form-control" placeholder="Nombre del cultivo" />
+            </div>
+            <div class="ak-col-12 ak-col-md-6">
+              <label class="ak-form-label" for="m-area">Área (ha)</label>
+              <input type="number" id="m-area" class="ak-form-control" placeholder="0.0" min="0" />
+            </div>
+            <div class="ak-col-12">
+              <label class="ak-form-label" for="m-notas">Notas</label>
+              <textarea id="m-notas" class="ak-form-control" rows="3" placeholder="Observaciones..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="ak-modal-footer">
+          <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cancelar</button>
+          <button class="ak-btn ak-btn-primary">Guardar cultivo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ak-modal" id="modalDemoLg" tabindex="-1" aria-hidden="true">
+    <div class="ak-modal-dialog ak-modal-dialog-lg">
+      <div class="ak-modal-content">
+        <div class="ak-modal-header">
+          <h5 class="ak-modal-title">Modal grande (800px)</h5>
+          <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="ak-modal-body">
+          <p>Contenido de modal grande. Ideal para formularios extensos, tablas o visualizaciones de datos.</p>
+        </div>
+        <div class="ak-modal-footer">
+          <button class="ak-btn ak-btn-primary" data-ak-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ak-modal" id="modalDemoSm" tabindex="-1" aria-hidden="true">
+    <div class="ak-modal-dialog ak-modal-dialog-sm ak-modal-dialog-centered">
+      <div class="ak-modal-content">
+        <div class="ak-modal-header">
+          <h5 class="ak-modal-title">Confirmar acción</h5>
+          <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="ak-modal-body">
+          <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="ak-modal-footer">
+          <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cancelar</button>
+          <button class="ak-btn ak-btn-danger" data-ak-dismiss="modal">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offcanvas -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Offcanvas (panel lateral)</h5>
+    <div class="ak-hstack" style="gap:8px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-primary" data-ak-toggle="offcanvas" data-ak-target="#offcanvasStart">
+        ← Izquierda
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-toggle="offcanvas" data-ak-target="#offcanvasEnd">
+        Derecha →
+      </button>
+    </div>
+  </div>
+
+  <div class="ak-offcanvas ak-offcanvas-start" id="offcanvasStart" tabindex="-1" aria-hidden="true">
+    <div class="ak-offcanvas-header">
+      <h5 class="ak-offcanvas-title">Menú de navegación</h5>
+      <button class="ak-btn-close" data-ak-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="ak-offcanvas-body">
+      <ul class="ak-list-group">
+        <a href="#" class="ak-list-group-item">🏠 Dashboard</a>
+        <a href="#" class="ak-list-group-item">🌽 Cultivos</a>
+        <a href="#" class="ak-list-group-item">📊 Reportes</a>
+        <a href="#" class="ak-list-group-item">⚙️ Configuración</a>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ak-offcanvas ak-offcanvas-end" id="offcanvasEnd" tabindex="-1" aria-hidden="true">
+    <div class="ak-offcanvas-header">
+      <h5 class="ak-offcanvas-title">Filtros de búsqueda</h5>
+      <button class="ak-btn-close" data-ak-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="ak-offcanvas-body">
+      <div class="ak-mb-3">
+        <label class="ak-form-label">Región</label>
+        <select class="ak-form-select">
+          <option>Todas</option>
+          <option>Norte</option>
+          <option>Centro</option>
+          <option>Sur</option>
+        </select>
+      </div>
+      <div class="ak-mb-3">
+        <label class="ak-form-label">Estado</label>
+        <div class="ak-form-check"><input class="ak-form-check-input" type="checkbox" id="f-activo" checked /><label class="ak-form-check-label" for="f-activo">Activo</label></div>
+        <div class="ak-form-check"><input class="ak-form-check-input" type="checkbox" id="f-pend" /><label class="ak-form-check-label" for="f-pend">Pendiente</label></div>
+        <div class="ak-form-check"><input class="ak-form-check-input" type="checkbox" id="f-alerta" /><label class="ak-form-check-label" for="f-alerta">Alerta</label></div>
+      </div>
+      <button class="ak-btn ak-btn-primary ak-btn-block">Aplicar filtros</button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     12. INIT ELEMENT (dinámicos)
+     ===================================================================== -->
+<section id="init-dinamico" class="demo-section">
+  <h2 class="demo-title">12. Elementos dinámicos (initElement)</h2>
+  <p class="demo-subtitle">Inicializa componentes creados después de cargar la página con <code>AgrocityKit.initElement()</code></p>
+
+  <div class="demo-box">
+    <p class="ak-text-muted ak-mb-3">Haz clic en "Agregar componente dinámico" para insertar HTML con <code>data-ak-datepicker</code> y <code>data-ak-select</code>, luego se inicializa automáticamente.</p>
+    <button class="ak-btn ak-btn-primary ak-mb-3" onclick="agregarDinamico()">+ Agregar componente dinámico</button>
+    <div id="dynamicContainer" class="ak-p-3 ak-border ak-rounded" style="min-height: 80px;">
+      <p class="ak-text-muted ak-fs-sm ak-m-0">Aquí aparecerán los nuevos componentes...</p>
+    </div>
+    <script>
+      function agregarDinamico() {
+        const container = document.getElementById('dynamicContainer');
+        const idx = container.querySelectorAll('.ak-row').length + 1;
+        const html = `
+          <div class="ak-row ak-g-2 ak-mt-2 ak-p-2 ak-bg-surface-alt ak-rounded">
+            <div class="ak-col-12 ak-col-sm-4">
+              <label class="ak-form-label">Cultivo #${idx}</label>
+              <select data-ak-select data-ak-placeholder="Selecciona...">
+                <option value="maiz">Maíz</option>
+                <option value="trigo">Trigo</option>
+                <option value="soja">Soja</option>
+              </select>
+            </div>
+            <div class="ak-col-12 ak-col-sm-4">
+              <label class="ak-form-label">Fecha #${idx}</label>
+              <input type="text" class="ak-form-control" data-ak-datepicker placeholder="Fecha..." />
+            </div>
+            <div class="ak-col-12 ak-col-sm-4">
+              <label class="ak-form-label">Hora #${idx}</label>
+              <input type="text" class="ak-form-control" data-ak-timepicker placeholder="Hora..." />
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+        // Inicializar los nuevos componentes
+        AgrocityKit.initElement(container);
+      }
+    </script>
+  </div>
+</section>
+
+<!-- =====================================================================
+     13. FEEDBACK
+     ===================================================================== -->
+<section id="feedback" class="demo-section">
+  <h2 class="demo-title">13. Feedback</h2>
+  <p class="demo-subtitle">Progress, Spinners, Toasts, Placeholders, Tooltips, Popovers</p>
+
+  <!-- Progress -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Progress</h5>
+    <div class="ak-progress ak-mb-3">
+      <div class="ak-progress-bar" style="width: 25%;">25%</div>
+    </div>
+    <div class="ak-progress ak-mb-3" style="height:24px;">
+      <div class="ak-progress-bar ak-bg-success" style="width: 60%;">60%</div>
+    </div>
+    <div class="ak-progress ak-mb-3">
+      <div class="ak-progress-bar ak-progress-bar-striped ak-progress-bar-animated ak-bg-warning" style="width: 75%;"></div>
+    </div>
+    <div class="ak-progress">
+      <div class="ak-progress-bar ak-bg-danger" style="width: 100%;">100%</div>
+    </div>
+  </div>
+
+  <!-- Spinners -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Spinners</h5>
+    <div class="ak-hstack" style="gap:16px; flex-wrap:wrap; align-items:center;">
+      <div class="ak-spinner-border" role="status"><span class="ak-visually-hidden">Cargando...</span></div>
+      <div class="ak-spinner-border ak-spinner-border-sm" role="status"></div>
+      <div class="ak-spinner-grow" role="status"><span class="ak-visually-hidden">Cargando...</span></div>
+      <div class="ak-spinner-border" style="color: var(--ak-success);" role="status"></div>
+      <div class="ak-spinner-border" style="color: var(--ak-danger);" role="status"></div>
+      <button class="ak-btn ak-btn-primary" disabled>
+        <span class="ak-spinner-border ak-spinner-border-sm" role="status"></span>
+        Cargando...
+      </button>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Toasts</h5>
+    <div class="ak-hstack" style="gap:8px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-success" onclick="AgrocityKit.showToast('¡Guardado correctamente!', {type:'success'})">
+        Toast éxito
+      </button>
+      <button class="ak-btn ak-btn-danger" onclick="AgrocityKit.showToast('Error al conectar con el sensor.', {type:'danger'})">
+        Toast error
+      </button>
+      <button class="ak-btn ak-btn-warning" onclick="AgrocityKit.showToast('Umbral de humedad alcanzado.', {type:'warning'})">
+        Toast advertencia
+      </button>
+      <button class="ak-btn ak-btn-secondary" onclick="AgrocityKit.showToast('Reporte generado.', {type:'info', duration:3000})">
+        Toast info
+      </button>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Loader (pantalla completa)</h5>
+    <div class="ak-hstack" style="gap:8px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-primary" onclick="AgrocityKit.loader(true, ['Cargando aplicativo', 'Sincronizando datos', 'Optimizando recursos', 'Listo']); setTimeout(() => AgrocityKit.loader(false), 5000)">
+        Mostrar loader (5s)
+      </button>
+      <button class="ak-btn ak-btn-secondary" onclick="AgrocityKit.loader(false)">
+        Ocultar loader
+      </button>
+    </div>
+  </div>
+
+  <!-- Dialog (alert, confirm, prompt) -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Dialog — Alert / Confirm / Prompt</h5>
+    <div class="ak-hstack" style="gap:8px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-primary" onclick="AgrocityKit.alert('Cultivo registrado correctamente.')">
+        Alert
+      </button>
+      <button class="ak-btn ak-btn-primary" onclick="AgrocityKit.alert('Éxito', 'Los datos del sensor fueron sincronizados.')">
+        Alert con título
+      </button>
+      <button class="ak-btn ak-btn-warning" onclick="AgrocityKit.confirm('¿Eliminar lote seleccionado?', function(r){ AgrocityKit.alert(r ? 'Aceptado' : 'Cancelado'); })">
+        Confirm
+      </button>
+      <button class="ak-btn ak-btn-success" onclick="AgrocityKit.alert({message:'Cultivo guardado', buttonText:'Listo', buttonVariant:'success'})">
+        Alert custom btn
+      </button>
+      <button class="ak-btn ak-btn-secondary" onclick="AgrocityKit.prompt('Nombre del cultivo', 'Maíz', function(v){ AgrocityKit.alert(v ? 'Ingresaste: ' + v : 'Cancelado'); })">
+        Prompt
+      </button>
+    </div>
+  </div>
+
+  <!-- Placeholders / Skeleton -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Placeholders (Skeleton loading)</h5>
+    <div class="ak-card" style="max-width:360px;">
+      <div class="ak-card-body ak-placeholder-glow">
+        <h5 class="ak-card-title">
+          <span class="ak-placeholder ak-col-6"></span>
+        </h5>
+        <p>
+          <span class="ak-placeholder ak-col-7"></span>
+          <span class="ak-placeholder ak-col-4"></span>
+          <span class="ak-placeholder ak-col-4"></span>
+          <span class="ak-placeholder ak-col-6"></span>
+          <span class="ak-placeholder ak-col-8"></span>
+        </p>
+        <a href="#" class="ak-btn ak-btn-primary ak-disabled ak-placeholder ak-col-6"></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltips -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tooltips</h5>
+    <div class="ak-hstack" style="gap:12px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip arriba (default)" data-ak-placement="top">
+        Arriba
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip abajo" data-ak-placement="bottom">
+        Abajo
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip izquierda" data-ak-placement="left">
+        Izquierda
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-tooltip data-ak-title="Tooltip derecha" data-ak-placement="right">
+        Derecha
+      </button>
+    </div>
+  </div>
+
+  <!-- Popovers -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Popovers</h5>
+    <div class="ak-hstack" style="gap:12px; flex-wrap:wrap;">
+      <button class="ak-btn ak-btn-primary" data-ak-popover
+              data-ak-title="Información del sensor"
+              data-ak-content="Sensor modelo SHT31-D. Precisión: ±2% HR, ±0.3°C. Protocolo: I²C."
+              data-ak-placement="top">
+        Clic para popover
+      </button>
+      <button class="ak-btn ak-btn-secondary" data-ak-popover
+              data-ak-title="Rendimiento estimado"
+              data-ak-content="Basado en histórico de 3 años: <strong>4.2 ton/ha</strong> para maíz en esta región."
+              data-ak-placement="bottom" data-ak-trigger="hover">
+        Hover para popover
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     14. CAROUSEL
+     ===================================================================== -->
+<section id="carousel" class="demo-section">
+  <h2 class="demo-title">14. Carousel</h2>
+  <p class="demo-subtitle">Slider de imágenes con controles, indicadores y auto-play</p>
+
+  <div class="demo-box">
+    <div class="ak-carousel" id="carouselDemo" data-ak-carousel data-ak-interval="4000">
+      <div class="ak-carousel-indicators">
+        <button type="button" class="ak-active" aria-label="Slide 1"></button>
+        <button type="button" aria-label="Slide 2"></button>
+        <button type="button" aria-label="Slide 3"></button>
+      </div>
+      <div class="ak-carousel-inner">
+        <div class="ak-carousel-item ak-active">
+          <img src="https://picsum.photos/seed/car1/900/400" class="ak-carousel-img" alt="Slide 1" />
+          <div class="ak-carousel-caption">
+            <h5>Campos de cultivo 🌽</h5>
+            <p>Monitoreo en tiempo real de condiciones climáticas.</p>
+          </div>
+        </div>
+        <div class="ak-carousel-item">
+          <img src="https://picsum.photos/seed/car2/900/400" class="ak-carousel-img" alt="Slide 2" />
+          <div class="ak-carousel-caption">
+            <h5>Sensores IoT 📡</h5>
+            <p>Datos precisos de humedad, temperatura y luminosidad.</p>
+          </div>
+        </div>
+        <div class="ak-carousel-item">
+          <img src="https://picsum.photos/seed/car3/900/400" class="ak-carousel-img" alt="Slide 3" />
+          <div class="ak-carousel-caption">
+            <h5>Analítica avanzada 📊</h5>
+            <p>Reportes automáticos y predicción de cosecha.</p>
+          </div>
+        </div>
+      </div>
+      <button class="ak-carousel-control-prev" type="button">
+        <span class="ak-carousel-control-icon" aria-hidden="true">‹</span>
+        <span class="ak-visually-hidden">Anterior</span>
+      </button>
+      <button class="ak-carousel-control-next" type="button">
+        <span class="ak-carousel-control-icon" aria-hidden="true">›</span>
+        <span class="ak-visually-hidden">Siguiente</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     15. SCROLLSPY
+     ===================================================================== -->
+<section id="scrollspy-demo" class="demo-section">
+  <h2 class="demo-title">15. ScrollSpy</h2>
+  <p class="demo-subtitle">Resalta el ítem de navegación según el scroll de la página</p>
+
+  <div class="demo-box">
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-3">
+        <nav id="spyNav" style="position:sticky; top:80px;">
+          <ul class="ak-nav ak-nav-pills" style="flex-direction:column; gap:4px;">
+            <li class="ak-nav-item"><a class="ak-nav-link" href="#seccion-uno">Sección 1</a></li>
+            <li class="ak-nav-item"><a class="ak-nav-link" href="#seccion-dos">Sección 2</a></li>
+            <li class="ak-nav-item"><a class="ak-nav-link" href="#seccion-tres">Sección 3</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="ak-col-12 ak-col-md-9">
+        <div data-ak-scrollspy data-ak-target="#spyNav" style="height:240px; overflow-y:auto; border:1px solid var(--ak-border); border-radius:var(--ak-radius); padding:16px;">
+          <h5 id="seccion-uno">Sección 1 — Siembra</h5>
+          <p>La siembra es la etapa más crítica del ciclo productivo. La densidad de siembra óptima varía según el cultivo y las condiciones del suelo.</p>
+          <h5 id="seccion-dos" class="ak-mt-4">Sección 2 — Riego</h5>
+          <p>El riego por goteo reduce el consumo de agua hasta un 40% comparado con el riego tradicional. El sistema monitorea la humedad del suelo en tiempo real.</p>
+          <h5 id="seccion-tres" class="ak-mt-4">Sección 3 — Cosecha</h5>
+          <p>La predicción de cosecha utiliza datos históricos y condiciones actuales para estimar el rendimiento con una precisión del ±5%.</p>
+          <div style="height:60px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     15. UTILIDADES
+     ===================================================================== -->
+<section id="utilidades" class="demo-section">
+  <h2 class="demo-title">16. Utilidades CSS</h2>
+  <p class="demo-subtitle">Spacing, colores, tipografía, display, borders, shadows, ratio, stacks, etc.</p>
+
+  <!-- Colores -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Colores de texto y fondo</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+      <span class="ak-text-primary">text-primary</span>
+      <span class="ak-text-secondary">text-secondary</span>
+      <span class="ak-text-success">text-success</span>
+      <span class="ak-text-danger">text-danger</span>
+      <span class="ak-text-warning" style="background:var(--ak-dark); padding:2px 6px; border-radius:4px;">text-warning</span>
+      <span class="ak-text-muted">text-muted</span>
+    </div>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:8px;">
+      <span class="ak-bg-primary ak-text-white ak-px-3 ak-py-1 ak-rounded">bg-primary</span>
+      <span class="ak-bg-success ak-text-white ak-px-3 ak-py-1 ak-rounded">bg-success</span>
+      <span class="ak-bg-danger ak-text-white ak-px-3 ak-py-1 ak-rounded">bg-danger</span>
+      <span class="ak-bg-warning ak-text-dark ak-px-3 ak-py-1 ak-rounded">bg-warning</span>
+      <span class="ak-bg-info ak-text-white ak-px-3 ak-py-1 ak-rounded">bg-info</span>
+      <span class="ak-bg-light ak-text-dark ak-px-3 ak-py-1 ak-rounded ak-border">bg-light</span>
+    </div>
+  </div>
+
+  <!-- Bordes y radio -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Bordes y border-radius</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:12px; align-items:center;">
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded">rounded</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded-0">0</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded-sm">sm</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded-lg">lg</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded-circle">circle</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-rounded-pill">pill</div>
+      <div style="width:60px;height:60px;background:var(--ak-gray-light);" class="ak-border ak-border-primary ak-rounded">border-primary</div>
+    </div>
+  </div>
+
+  <!-- Sombras -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Sombras</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:16px; align-items:center;">
+      <div class="ak-p-4 ak-bg-surface ak-rounded ak-shadow-sm">shadow-sm</div>
+      <div class="ak-p-4 ak-bg-surface ak-rounded ak-shadow">shadow</div>
+      <div class="ak-p-4 ak-bg-surface ak-rounded ak-shadow-lg">shadow-lg</div>
+      <div class="ak-p-4 ak-bg-surface ak-rounded ak-shadow-none" style="border:1px solid var(--ak-border);">shadow-none</div>
+    </div>
+  </div>
+
+  <!-- Espaciado -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Espaciado (margin / padding)</h5>
+    <div class="ak-hstack" style="flex-wrap:wrap; gap:4px;">
+      <div class="ak-p-1 ak-bg-success ak-text-white ak-rounded">p-1</div>
+      <div class="ak-p-2 ak-bg-success ak-text-white ak-rounded">p-2</div>
+      <div class="ak-p-3 ak-bg-success ak-text-white ak-rounded">p-3</div>
+      <div class="ak-p-4 ak-bg-success ak-text-white ak-rounded">p-4</div>
+      <div class="ak-p-5 ak-bg-success ak-text-white ak-rounded">p-5</div>
+    </div>
+    <div class="ak-hstack ak-mt-3" style="flex-wrap:wrap; gap:4px;">
+      <div class="ak-m-1 ak-p-2 ak-border ak-rounded">m-1</div>
+      <div class="ak-m-2 ak-p-2 ak-border ak-rounded">m-2</div>
+      <div class="ak-m-3 ak-p-2 ak-border ak-rounded">m-3</div>
+    </div>
+  </div>
+
+  <!-- Tipografía utilidades -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Tipografía — utilidades</h5>
+    <p class="ak-fw-bold">fw-bold — Texto en negrita</p>
+    <p class="ak-fw-normal">fw-normal — Texto normal</p>
+    <p class="ak-fw-light">fw-light — Texto ligero</p>
+    <p class="ak-fst-italic">fst-italic — Texto en cursiva</p>
+    <p class="ak-text-start">text-start — Alineado izquierda</p>
+    <p class="ak-text-center">text-center — Centrado</p>
+    <p class="ak-text-end">text-end — Alineado derecha</p>
+    <p class="ak-text-uppercase">text-uppercase</p>
+    <p class="ak-text-lowercase">TEXT-LOWERCASE</p>
+    <p class="ak-text-capitalize">text capitalize</p>
+    <p class="ak-text-truncate" style="max-width:300px;">text-truncate — Este texto es muy largo y se cortará con puntos suspensivos automáticamente.</p>
+  </div>
+
+  <!-- Display / Flex -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Display, Flex y Position</h5>
+    <div class="ak-d-flex ak-gap-2 ak-flex-wrap ak-mb-3">
+      <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded">flex item 1</div>
+      <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded">flex item 2</div>
+      <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded ak-ms-auto">ms-auto →</div>
+    </div>
+    <div class="ak-d-grid ak-gap-2" style="grid-template-columns: repeat(4,1fr);">
+      <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded ak-text-center">grid</div>
+      <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded ak-text-center">grid</div>
+      <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded ak-text-center">grid</div>
+      <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded ak-text-center">grid</div>
+    </div>
+  </div>
+
+  <!-- Ratio / Aspect ratio -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Ratio (aspect-ratio)</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-6 ak-col-md-3">
+        <div class="ak-ratio ak-ratio-1x1" style="background:var(--ak-gray-light); border-radius:var(--ak-radius);">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-center ak-text-muted">1×1</div>
+        </div>
+      </div>
+      <div class="ak-col-6 ak-col-md-3">
+        <div class="ak-ratio ak-ratio-4x3" style="background:var(--ak-gray-light); border-radius:var(--ak-radius);">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-center ak-text-muted">4×3</div>
+        </div>
+      </div>
+      <div class="ak-col-6 ak-col-md-3">
+        <div class="ak-ratio ak-ratio-16x9" style="background:var(--ak-gray-light); border-radius:var(--ak-radius);">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-center ak-text-muted">16×9</div>
+        </div>
+      </div>
+      <div class="ak-col-6 ak-col-md-3">
+        <div class="ak-ratio ak-ratio-21x9" style="background:var(--ak-gray-light); border-radius:var(--ak-radius);">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-center ak-text-muted">21×9</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stacks -->
+  <div class="demo-box">
+    <h5 class="ak-h5 ak-mb-3">Stacks (vstack / hstack)</h5>
+    <div class="ak-row ak-g-3">
+      <div class="ak-col-12 ak-col-md-6">
+        <p class="ak-text-muted ak-mb-2">vstack</p>
+        <div class="ak-vstack ak-gap-2">
+          <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded">Elemento 1</div>
+          <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded">Elemento 2</div>
+          <div class="ak-p-2 ak-bg-primary ak-text-white ak-rounded">Elemento 3</div>
+        </div>
+      </div>
+      <div class="ak-col-12 ak-col-md-6">
+        <p class="ak-text-muted ak-mb-2">hstack</p>
+        <div class="ak-hstack ak-gap-2">
+          <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded">A</div>
+          <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded">B</div>
+          <div class="ak-vr"></div>
+          <div class="ak-p-2 ak-bg-secondary ak-text-white ak-rounded ak-ms-auto">C (ms-auto)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     16. TEMA OSCURO
+     ===================================================================== -->
+<section id="tema-oscuro" class="demo-section">
+  <h2 class="demo-title">17. Tema oscuro</h2>
+  <p class="demo-subtitle">Toggle entre tema claro y oscuro via <code>AgrocityKit.theme('toggle')</code> o <code>data-theme="dark"</code></p>
+
+  <div class="demo-box">
+    <p>Haz clic en el botón <strong>"🌙 Tema"</strong> del navbar para alternar entre modo claro y oscuro. Todos los componentes se adaptan automáticamente a través de variables CSS.</p>
+    <div class="ak-hstack" style="gap:12px; flex-wrap:wrap; margin-top:16px;">
+      <button class="ak-btn ak-btn-secondary" onclick="AgrocityKit.theme('light')">☀️ Claro</button>
+      <button class="ak-btn ak-btn-secondary" onclick="AgrocityKit.theme('dark')">🌙 Oscuro</button>
+      <button class="ak-btn ak-btn-primary" onclick="AgrocityKit.theme('toggle')">↕️ Alternar</button>
+    </div>
+  </div>
+</section>
+
+</main><!-- /main -->
+
+<!-- =====================================================================
+     FOOTER
+     ===================================================================== -->
+<footer style="background:var(--ak-secondary-dark); color:rgba(255,255,255,0.7); padding:32px 24px; text-align:center; margin-top:48px;">
+  <p style="margin:0 0 8px; font-size:1.1rem; color:#fff; font-weight:600;">🌱 Agrocity Kit v1.2.0</p>
+  <p style="margin:0; font-size:0.85rem;">Framework CSS + JS vanilla, sin dependencias · Soporte para tema claro/oscuro · Compatible con todos los navegadores modernos</p>
+</footer>
+
+<script src="../dist/js/agrocity-kit.min.js"></script>
+<script src="../dist/js/agrocity-icons.min.js"></script>
+</body>
+</html>

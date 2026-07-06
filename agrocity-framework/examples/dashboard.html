@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Agrocity Framework</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    body.ak-body { background: var(--ak-surface-alt); }
+    .app-layout { display: flex; min-height: 100vh; }
+    .app-sidebar {
+      width: 250px;
+      background: var(--ak-surface);
+      border-right: 1px solid var(--ak-border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .app-sidebar .ak-navbar-brand { padding: 20px 20px 16px; border-bottom: 1px solid var(--ak-border); }
+    .app-sidebar .ak-nav { padding: 12px; flex: 1; overflow-y: auto; }
+    .app-sidebar .ak-nav-link {
+      border-radius: var(--ak-radius);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+    }
+    .app-sidebar .ak-nav-link.ak-active {
+      background: rgba(43, 123, 65, 0.1);
+      color: var(--ak-primary);
+      font-weight: 600;
+    }
+    .app-sidebar .ak-nav-link:hover:not(.ak-active) { background: var(--ak-gray-light); }
+    .app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .app-header {
+      background: var(--ak-surface);
+      border-bottom: 1px solid var(--ak-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .app-content { flex: 1; padding: 24px; overflow-y: auto; }
+    .stat-card {
+      background: var(--ak-surface);
+      border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius-lg);
+      padding: 20px;
+      transition: box-shadow var(--ak-transition-slow), transform var(--ak-transition-slow);
+    }
+    .stat-card:hover { box-shadow: var(--ak-shadow); transform: translateY(-2px); }
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--ak-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 768px) {
+      .app-sidebar { display: none; }
+      .app-header { padding: 10px 16px; }
+      .app-content { padding: 16px; }
+    }
+  </style>
+</head>
+<body class="ak-body">
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="app-sidebar">
+      <div class="ak-navbar-brand">🌱 Agrocity</div>
+      <nav class="ak-nav ak-flex-column">
+        <a href="#" class="ak-nav-link ak-active">
+          <span>📊</span> Dashboard
+        </a>
+        <a href="#" class="ak-nav-link">
+          <span>🌾</span> Cultivos
+        </a>
+        <a href="#" class="ak-nav-link">
+          <span>🧑‍🌾</span> Productores
+        </a>
+        <a href="#" class="ak-nav-link">
+          <span>📈</span> Reportes
+        </a>
+        <a href="#" class="ak-nav-link">
+          <span>⚙️</span> Configuración
+        </a>
+      </nav>
+      <div class="ak-p-3 ak-border-top ak-text-muted ak-fs-sm">
+        v1.2.0 &middot; 4 cultivos activos
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="app-main">
+
+      <!-- Header -->
+      <header class="app-header">
+        <div class="ak-d-flex ak-align-center ak-gap-3">
+          <button class="ak-btn ak-btn-outline ak-d-md-none ak-p-2" data-ak-toggle="offcanvas" data-ak-target="#sidebarMobile" aria-label="Menú">☰</button>
+          <h1 class="ak-h5 ak-m-0">Dashboard</h1>
+        </div>
+        <div class="ak-d-flex ak-align-center ak-gap-3">
+          <button class="ak-btn ak-btn-sm ak-btn-outline" onclick="AgrocityKit.theme('toggle')">🌓</button>
+          <span class="ak-text-muted ak-fs-sm">Hola, Rubén</span>
+        </div>
+      </header>
+
+      <!-- Offcanvas móvil -->
+      <div class="ak-offcanvas ak-offcanvas-start" id="sidebarMobile" tabindex="-1">
+        <div class="ak-offcanvas-header">
+          <h5 class="ak-offcanvas-title">🌱 Agrocity</h5>
+          <button class="ak-btn-close" data-ak-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="ak-offcanvas-body">
+          <nav class="ak-nav ak-flex-column">
+            <a href="#" class="ak-nav-link ak-active">📊 Dashboard</a>
+            <a href="#" class="ak-nav-link">🌾 Cultivos</a>
+            <a href="#" class="ak-nav-link">🧑‍🌾 Productores</a>
+            <a href="#" class="ak-nav-link">📈 Reportes</a>
+            <a href="#" class="ak-nav-link">⚙️ Configuración</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="app-content">
+
+        <!-- Stats row -->
+        <div class="ak-row ak-g-3 ak-mb-4">
+          <div class="ak-col-12 ak-col-sm-6 ak-col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon ak-bg-primary">🌾</div>
+              <div class="ak-text-muted ak-fs-sm ak-mb-1">Total Cultivos</div>
+              <div class="ak-h3 ak-m-0">1,284</div>
+              <div class="ak-text-success ak-fs-sm ak-mt-1">+12% este mes</div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-sm-6 ak-col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon ak-bg-success">🧑‍🌾</div>
+              <div class="ak-text-muted ak-fs-sm ak-mb-1">Productores</div>
+              <div class="ak-h3 ak-m-0">843</div>
+              <div class="ak-text-success ak-fs-sm ak-mt-1">+5 este mes</div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-sm-6 ak-col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon ak-bg-warning" style="color:#1a1a1a">📦</div>
+              <div class="ak-text-muted ak-fs-sm ak-mb-1">Producción Total</div>
+              <div class="ak-h3 ak-m-0">12.5K t</div>
+              <div class="ak-text-success ak-fs-sm ak-mt-1">+8% vs trimestre</div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-sm-6 ak-col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon ak-bg-danger">⚠️</div>
+              <div class="ak-text-muted ak-fs-sm ak-mb-1">Alertas Activas</div>
+              <div class="ak-h3 ak-m-0">3</div>
+              <div class="ak-text-danger ak-fs-sm ak-mt-1">Requieren atención</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts + Table -->
+        <div class="ak-row ak-g-3 ak-mb-4">
+          <div class="ak-col-12 ak-col-lg-8">
+            <div class="ak-card">
+              <div class="ak-card-header">🌾 Últimos cultivos registrados</div>
+              <div class="ak-card-body ak-p-0">
+                <table class="ak-table ak-table-striped ak-table-hover ak-m-0" data-ak-datatable data-ak-page-size="5" data-ak-search="false" data-ak-pagination="true">
+                  <thead>
+                    <tr>
+                      <th>Cultivo</th>
+                      <th data-type="number">Área (ha)</th>
+                      <th data-type="number">Rendimiento</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maíz</td><td>12.5</td><td>8.2 t/ha</td><td><span class="ak-badge-success">Activo</span></td></tr>
+                    <tr><td>Trigo</td><td>8.3</td><td>5.1 t/ha</td><td><span class="ak-badge-warning">Pendiente</span></td></tr>
+                    <tr><td>Soja</td><td>15.0</td><td>3.8 t/ha</td><td><span class="ak-badge-success">Activo</span></td></tr>
+                    <tr><td>Arroz</td><td>6.2</td><td>7.0 t/ha</td><td><span class="ak-badge-info">En revisión</span></td></tr>
+                    <tr><td>Girasol</td><td>4.8</td><td>2.9 t/ha</td><td><span class="ak-badge-success">Activo</span></td></tr>
+                    <tr><td>Caña</td><td>20.1</td><td>45 t/ha</td><td><span class="ak-badge-primary">Cosechado</span></td></tr>
+                    <tr><td>Tabaco</td><td>3.5</td><td>2.1 t/ha</td><td><span class="ak-badge-warning">Pendiente</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-lg-4">
+            <div class="ak-card">
+              <div class="ak-card-header">📋 Resumen de actividades</div>
+              <div class="ak-card-body">
+                <div class="ak-vstack ak-gap-3">
+                  <div class="ak-d-flex ak-align-center ak-gap-3">
+                    <span class="ak-badge ak-bg-primary">Hoy</span>
+                    <div class="ak-flex-fill">
+                      <div class="ak-fw-semibold ak-fs-sm">Fumigación lote 4</div>
+                      <div class="ak-text-muted ak-fs-sm">08:00 — Maíz</div>
+                    </div>
+                  </div>
+                  <div class="ak-d-flex ak-align-center ak-gap-3">
+                    <span class="ak-badge ak-bg-success">Hoy</span>
+                    <div class="ak-flex-fill">
+                      <div class="ak-fw-semibold ak-fs-sm">Riego sistematizado</div>
+                      <div class="ak-text-muted ak-fs-sm">10:30 — Soja</div>
+                    </div>
+                  </div>
+                  <div class="ak-d-flex ak-align-center ak-gap-3">
+                    <span class="ak-badge ak-bg-warning">Mañana</span>
+                    <div class="ak-flex-fill">
+                      <div class="ak-fw-semibold ak-fs-sm">Control de plagas</div>
+                      <div class="ak-text-muted ak-fs-sm">07:00 — Trigo</div>
+                    </div>
+                  </div>
+                  <div class="ak-d-flex ak-align-center ak-gap-3">
+                    <span class="ak-badge ak-bg-secondary">Pend.</span>
+                    <div class="ak-flex-fill">
+                      <div class="ak-fw-semibold ak-fs-sm">Análisis de suelo</div>
+                      <div class="ak-text-muted ak-fs-sm">Lote 7 y 8</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+</body>
+</html>

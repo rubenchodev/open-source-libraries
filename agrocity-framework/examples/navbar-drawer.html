@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navbar + Drawer — Agrocity Kit</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    .ak-navbar { position: sticky; top: 0; z-index: 1020; }
+
+    .ak-app-main { padding: 32px 40px; }
+
+    /* ── Drawer como sidebar en desktop ── */
+    @media (min-width: 768px) {
+      #appDrawer {
+        display: block !important;
+        position: sticky;
+        top: 56px;
+        width: 260px;
+        height: calc(100vh - 56px);
+        z-index: auto;
+        flex-shrink: 0;
+        overflow-x: hidden;
+        box-shadow: none;
+      }
+      #appDrawer .ak-drawer-backdrop { display: none; }
+      #appDrawer .ak-drawer-content {
+        position: static; transform: none; width: auto; height: 100%;
+        box-shadow: none; z-index: auto;
+        border-right: 1px solid var(--ak-border);
+      }
+      #appDrawer .ak-drawer-header { display: none; }
+    }
+    @media (max-width: 767px) {
+      #appDrawer .ak-drawer-content { width: 300px; }
+    }
+
+    /* ── Demo content ── */
+    .demo-section { margin: 48px 0; }
+    .demo-section h2 {
+      font-size: 1.6rem; font-weight: 700; margin: 0 0 8px;
+      color: var(--ak-primary);
+    }
+    .demo-section p { color: var(--ak-text); line-height: 1.6; }
+    .demo-card {
+      background: var(--ak-surface-alt); border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius); padding: 24px; margin: 16px 0;
+    }
+
+  </style>
+</head>
+<body class="ak-body ak-app">
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════════════════════════════ -->
+  <nav class="ak-navbar" id="mainNavbar">
+    <a href="#" class="ak-navbar-brand">🌱 Agrocity App</a>
+    <button class="ak-navbar-toggler" data-ak-toggle="drawer" data-ak-target="#appDrawer">
+      ☰
+    </button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       LAYOUT: DRAWER + MAIN
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="ak-app-body">
+
+    <!-- ─── DRAWER (sidebar) ─── -->
+    <div class="ak-drawer" id="appDrawer">
+      <div class="ak-drawer-backdrop"></div>
+      <div class="ak-drawer-content">
+        <div class="ak-drawer-header">
+          <div class="ak-drawer-header-avatar">🌱</div>
+          <div>
+            <div class="ak-drawer-header-title">Agrocity App</div>
+            <div class="ak-drawer-header-subtitle">Panel de control</div>
+          </div>
+          <button class="ak-btn-close" data-ak-dismiss="drawer" style="margin-left:auto;"></button>
+        </div>
+        <div class="ak-drawer-body" id="docsSidebar">
+          <nav id="docsNav">
+
+            <a href="#inicio" class="ak-drawer-item ak-active">
+              <span class="ak-drawer-item-icon">🏠</span>
+              <span>Inicio</span>
+            </a>
+
+            <div class="ak-drawer-subheader">Módulos</div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subCultivos">
+              <span class="ak-drawer-item-icon">🌾</span>
+              <span>Cultivos</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subCultivos" class="ak-drawer-sub">
+              <a class="ak-drawer-sub-item" href="#maiz">Maíz</a>
+              <a class="ak-drawer-sub-item" href="#trigo">Trigo</a>
+              <a class="ak-drawer-sub-item" href="#soya">Soya</a>
+            </div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subInventario">
+              <span class="ak-drawer-item-icon">📦</span>
+              <span>Inventario</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subInventario" class="ak-drawer-sub">
+              <a class="ak-drawer-sub-item" href="#insumos">Insumos</a>
+              <a class="ak-drawer-sub-item" href="#herramientas">Herramientas</a>
+            </div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subReportes">
+              <span class="ak-drawer-item-icon">📈</span>
+              <span>Reportes</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subReportes" class="ak-drawer-sub">
+              <a class="ak-drawer-sub-item" href="#graficos">Gráficos</a>
+              <a class="ak-drawer-sub-item" href="#exportar">Exportar datos</a>
+            </div>
+
+            <div class="ak-drawer-divider"></div>
+
+            <div class="ak-drawer-subheader">Sistema</div>
+
+            <a href="#usuarios" class="ak-drawer-item">
+              <span class="ak-drawer-item-icon">👥</span>
+              <span>Usuarios</span>
+            </a>
+            <a href="#configuracion" class="ak-drawer-item">
+              <span class="ak-drawer-item-icon">⚙️</span>
+              <span>Configuración</span>
+            </a>
+
+          </nav>
+        </div>
+        <div class="ak-drawer-footer">
+          <button class="ak-drawer-item">🚪 Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── MAIN ─── -->
+    <main class="ak-app-main">
+
+      <section id="inicio" class="demo-section">
+        <h2>Inicio</h2>
+        <p>Panel principal con resumen de cultivos, inventario y reportes.</p>
+        <div class="demo-card">
+          <p style="margin:0; color:var(--ak-text-muted);">
+            Bienvenido al panel de control. Usa el menú lateral para navegar entre las secciones.
+            En dispositivos móviles el menú se muestra como panel deslizante.
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:16px;">
+          <div class="demo-card" style="text-align:center;">
+            <div style="font-size:2rem;">🌾</div>
+            <div style="font-size:1.2rem;font-weight:700;">12</div>
+            <div style="font-size:0.85rem;color:var(--ak-text-muted);">Cultivos activos</div>
+          </div>
+          <div class="demo-card" style="text-align:center;">
+            <div style="font-size:2rem;">📦</div>
+            <div style="font-size:1.2rem;font-weight:700;">48</div>
+            <div style="font-size:0.85rem;color:var(--ak-text-muted);">Productos</div>
+          </div>
+          <div class="demo-card" style="text-align:center;">
+            <div style="font-size:2rem;">📈</div>
+            <div style="font-size:1.2rem;font-weight:700;">+15%</div>
+            <div style="font-size:0.85rem;color:var(--ak-text-muted);">Rendimiento</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="maiz" class="demo-section">
+        <h2>Maíz</h2>
+        <p>Información detallada del cultivo de maíz.</p>
+        <div class="demo-card">
+          <p style="margin:0;">Temporada: Primavera-Verano · Área: 12.5 ha · Rendimiento esperado: 8.2 t/ha</p>
+        </div>
+      </section>
+
+      <section id="trigo" class="demo-section">
+        <h2>Trigo</h2>
+        <p>Información detallada del cultivo de trigo.</p>
+        <div class="demo-card">
+          <p style="margin:0;">Temporada: Otoño-Invierno · Área: 8.0 ha · Rendimiento esperado: 6.5 t/ha</p>
+        </div>
+      </section>
+
+      <section id="soya" class="demo-section">
+        <h2>Soya</h2>
+        <p>Información detallada del cultivo de soya.</p>
+        <div class="demo-card">
+          <p style="margin:0;">Temporada: Primavera-Verano · Área: 20.0 ha · Rendimiento esperado: 3.2 t/ha</p>
+        </div>
+      </section>
+
+      <section id="insumos" class="demo-section">
+        <h2>Insumos</h2>
+        <p>Gestión de insumos agrícolas.</p>
+        <div class="demo-card">
+          <p style="margin:0;">Fertilizantes, semillas y agroquímicos disponibles en almacén.</p>
+        </div>
+      </section>
+
+      <section id="herramientas" class="demo-section">
+        <h2>Herramientas</h2>
+        <p>Equipo y maquinaria registrada.</p>
+        <div class="demo-card">
+          <p style="margin:0;">Tractores, sembradoras y sistemas de riego disponibles.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+</body>
+</html>

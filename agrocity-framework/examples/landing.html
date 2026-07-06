@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agrocity — Framework para el agro</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    .hero {
+      background: linear-gradient(135deg, var(--ak-secondary-dark) 0%, #1a4a2e 50%, var(--ak-primary) 100%);
+      color: #fff;
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+    .hero * { position: relative; z-index: 1; }
+    .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+    .hero p { font-size: 1.2rem; opacity: 0.85; max-width: 600px; }
+    .feature-card {
+      background: var(--ak-surface);
+      border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+      transition: box-shadow var(--ak-transition-slow), transform var(--ak-transition-slow);
+    }
+    .feature-card:hover {
+      box-shadow: var(--ak-shadow-lg);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 64px; height: 64px;
+      border-radius: var(--ak-radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.8rem;
+    }
+    .section-alt { background: var(--ak-surface-alt); }
+    .testimonial-card {
+      background: var(--ak-surface);
+      border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius-lg);
+      padding: 28px;
+    }
+    .pricing-card {
+      background: var(--ak-surface);
+      border: 2px solid var(--ak-border);
+      border-radius: var(--ak-radius-lg);
+      padding: 32px;
+      text-align: center;
+      transition: box-shadow var(--ak-transition-slow), transform var(--ak-transition-slow);
+    }
+    .pricing-card:hover { box-shadow: var(--ak-shadow); transform: translateY(-4px); }
+    .pricing-card.featured {
+      border-color: var(--ak-primary);
+      position: relative;
+    }
+    .pricing-card.featured::before {
+      content: 'MÁS POPULAR';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ak-primary);
+      color: #fff;
+      padding: 4px 16px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .pricing-price { font-size: 2.8rem; font-weight: 800; color: var(--ak-primary); }
+    .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--ak-text-muted); }
+    footer {
+      background: var(--ak-secondary-dark);
+      color: rgba(255,255,255,0.7);
+      padding: 40px 0 24px;
+    }
+    footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    footer a:hover { color: #fff; text-decoration: underline; }
+    @media (max-width: 768px) {
+      .hero { padding: 48px 0; }
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body class="ak-body">
+
+  <!-- Navbar -->
+  <header class="ak-navbar ak-navbar ak-fixed-top" style="background: rgba(1,42,78,0.95); backdrop-filter: blur(8px);">
+    <a href="#" class="ak-navbar-brand">🌱 Agrocity</a>
+    <div class="ak-navbar-collapse" id="navLanding">
+      <ul class="ak-navbar-nav">
+        <li><a href="#features" class="ak-nav-link">Características</a></li>
+        <li><a href="#testimonials" class="ak-nav-link">Testimonios</a></li>
+        <li><a href="#pricing" class="ak-nav-link">Precios</a></li>
+        <li><a href="#contact" class="ak-nav-link">Contacto</a></li>
+      </ul>
+    </div>
+    <button class="ak-navbar-toggler" data-ak-toggle="collapse" data-ak-target="#navLanding">☰</button>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" style="margin-top: 56px;">
+    <div class="ak-container ak-text-center">
+      <h1>Tu plataforma agrícola<br/>todo en uno</h1>
+      <p class="ak-mx-auto ak-mb-4">Gestiona cultivos, productores, rendimientos y reportes desde un solo lugar. Diseñado para el campo, construido para crecer.</p>
+      <div class="ak-d-flex ak-justify-center ak-gap-3 ak-flex-wrap">
+        <a href="#" class="ak-btn ak-btn-lg" style="background:#fff;color:var(--ak-primary);border-color:#fff;">Comenzar gratis</a>
+        <a href="#" class="ak-btn ak-btn-lg ak-btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.5);">Ver demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="ak-py-5">
+    <div class="ak-container">
+      <h2 class="ak-h2 ak-text-center ak-mb-4">¿Por qué Agrocity?</h2>
+      <p class="ak-text-muted ak-text-center ak-mb-4" style="max-width:600px;margin-inline:auto;">Todo lo que necesitas para gestionar tu operación agrícola de forma eficiente.</p>
+      <div class="ak-row ak-g-3">
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon ak-bg-primary">📊</div>
+            <h5 class="ak-fw-semibold ak-mb-2">Dashboard inteligente</h5>
+            <p class="ak-text-muted ak-fs-sm">Métricas clave, alertas y tendencias en tiempo real.</p>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon ak-bg-success">🌾</div>
+            <h5 class="ak-fw-semibold ak-mb-2">Gestión de cultivos</h5>
+            <p class="ak-text-muted ak-fs-sm">Control de ciclos, rendimientos y rotaciones.</p>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon ak-bg-warning" style="color:#1a1a1a">📈</div>
+            <h5 class="ak-fw-semibold ak-mb-2">Reportes avanzados</h5>
+            <p class="ak-text-muted ak-fs-sm">Exporta datos, gráficos y análisis predictivos.</p>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="feature-card">
+            <div class="feature-icon ak-bg-secondary">🔒</div>
+            <h5 class="ak-fw-semibold ak-mb-2">Seguro y offline</h5>
+            <p class="ak-text-muted ak-fs-sm">Datos cifrados, backups automáticos, modo sin conexión.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios -->
+  <section id="testimonials" class="section-alt ak-py-5">
+    <div class="ak-container">
+      <h2 class="ak-h2 ak-text-center ak-mb-4">Lo que dicen nuestros usuarios</h2>
+      <div class="ak-row ak-g-3">
+        <div class="ak-col-12 ak-col-md-4">
+          <div class="testimonial-card">
+            <div class="ak-text-warning ak-mb-2">★★★★★</div>
+            <p class="ak-fst-italic">"Agrocity nos ayudó a reducir un 30% los costos operativos. La interfaz es muy intuitiva."</p>
+            <div class="ak-d-flex ak-align-center ak-gap-2 ak-mt-3">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--ak-primary-light);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">JM</div>
+              <div><div class="ak-fw-semibold ak-fs-sm">Juan Martínez</div><div class="ak-text-muted ak-fs-sm">Productor, Santa Fe</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-md-4">
+          <div class="testimonial-card">
+            <div class="ak-text-warning ak-mb-2">★★★★★</div>
+            <p class="ak-fst-italic">"Los reportes exportables y el dashboard me permiten tomar decisiones mucho más rápido."</p>
+            <div class="ak-d-flex ak-align-center ak-gap-2 ak-mt-3">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--ak-secondary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">CG</div>
+              <div><div class="ak-fw-semibold ak-fs-sm">Carmen García</div><div class="ak-text-muted ak-fs-sm">Ing. Agrónoma, Córdoba</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-md-4">
+          <div class="testimonial-card">
+            <div class="ak-text-warning ak-mb-2">★★★★☆</div>
+            <p class="ak-fst-italic">"Migrar desde Excel fue muy fácil. La tabla dinámica me encanta, ordeno y filtro todo."</p>
+            <div class="ak-d-flex ak-align-center ak-gap-2 ak-mt-3">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--ak-danger);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">PL</div>
+              <div><div class="ak-fw-semibold ak-fs-sm">Pedro López</div><div class="ak-text-muted ak-fs-sm">Administrador, Salta</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="ak-py-5">
+    <div class="ak-container">
+      <h2 class="ak-h2 ak-text-center ak-mb-4">Planes flexibles</h2>
+      <p class="ak-text-muted ak-text-center ak-mb-4">Elige el plan que mejor se adapte a tu operación.</p>
+      <div class="ak-row ak-g-3 ak-justify-center">
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="pricing-card">
+            <h5 class="ak-h5">Básico</h5>
+            <div class="pricing-price">Gratis<span>/mes</span></div>
+            <ul class="ak-list-unstyled ak-text-start ak-mt-3 ak-vstack ak-gap-2">
+              <li>✔ Hasta 5 cultivos</li>
+              <li>✔ Dashboard básico</li>
+              <li>✔ 1 usuario</li>
+              <li class="ak-text-muted">✗ Exportación CSV</li>
+              <li class="ak-text-muted">✗ Reportes avanzados</li>
+            </ul>
+            <a href="#" class="ak-btn ak-btn-outline ak-btn-block ak-mt-3">Comenzar</a>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="pricing-card featured">
+            <h5 class="ak-h5">Pro</h5>
+            <div class="pricing-price">$29<span>/mes</span></div>
+            <ul class="ak-list-unstyled ak-text-start ak-mt-3 ak-vstack ak-gap-2">
+              <li>✔ Cultivos ilimitados</li>
+              <li>✔ Dashboard completo</li>
+              <li>✔ Hasta 10 usuarios</li>
+              <li>✔ Exportación CSV</li>
+              <li class="ak-text-muted">✗ Reportes avanzados</li>
+            </ul>
+            <a href="#" class="ak-btn ak-btn-primary ak-btn-block ak-mt-3">Elegir Pro</a>
+          </div>
+        </div>
+        <div class="ak-col-12 ak-col-sm-6 ak-col-lg-3">
+          <div class="pricing-card">
+            <h5 class="ak-h5">Enterprise</h5>
+            <div class="pricing-price">$79<span>/mes</span></div>
+            <ul class="ak-list-unstyled ak-text-start ak-mt-3 ak-vstack ak-gap-2">
+              <li>✔ Todo lo de Pro</li>
+              <li>✔ API personalizada</li>
+              <li>✔ Usuarios ilimitados</li>
+              <li>✔ Reportes avanzados</li>
+              <li>✔ Soporte prioritario</li>
+            </ul>
+            <a href="#" class="ak-btn ak-btn-outline ak-btn-block ak-mt-3">Contactar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="ak-container">
+      <div class="ak-row ak-g-4 ak-mb-4">
+        <div class="ak-col-12 ak-col-md-4">
+          <h6 class="ak-text-white ak-fw-semibold ak-mb-3">🌱 Agrocity</h6>
+          <p class="ak-fs-sm">Framework UI para aplicaciones agrícolas. Código abierto, sin dependencias.</p>
+        </div>
+        <div class="ak-col-6 ak-col-md-2">
+          <h6 class="ak-text-white ak-fw-semibold ak-mb-3">Producto</h6>
+          <div class="ak-vstack ak-gap-1 ak-fs-sm"><a href="#">Características</a><a href="#">Precios</a><a href="#">API</a></div>
+        </div>
+        <div class="ak-col-6 ak-col-md-2">
+          <h6 class="ak-text-white ak-fw-semibold ak-mb-3">Recursos</h6>
+          <div class="ak-vstack ak-gap-1 ak-fs-sm"><a href="#">Documentación</a><a href="#">Blog</a><a href="#">GitHub</a></div>
+        </div>
+        <div class="ak-col-12 ak-col-md-4">
+          <h6 class="ak-text-white ak-fw-semibold ak-mb-3">Contacto</h6>
+          <div class="ak-vstack ak-gap-1 ak-fs-sm">
+            <span>contacto@agrocity.dev</span>
+            <span>+54 9 11 5555-0202</span>
+          </div>
+        </div>
+      </div>
+      <div class="ak-border-top ak-pt-3 ak-text-center ak-fs-sm" style="border-color:rgba(255,255,255,0.1)!important;">
+        © 2026 Agrocity Framework. MIT License.
+      </div>
+    </div>
+  </footer>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+</body>
+</html>

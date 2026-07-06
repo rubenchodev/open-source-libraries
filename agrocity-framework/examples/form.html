@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro — Agrocity Framework</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    body.ak-body {
+      background: linear-gradient(135deg, var(--ak-surface-alt) 0%, #e8f0e8 100%);
+      min-height: 100vh;
+    }
+    .form-container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .form-card {
+      background: var(--ak-surface);
+      border-radius: var(--ak-radius-lg);
+      box-shadow: var(--ak-shadow-lg);
+      overflow: hidden;
+    }
+    .form-card-header {
+      background: var(--ak-primary);
+      color: #fff;
+      padding: 28px 32px;
+    }
+    .form-card-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+    .form-card-header p { margin: 4px 0 0; opacity: 0.8; font-size: 0.9rem; }
+    .form-card-body { padding: 32px; }
+    @media (max-width: 576px) {
+      .form-card-header { padding: 20px; }
+      .form-card-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body class="ak-body">
+
+  <!-- Header -->
+  <header class="ak-navbar ak-mb-4">
+    <a href="#" class="ak-navbar-brand">🌱 Agrocity</a>
+    <div class="ak-navbar-nav ak-ms-auto">
+      <span class="ak-text-white ak-fs-sm">¿Ya tienes cuenta? <a href="#" class="ak-text-white ak-fw-semibold" style="text-decoration:underline;">Inicia sesión</a></span>
+    </div>
+  </header>
+
+  <div class="ak-container">
+    <div class="form-container">
+
+      <!-- Progress steps -->
+      <div class="ak-d-flex ak-justify-center ak-gap-2 ak-mb-4">
+        <span class="ak-badge ak-bg-primary">1. Datos personales</span>
+        <span class="ak-badge ak-bg-light ak-text-muted">2. Explotación</span>
+        <span class="ak-badge ak-bg-light ak-text-muted">3. Confirmación</span>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <h1>Registro de productor</h1>
+          <p>Completa tus datos para comenzar a usar Agrocity</p>
+        </div>
+        <div class="form-card-body">
+
+          <form onsubmit="event.preventDefault(); alert('Formulario enviado correctamente.');">
+
+            <!-- Sección datos personales -->
+            <h5 class="ak-fw-semibold ak-mb-3 ak-text-primary">👤 Datos personales</h5>
+            <div class="ak-row ak-g-3 ak-mb-3">
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="nombre">Nombre *</label>
+                <input type="text" id="nombre" class="ak-form-control" placeholder="Tu nombre" required />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="apellido">Apellido *</label>
+                <input type="text" id="apellido" class="ak-form-control" placeholder="Tu apellido" required />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="email">Correo electrónico *</label>
+                <input type="email" id="email" class="ak-form-control" placeholder="correo@ejemplo.com" required />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" class="ak-form-control" placeholder="+54 9 11 ..." />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="password">Contraseña *</label>
+                <input type="password" id="password" class="ak-form-control" placeholder="Mín. 8 caracteres" required />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="password2">Confirmar contraseña *</label>
+                <input type="password" id="password2" class="ak-form-control" placeholder="Repite la contraseña" required data-ak-no-toggle />
+              </div>
+            </div>
+
+            <hr class="ak-my-4" />
+
+            <!-- Sección explotación -->
+            <h5 class="ak-fw-semibold ak-mb-3 ak-text-primary">🌾 Datos de la explotación</h5>
+            <div class="ak-row ak-g-3 ak-mb-3">
+              <div class="ak-col-12">
+                <label class="ak-form-label" for="explotacion">Nombre de la explotación *</label>
+                <input type="text" id="explotacion" class="ak-form-control" placeholder="Ej: Campo La Esperanza" required />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="provincia">Provincia</label>
+                <select id="provincia" class="ak-form-select">
+                  <option value="">Selecciona...</option>
+                  <option>Buenos Aires</option>
+                  <option>Córdoba</option>
+                  <option>Santa Fe</option>
+                  <option>Entre Ríos</option>
+                  <option>Mendoza</option>
+                </select>
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="hectareas">Hectáreas totales</label>
+                <input type="number" id="hectareas" class="ak-form-control" placeholder="Ej: 150" />
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label" for="tipo">Tipo de cultivo principal</label>
+                <select id="tipo" class="ak-form-select" data-ak-select data-ak-search="true" data-ak-placeholder="Selecciona cultivos...">
+                  <option value="">Selecciona...</option>
+                  <option value="maiz">Maíz</option>
+                  <option value="trigo">Trigo</option>
+                  <option value="soja">Soja</option>
+                  <option value="girasol">Girasol</option>
+                  <option value="arroz">Arroz</option>
+                  <option value="caña">Caña de azúcar</option>
+                  <option value="algodon">Algodón</option>
+                  <option value="tabaco">Tabaco</option>
+                </select>
+              </div>
+              <div class="ak-col-12 ak-col-sm-6">
+                <label class="ak-form-label">¿Certificación orgánica?</label>
+                <div class="ak-form-switch">
+                  <input type="checkbox" class="ak-form-check-input" id="organico" />
+                  <label class="ak-form-check-label" for="organico">Sí, certificado</label>
+                </div>
+              </div>
+            </div>
+
+            <hr class="ak-my-4" />
+
+            <!-- Preferencias -->
+            <h5 class="ak-fw-semibold ak-mb-3 ak-text-primary">🔔 Preferencias</h5>
+            <div class="ak-vstack ak-gap-2 ak-mb-4">
+              <div class="ak-form-check">
+                <input type="checkbox" class="ak-form-check-input" id="chk1" checked />
+                <label class="ak-form-check-label" for="chk1">Recibir notificaciones por correo</label>
+              </div>
+              <div class="ak-form-check">
+                <input type="checkbox" class="ak-form-check-input" id="chk2" />
+                <label class="ak-form-check-label" for="chk2">Acepto los términos y condiciones *</label>
+              </div>
+              <div class="ak-form-check">
+                <input type="radio" name="plan" class="ak-form-check-input" id="plan1" checked />
+                <label class="ak-form-check-label" for="plan1">Plan gratuito (básico)</label>
+              </div>
+              <div class="ak-form-check">
+                <input type="radio" name="plan" class="ak-form-check-input" id="plan2" />
+                <label class="ak-form-check-label" for="plan2">Plan Pro ($29/mes) — prueba gratis 14 días</label>
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="ak-d-flex ak-justify-between ak-gap-3 ak-flex-wrap">
+              <button type="reset" class="ak-btn ak-btn-outline">Limpiar</button>
+              <button type="submit" class="ak-btn ak-btn-primary ak-btn-lg" style="min-width:180px;">
+                Crear cuenta
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+      <p class="ak-text-center ak-text-muted ak-fs-sm ak-mt-3">
+        Al registrarte aceptas nuestros <a href="#" class="ak-link-primary">términos</a> y <a href="#" class="ak-link-primary">política de privacidad</a>.
+      </p>
+
+    </div>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+</body>
+</html>

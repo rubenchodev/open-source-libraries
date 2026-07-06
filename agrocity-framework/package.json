@@ -1,0 +1,16 @@
+{
+  "name": "agrocity-kit",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Framework UI ligero, sin dependencias runtime",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "npx http-server examples -o"
+  },
+  "devDependencies": {
+    "terser": "^5.39.0",
+    "clean-css": "^5.3.3"
+  }
+}

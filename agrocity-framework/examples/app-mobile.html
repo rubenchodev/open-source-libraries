@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>App Móvil — Agrocity Framework</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    body.ak-body {
+      background: var(--ak-surface-alt);
+      padding-bottom: 70px;
+    }
+    /* Header fijo tipo app */
+    .app-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--ak-primary);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .app-topbar h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+
+    /* Bottom nav fijo */
+    .app-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--ak-surface);
+      border-top: 1px solid var(--ak-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 6px 0;
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+    }
+    .app-bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: var(--ak-text-muted);
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      border-radius: var(--ak-radius);
+      transition: color 150ms ease;
+      position: relative;
+    }
+    .app-bottom-nav a .nav-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .app-bottom-nav a.ak-active {
+      color: var(--ak-primary);
+      font-weight: 600;
+    }
+    .app-bottom-nav a.ak-active::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 3px;
+      background: var(--ak-primary);
+      border-radius: 0 0 3px 3px;
+    }
+    .app-bottom-nav a:hover { color: var(--ak-primary); }
+
+    /* Cards tipo feed */
+    .feed-card {
+      background: var(--ak-surface);
+      border-radius: var(--ak-radius-lg);
+      border: 1px solid var(--ak-border);
+      overflow: hidden;
+      transition: box-shadow var(--ak-transition-slow);
+    }
+    .feed-card:hover { box-shadow: var(--ak-shadow); }
+
+    /* Skeleton loading */
+    .skeleton-box {
+      height: 14px;
+      background: linear-gradient(90deg, var(--ak-gray-light) 25%, rgba(150,150,150,0.1) 50%, var(--ak-gray-light) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Status indicator */
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.active { background: var(--ak-success); box-shadow: 0 0 0 3px rgba(43,123,65,0.2); }
+    .status-dot.pending { background: var(--ak-warning); }
+    .status-dot.danger { background: var(--ak-danger); }
+
+    /* Pull-to-refresh indicator */
+    .ptr-indicator {
+      text-align: center;
+      padding: 8px;
+      color: var(--ak-text-muted);
+      font-size: 0.8rem;
+    }
+
+    @media (min-width: 768px) {
+      body.ak-body {
+        max-width: 480px;
+        margin: 0 auto;
+        border-left: 1px solid var(--ak-border);
+        border-right: 1px solid var(--ak-border);
+        min-height: 100vh;
+      }
+      .app-topbar {
+        max-width: 480px;
+        margin: 0 auto;
+        left: auto;
+      }
+      .app-bottom-nav {
+        max-width: 480px;
+        width: 100%;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body class="ak-body">
+
+  <!-- Top bar -->
+  <header class="app-topbar">
+    <button style="color:#fff;background:none;border:none;font-size:1.5rem;line-height:1;padding:0;cursor:pointer;opacity:0.85;" aria-label="Atrás">‹</button>
+    <h1>Agrocity App</h1>
+    <button style="color:#fff;background:none;border:none;font-size:1.2rem;line-height:1;padding:0;cursor:pointer;opacity:0.85;" aria-label="Notificaciones">🔔</button>
+  </header>
+
+  <!-- Content -->
+  <div class="ak-container-fluid ak-py-3">
+
+    <!-- Saludo -->
+    <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-3">
+      <div>
+        <div class="ak-text-muted ak-fs-sm">Buenos días 👋</div>
+        <div class="ak-fw-bold" style="font-size:1.15rem;">Rubén, ¡bienvenido!</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--ak-primary-light);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;">R</div>
+    </div>
+
+    <!-- Buscador -->
+    <div class="ak-form-floating ak-mb-3">
+      <input type="search" id="buscador" class="ak-form-control" placeholder="Buscar cultivos, productores..." />
+      <label for="buscador">🔍 Buscar en la app...</label>
+    </div>
+
+    <!-- Stats cards en fila -->
+    <div class="ak-row ak-g-2 ak-mb-3">
+      <div class="ak-col-4">
+        <div class="ak-card ak-text-center ak-p-3" style="background:rgba(43,123,65,0.08);border-color:rgba(43,123,65,0.15);">
+          <div class="ak-h4 ak-m-0 ak-text-primary">12</div>
+          <div class="ak-fs-sm ak-text-muted">Cultivos</div>
+        </div>
+      </div>
+      <div class="ak-col-4">
+        <div class="ak-card ak-text-center ak-p-3" style="background:rgba(47,85,151,0.08);border-color:rgba(47,85,151,0.15);">
+          <div class="ak-h4 ak-m-0 ak-text-secondary">8</div>
+          <div class="ak-fs-sm ak-text-muted">Activos</div>
+        </div>
+      </div>
+      <div class="ak-col-4">
+        <div class="ak-card ak-text-center ak-p-3" style="background:rgba(192,57,43,0.08);border-color:rgba(192,57,43,0.15);">
+          <div class="ak-h4 ak-m-0 ak-text-danger">3</div>
+          <div class="ak-fs-sm ak-text-muted">Alertas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actividad reciente -->
+    <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+      <h6 class="ak-fw-semibold ak-m-0">🌾 Actividad reciente</h6>
+      <a href="#" class="ak-link-primary ak-fs-sm">Ver todo</a>
+    </div>
+
+    <div class="ak-vstack ak-gap-2 ak-mb-4">
+      <div class="feed-card ak-p-3">
+        <div class="ak-d-flex ak-align-center ak-gap-3">
+          <span class="status-dot active"></span>
+          <div class="ak-flex-fill">
+            <div class="ak-fw-semibold ak-fs-sm">Riego lote 3</div>
+            <div class="ak-text-muted ak-fs-sm">Iniciado hace 15 min · Maíz</div>
+          </div>
+          <span class="ak-badge ak-bg-primary" style="font-size:0.65rem;">AHORA</span>
+        </div>
+      </div>
+      <div class="feed-card ak-p-3">
+        <div class="ak-d-flex ak-align-center ak-gap-3">
+          <span class="status-dot pending"></span>
+          <div class="ak-flex-fill">
+            <div class="ak-fw-semibold ak-fs-sm">Control de plagas</div>
+            <div class="ak-text-muted ak-fs-sm">Programado para mañana 07:00 · Trigo</div>
+          </div>
+          <span class="ak-badge ak-bg-warning" style="font-size:0.65rem;">PEND.</span>
+        </div>
+      </div>
+      <div class="feed-card ak-p-3">
+        <div class="ak-d-flex ak-align-center ak-gap-3">
+          <span class="status-dot danger"></span>
+          <div class="ak-flex-fill">
+            <div class="ak-fw-semibold ak-fs-sm">Alerta sequía</div>
+            <div class="ak-text-muted ak-fs-sm">Lote 6 — nivel crítico de humedad</div>
+          </div>
+          <span class="ak-badge ak-bg-danger" style="font-size:0.65rem;">URGENTE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cultivos grid -->
+    <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+      <h6 class="ak-fw-semibold ak-m-0">🌱 Mis cultivos</h6>
+      <a href="#" class="ak-link-primary ak-fs-sm">Ver mapa</a>
+    </div>
+
+    <div class="ak-row ak-g-2 ak-mb-3">
+      <div class="ak-col-6">
+        <div class="feed-card ak-p-3">
+          <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+            <span class="ak-fw-semibold ak-fs-sm">Maíz</span>
+            <span class="status-dot active"></span>
+          </div>
+          <div class="ak-text-muted ak-fs-sm">12.5 ha</div>
+          <div class="ak-progress ak-mt-2" style="height:6px;">
+            <div class="ak-progress-bar" style="width:75%;"></div>
+          </div>
+          <div class="ak-d-flex ak-justify-between ak-mt-1">
+            <span class="ak-fs-sm ak-text-success">75%</span>
+            <span class="ak-fs-sm ak-text-muted">Cosecha en 30d</span>
+          </div>
+        </div>
+      </div>
+      <div class="ak-col-6">
+        <div class="feed-card ak-p-3">
+          <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+            <span class="ak-fw-semibold ak-fs-sm">Soja</span>
+            <span class="status-dot pending"></span>
+          </div>
+          <div class="ak-text-muted ak-fs-sm">15.0 ha</div>
+          <div class="ak-progress ak-mt-2" style="height:6px;">
+            <div class="ak-progress-bar ak-bg-warning" style="width:35%;"></div>
+          </div>
+          <div class="ak-d-flex ak-justify-between ak-mt-1">
+            <span class="ak-fs-sm ak-text-warning">35%</span>
+            <span class="ak-fs-sm ak-text-muted">En crecimiento</span>
+          </div>
+        </div>
+      </div>
+      <div class="ak-col-6">
+        <div class="feed-card ak-p-3">
+          <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+            <span class="ak-fw-semibold ak-fs-sm">Trigo</span>
+            <span class="status-dot active"></span>
+          </div>
+          <div class="ak-text-muted ak-fs-sm">8.3 ha</div>
+          <div class="ak-progress ak-mt-2" style="height:6px;">
+            <div class="ak-progress-bar ak-bg-success" style="width:90%;"></div>
+          </div>
+          <div class="ak-d-flex ak-justify-between ak-mt-1">
+            <span class="ak-fs-sm ak-text-success">90%</span>
+            <span class="ak-fs-sm ak-text-muted">Próximo a cosechar</span>
+          </div>
+        </div>
+      </div>
+      <div class="ak-col-6">
+        <div class="feed-card ak-p-3">
+          <div class="ak-d-flex ak-align-center ak-justify-between ak-mb-2">
+            <span class="ak-fw-semibold ak-fs-sm">Girasol</span>
+            <span class="status-dot danger"></span>
+          </div>
+          <div class="ak-text-muted ak-fs-sm">4.8 ha</div>
+          <div class="ak-progress ak-mt-2" style="height:6px;">
+            <div class="ak-progress-bar ak-bg-danger" style="width:15%;"></div>
+          </div>
+          <div class="ak-d-flex ak-justify-between ak-mt-1">
+            <span class="ak-fs-sm ak-text-danger">15%</span>
+            <span class="ak-fs-sm ak-text-muted">Requiere atención</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cargando skeleton demo -->
+    <div class="d-none">
+      <div class="feed-card ak-p-3">
+        <div class="skeleton-box" style="width:60%;margin-bottom:8px;"></div>
+        <div class="skeleton-box" style="width:40%;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="app-bottom-nav" role="tablist">
+    <a href="#" class="ak-active" role="tab">
+      <span class="nav-icon">🏠</span>
+      <span>Inicio</span>
+    </a>
+    <a href="#" role="tab">
+      <span class="nav-icon">🌾</span>
+      <span>Cultivos</span>
+    </a>
+    <a href="#" role="tab">
+      <span class="nav-icon">📊</span>
+      <span>Reportes</span>
+    </a>
+    <a href="#" role="tab">
+      <span class="nav-icon">⚙️</span>
+      <span>Más</span>
+    </a>
+  </nav>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+</body>
+</html>
