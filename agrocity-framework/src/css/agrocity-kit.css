@@ -1922,6 +1922,22 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
 .ak-card-subtitle { margin: 0 0 8px; color: var(--ak-text-muted); }
 .ak-card-text { margin: 0 0 8px; }
 .ak-card-img-top { width: 100%; display: block; }
+.ak-card-img-container {
+  width: 100%;
+  min-height: 100px;
+  max-height: 130px;
+  background: var(--ak-primary-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem;
+  overflow: hidden;
+}
+.ak-card-img-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
 .ak-card-link { color: var(--ak-secondary); text-decoration: none; margin-right: 12px; }
 
 /* ---- List group ------------------------------------------------------- */
@@ -2479,6 +2495,38 @@ body.ak-modal-open { overflow: hidden; }
 .ak-drawer-sub-item:hover { color: var(--ak-primary); background: var(--ak-surface-alt); }
 .ak-drawer-sub-item.ak-active { color: var(--ak-primary); font-weight: 600; background: rgba(43,123,65,0.1); }
 
+/* ── Page panel (drawer navigation target) ── */
+.ak-page { display: none; }
+.ak-page.ak-active { display: block; }
+
+/* ── Drawer persistent (sidebar en desktop, overlay en mobile) ── */
+@media (min-width: 768px) {
+  .ak-drawer-persistent {
+    display: block !important;
+    position: sticky;
+    top: 56px;
+    width: 260px;
+    height: calc(100vh - 56px);
+    z-index: auto;
+    flex-shrink: 0;
+    overflow-x: hidden;
+    box-shadow: none;
+  }
+  .ak-drawer-persistent .ak-drawer-backdrop { display: none; }
+  .ak-drawer-persistent .ak-drawer-content {
+    position: static;
+    transform: none;
+    width: auto;
+    height: 100%;
+    box-shadow: none;
+    border-right: 1px solid var(--ak-border);
+  }
+  .ak-drawer-persistent .ak-drawer-header { display: none; }
+}
+@media (max-width: 767px) {
+  .ak-drawer-persistent .ak-drawer-content { width: 300px; }
+}
+
 /* ---- Toasts ----------------------------------------------------------- */
 .ak-toast-container {
   position: fixed;
@@ -2779,6 +2827,33 @@ body.ak-modal-open { overflow: hidden; }
 .ak-app{display:flex;flex-direction:column;min-height:100vh}
 .ak-app-body{display:flex;flex:1;min-height:0}
 .ak-app-main{flex:1;min-width:0;overflow-y:auto}
+
+/* Avatar */
+.ak-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Navbar user info */
+.ak-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ak-nav-user-text {
+  text-align: right;
+  line-height: 1.3;
+}
+.ak-nav-user-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.ak-nav-user-email {
+  font-size: 11px;
+  color: var(--ak-text-muted);
+}
 
 /* Clearfix */
 .ak-clearfix::after{display:block;clear:both;content:""}

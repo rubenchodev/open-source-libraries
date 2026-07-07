@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drawer Navigation — Agrocity Kit</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    .ak-navbar { position: sticky; top: 0; z-index: 1020; }
+    .ak-app-main { padding: 32px 40px; }
+
+    .demo-card {
+      background: var(--ak-surface-alt); border: 1px solid var(--ak-border);
+      border-radius: var(--ak-radius); padding: 24px; margin: 16px 0;
+    }
+    .log-container {
+      background: #1a1a2e; color: #00ff88; font-family: monospace;
+      padding: 16px; border-radius: var(--ak-radius); font-size: 0.8rem;
+      max-height: 200px; overflow-y: auto; margin-top: 16px;
+    }
+    .log-container .log-entry { padding: 2px 0; }
+  </style>
+</head>
+<body class="ak-body ak-app">
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════════════════════════════ -->
+  <nav class="ak-navbar" id="mainNavbar">
+    <div class="ak-container-fluid ak-d-flex ak-align-items-center ak-justify-content-between">
+      <div class="ak-d-flex ak-align-items-center ak-gap-2">
+        <button class="ak-navbar-toggler" data-ak-toggle="drawer" data-ak-target="#appDrawer">
+          <span data-ak-icon="menu"></span>
+        </button>
+        <span class="ak-h5 ak-m-0 ak-text-white">Agrocity Kit — Drawer Navigation</span>
+      </div>
+      <div class="ak-nav-user">
+        <div class="ak-nav-user-text">
+          <div class="ak-nav-user-name">Demo User</div>
+          <div class="ak-nav-user-email">demo@agrocity.app</div>
+        </div>
+        <img class="ak-avatar" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="Avatar" />
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       LAYOUT: DRAWER (persistent) + MAIN
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="ak-app-body">
+
+    <!-- ─── DRAWER (sidebar en desktop, overlay en mobile) ─── -->
+    <div class="ak-drawer ak-drawer-persistent" id="appDrawer">
+      <div class="ak-drawer-backdrop"></div>
+      <div class="ak-drawer-content">
+        <div class="ak-drawer-header">
+          <div class="ak-drawer-header-avatar" data-ak-icon="droplet"></div>
+          <div>
+            <div class="ak-drawer-header-title">Agrocity App</div>
+            <div class="ak-drawer-header-subtitle">Panel de navegación</div>
+          </div>
+          <button class="ak-btn-close" data-ak-dismiss="drawer" style="margin-left:auto;"></button>
+        </div>
+        <div class="ak-drawer-body">
+          <nav id="docsNav">
+
+            <div class="ak-drawer-subheader">General</div>
+
+            <a href="#inicio" class="ak-drawer-item ak-active" data-ak-toggle="drawer-item">
+              <span class="ak-drawer-item-icon" data-ak-icon="home"></span>
+              <span>Inicio</span>
+            </a>
+
+            <div class="ak-drawer-subheader">Módulos</div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subCultivos">
+              <span class="ak-drawer-item-icon" data-ak-icon="sprout"></span>
+              <span>Cultivos</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subCultivos" class="ak-drawer-sub">
+              <a href="#maiz" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Maíz</a>
+              <a href="#trigo" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Trigo</a>
+              <a href="#soya" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Soya</a>
+            </div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subInventario">
+              <span class="ak-drawer-item-icon" data-ak-icon="package"></span>
+              <span>Inventario</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subInventario" class="ak-drawer-sub">
+              <a href="#insumos" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Insumos</a>
+              <a href="#herramientas" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Herramientas</a>
+            </div>
+
+            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subMenuProcedures">
+              <span class="ak-drawer-item-icon" data-ak-icon="file"></span>
+              <span>Trámites</span>
+              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div id="subMenuProcedures" class="ak-drawer-sub"></div>
+
+            <div class="ak-drawer-divider"></div>
+
+            <div class="ak-drawer-subheader">Sistema</div>
+
+            <a href="#callback-demo" class="ak-drawer-item" data-ak-toggle="drawer-item" data-ak-callback="onCustomClick">
+              <span class="ak-drawer-item-icon" data-ak-icon="star"></span>
+              <span>Callback Demo</span>
+            </a>
+
+            <a href="#event-log" class="ak-drawer-item" data-ak-toggle="drawer-item">
+              <span class="ak-drawer-item-icon" data-ak-icon="file"></span>
+              <span>Event Log</span>
+            </a>
+
+          </nav>
+        </div>
+        <div class="ak-drawer-footer">
+          <button class="ak-drawer-item">
+            <span class="ak-drawer-item-icon" data-ak-icon="log-out"></span>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── MAIN ─── -->
+    <main class="ak-app-main">
+
+      <!-- Panel: Inicio -->
+      <section id="inicio" class="ak-page ak-active">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">Inicio</h2>
+          <p class="ak-text-muted">Panel principal con resumen del sistema. Usa el menú lateral para navegar entre las secciones.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:16px;">
+            <div class="demo-card" style="text-align:center;">
+              <div style="font-size:2rem;" data-ak-icon="sprout"></div>
+              <div style="font-size:1.2rem;font-weight:700;">12</div>
+              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Cultivos activos</div>
+            </div>
+            <div class="demo-card" style="text-align:center;">
+              <div style="font-size:2rem;" data-ak-icon="package"></div>
+              <div style="font-size:1.2rem;font-weight:700;">48</div>
+              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Productos</div>
+            </div>
+            <div class="demo-card" style="text-align:center;">
+              <div style="font-size:2rem;" data-ak-icon="trending-up"></div>
+              <div style="font-size:1.2rem;font-weight:700;">+15%</div>
+              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Rendimiento</div>
+            </div>
+          </div>
+
+          <div class="ak-my-5">
+            <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">Trámites disponibles</h2>
+            <p class="ak-text-muted">Selecciona un trámite para iniciar el proceso.</p>
+            <div class="ak-row ak-justify-content-center" id="procedureListContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Maíz -->
+      <section id="maiz" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌽 Maíz</h2>
+          <p class="ak-text-muted">Información detallada del cultivo de maíz.</p>
+          <div class="demo-card">
+            <p style="margin:0;">Temporada: Primavera-Verano · Área: 12.5 ha · Rendimiento esperado: 8.2 t/ha</p>
+          </div>
+          <div class="demo-card">
+            <p><strong>Etapa actual:</strong> Floración</p>
+            <div class="ak-progress" style="margin-top:8px;">
+              <div class="ak-progress-bar" style="width:65%;">65%</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Trigo -->
+      <section id="trigo" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌾 Trigo</h2>
+          <p class="ak-text-muted">Información detallada del cultivo de trigo.</p>
+          <div class="demo-card">
+            <p style="margin:0;">Temporada: Otoño-Invierno · Área: 8.0 ha · Rendimiento esperado: 6.5 t/ha</p>
+          </div>
+          <div class="demo-card">
+            <p><strong>Etapa actual:</strong> Maduración</p>
+            <div class="ak-progress" style="margin-top:8px;">
+              <div class="ak-progress-bar" style="width:85%;">85%</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Soya -->
+      <section id="soya" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌱 Soya</h2>
+          <p class="ak-text-muted">Información detallada del cultivo de soya.</p>
+          <div class="demo-card">
+            <p style="margin:0;">Temporada: Primavera-Verano · Área: 20.0 ha · Rendimiento esperado: 3.2 t/ha</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Insumos -->
+      <section id="insumos" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">📦 Insumos</h2>
+          <p class="ak-text-muted">Gestión de insumos agrícolas.</p>
+          <div class="demo-card">
+            <p style="margin:0;">Fertilizantes, semillas y agroquímicos disponibles en almacén.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Herramientas -->
+      <section id="herramientas" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🔧 Herramientas</h2>
+          <p class="ak-text-muted">Equipo y maquinaria registrada.</p>
+          <div class="demo-card">
+            <p style="margin:0;">Tractores, sembradoras y sistemas de riego disponibles.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Callback Demo -->
+      <section id="callback-demo" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">⭐ Callback Demo</h2>
+          <p class="ak-text-muted">Este panel se activa mediante <code>data-ak-callback</code>.</p>
+          <div class="ak-alert ak-alert-info">
+            El callback ejecutó <code>onCustomClick(item, panel)</code> al hacer clic en el item del menú.
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: Event Log -->
+      <section id="event-log" class="ak-page">
+        <div class="ak-my-5">
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">📄 Event Log</h2>
+          <p class="ak-text-muted">Registro de eventos <code>ak:drawer:item:click</code>.</p>
+          <div class="log-container" id="logContainer">
+            <div class="log-entry">// Esperando navegación...</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+  <script>
+    // Escuchar el evento personalizado
+    document.addEventListener('ak:drawer:item:click', function(e) {
+      var log = document.getElementById('logContainer');
+      if (!log) return;
+      var entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.textContent = '→ Navegando a: ' + e.detail.target + ' | Panel: ' + (e.detail.panel ? e.detail.panel.id : 'null');
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    });
+
+    // Callback personalizado via data-ak-callback
+    function onCustomClick(item, panel) {
+      AgrocityKit.showToast('Callback ejecutado desde: ' + item.textContent.trim(), {
+        type: 'success',
+        title: 'data-ak-callback',
+        duration: 3000
+      });
+    }
+
+    // ─── Ejemplo dinámico: Trámites ─────────────────────────────────────
+
+    var proceduresData_ = [
+      {
+        rowIndex: 2, id: 'CONAGUA-01-021',
+        name: 'Prórroga de títulos de concesión y/o permisos de descarga',
+        shortName: 'Prórroga de títulos',
+        logo: 'https://agrocity.mx/cdn/shop/articles/monito_9627e6a5-75e1-47b5-aead-605010b76b49_1200x1200.jpg',
+        description: 'La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b, y séptimo párrafo de la Ley de Puertos.',
+        status: 'Activo', panelId: '#procedurePanel21'
+      },
+      {
+        rowIndex: 3, id: 'CONAGUA-01-022',
+        name: 'Prueba 3',
+        shortName: 'Prórroga 3',
+        logo: 'https://agrocity.mx/cdn/shop/articles/monito_9627e6a5-75e1-47b5-aead-605010b76b49_1200x1200.jpg',
+        description: 'La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b.',
+        status: 'Activo', panelId: '#procedurePanel22'
+      }
+    ];
+
+    function escapeJs_(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+    }
+
+    function renderProceduresList_(proceduresArray_) {
+      var subMenuProcedures_ = Ak('#subMenuProcedures');
+      var procedureListContainer_ = Ak('#procedureListContainer');
+      var mainContent_ = Ak('.ak-app-main');
+
+      subMenuProcedures_.html('');
+      procedureListContainer_.html('');
+
+      proceduresArray_.forEach(function(procedure_) {
+        // Sub-item en el drawer
+        var subItem = Ak('<a class="ak-drawer-sub-item" data-ak-toggle="drawer-item"></a>')
+          .attr('href', procedure_.panelId)
+          .text(procedure_.shortName);
+        subMenuProcedures_.append(subItem);
+
+        // Panel del trámite (oculto hasta navegar)
+        var panelId = procedure_.panelId.replace('#', '');
+        var panel = Ak('<section class="ak-page" id="' + panelId + '"></section>')
+          .append(
+            Ak('<div class="ak-my-5"></div>')
+              .append(Ak('<h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2"></h2>').text(procedure_.name))
+              .append(Ak('<p class="ak-text-muted"></p>').text(procedure_.description))
+          );
+        mainContent_.append(panel);
+
+        // Card en la grilla de inicio (igual altura, botón centrado al fondo)
+        var cardCol = Ak('<div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-d-flex"></div>');
+        var card = Ak('<div class="ak-card ak-h-100"></div>')
+          .append(
+            Ak('<div class="ak-card-img-container"></div>')
+              .append(Ak('<img>').attr('src', procedure_.logo).attr('alt', procedure_.name))
+          )
+          .append(
+            Ak('<div class="ak-card-body ak-d-flex ak-flex-column ak-align-items-center ak-text-center"></div>')
+              .append(Ak('<h3 class="ak-h3"></h3>').text(procedure_.name))
+              .append(Ak('<p class="ak-card-text ak-fst-italic"></p>').text(procedure_.description))
+              .append(
+                Ak('<div class="ak-mt-auto ak-pt-3"></div>')
+                  .append(
+                    Ak('<button class="ak-btn ak-btn-primary">Ingresar al trámite</button>')
+                      .on('click', function() {
+                        subItem[0].click();
+                      })
+                  )
+              )
+          );
+        cardCol.append(card);
+        procedureListContainer_.append(cardCol);
+      });
+    }
+
+    renderProceduresList_(proceduresData_);
+  </script>
+</body>
+</html>

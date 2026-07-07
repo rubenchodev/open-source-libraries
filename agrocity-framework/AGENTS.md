@@ -518,6 +518,7 @@ function createUser(email) {
 | `.ak-fade` | Animación fade |
 | `.ak-card` | Card base |
 | `.ak-card-img-top` | Imagen superior |
+| `.ak-card-img-container` | Contenedor flex con fondo y centrado para imagen en card |
 | `.ak-card-header` | Header de card |
 | `.ak-card-body` | Cuerpo de card |
 | `.ak-card-title` | Título de card |
@@ -596,6 +597,13 @@ function createUser(email) {
 | `.ak-drawer-item-icon` | Icono del item |
 | `.ak-drawer-sub` | Submenú colapsable |
 | `.ak-drawer-sub-item` | Item de submenú |
+| `.ak-drawer-persistent` | Drawer persistente (sidebar en desktop, overlay en mobile) |
+| `.ak-page` | Panel navegable para drawer-item (show/hide con ak-active) |
+| `.ak-avatar` | Imagen avatar circular 32×32 |
+| `.ak-nav-user` | Info de usuario en navbar |
+| `.ak-nav-user-text` | Contenedor texto del nav-user |
+| `.ak-nav-user-name` | Nombre en nav-user |
+| `.ak-nav-user-email` | Email en nav-user |
 | `.ak-progress` | Barra de progreso |
 | `.ak-progress-bar` | Barra interna |
 | `.ak-progress-bar-striped` | Rayada |
@@ -708,7 +716,8 @@ Patrón: `ak-{m|p}{t|b|s|e|x|y}-{0..5}` + `.ak-m-auto`
 | `data-ak-timepicker` | TimePicker | `<input>` selector hora |
 | `data-ak-date-range` | DateRange | Contenedor con 2 datepickers |
 | `data-ak-time-range` | TimeRange | Contenedor con 2 timepickers |
-| `data-ak-toggle` | Modal/Offcanvas/Collapse/Dropdown/Accordion/Tab/Drawer | Abre/cierra |
+| `data-ak-toggle` | Modal/Offcanvas/Collapse/Dropdown/Accordion/Tab/Drawer/Drawer-item/Drawer-sub | Abre/cierra |
+| `data-ak-callback` | Drawer-item | Función global a ejecutar al hacer clic (ej: `miFuncion`) |
 | `data-ak-dismiss` | Modal/Offcanvas/Alert/Toast | Cierra |
 | `data-ak-target` | Todos | Selector del target (#id) |
 | `data-ak-carousel` | Carousel | Inicializa carrusel |
@@ -772,6 +781,9 @@ AgrocityKit.loader(show, [messages]);
 AgrocityKit.alert(msg);
 AgrocityKit.confirm(msg, callback);
 AgrocityKit.prompt(msg, defaultValue, callback);
+
+// Eventos de componentes
+// document.addEventListener('ak:drawer:item:click', (e) => { e.detail.target, e.detail.panel });
 
 // Iconos (con agrocity-icons.js)
 AgrocityKit.icon(name, size = 20, { class });

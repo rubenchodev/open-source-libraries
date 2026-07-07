@@ -4436,6 +4436,39 @@
         panel.classList.toggle("ak-show", !isOpen);
         panel.classList.toggle("ak-collapse", isOpen);
         trigger.classList.toggle("ak-collapsed", isOpen);
+      } else if (type === "drawer-item" && targetSel) {
+        e.preventDefault();
+        const drawerContent = trigger.closest(".ak-drawer-content");
+        const drawer = trigger.closest(".ak-drawer");
+        // 1. Manejar ak-active en items del mismo drawer
+        if (drawerContent) {
+          drawerContent.querySelectorAll("[data-ak-toggle='drawer-item']").forEach(function(item) {
+            item.classList.remove("ak-active");
+          });
+        }
+        trigger.classList.add("ak-active");
+        // 2. Mostrar panel target
+        const panel = document.querySelector(targetSel);
+        if (panel) {
+          const container = panel.closest(".ak-drawer-panels") || panel.parentNode;
+          if (container) {
+            container.querySelectorAll(".ak-page").forEach(function(p) {
+              p.classList.remove("ak-active");
+            });
+          }
+          panel.classList.add("ak-active");
+        }
+        // 3. Cerrar drawer en móvil (solo si NO es persistent)
+        if (drawer && !drawer.classList.contains("ak-drawer-persistent")) {
+          drawer.classList.remove("ak-show");
+        }
+        // 4. Evento personalizado
+        Helpers.emit(trigger, "ak:drawer:item:click", { target: targetSel, panel: panel });
+        // 5. Callback opcional
+        const cb = trigger.getAttribute("data-ak-callback");
+        if (cb && typeof window[cb] === "function") {
+          window[cb](trigger, panel);
+        }
       } else if (type === "drawer-sub" && targetSel) {
         e.preventDefault();
         const sub = document.querySelector(targetSel);
