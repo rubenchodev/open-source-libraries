@@ -142,6 +142,259 @@
     isMobile() {
       return window.matchMedia("(max-width: 640px)").matches;
     },
+
+    /** Inicializa validación reactiva en un formulario. */
+    formValidationInit(target, options) {
+      const forms = Helpers.resolveElements(target);
+      forms.forEach(form => {
+        if (form._akFvInit) return;
+        form._akFvInit = true;
+
+        const opts = options || {};
+
+        // Auto-agregar * a labels de campos required que falten
+        form.querySelectorAll('.ak-form-field-content [required]').forEach(function(field) {
+          var content = field.closest('.ak-form-field-content');
+          if (!content) return;
+          var label = content.querySelector('.ak-form-label');
+          if (!label) return;
+          if (label.querySelector('.ak-asterisk-field')) return;
+          var span = document.createElement('span');
+          span.className = 'ak-asterisk-field';
+          span.textContent = '*';
+          label.appendChild(span);
+        });
+
+        const getContainer = (el) => {
+          if (el.type === 'file' || el.closest('.ak-form-file')) {
+            return el.closest('.ak-form-file') || el;
+          }
+          if (el.hasAttribute('data-ak-select')) {
+            var next = el.nextElementSibling;
+            return (next && next.classList.contains('ak-select')) ? next : el;
+          }
+          if (el.closest('.ak-select')) {
+            return el.closest('.ak-select');
+          }
+          if (el.closest('.ak-datepicker')) {
+            return el.closest('.ak-datepicker');
+          }
+          if (el.closest('.ak-timepicker')) {
+            return el.closest('.ak-timepicker');
+          }
+          if (el.closest('.ak-password-wrap')) {
+            return el.closest('.ak-password-wrap');
+          }
+          if (el.closest('.ak-input-group')) {
+            return el.closest('.ak-input-group');
+          }
+          if (el.type === 'checkbox' || el.type === 'radio') {
+            return el.closest('.ak-form-check') || el;
+          }
+          return el;
+        };
+
+        const getValue = (el) => {
+          if (el.type === 'file') {
+            return el.files && el.files.length > 0 ? 'filled' : '';
+          }
+          if (el.closest('.ak-form-file')) {
+            const input = el.closest('.ak-form-file').querySelector('.ak-form-file-input');
+            return input && input.files && input.files.length > 0 ? 'filled' : '';
+          }
+          if (el.hasAttribute('data-ak-select')) {
+            return el.value || '';
+          }
+          if (el.type === 'checkbox') {
+            return el.checked ? (el.value || 'on') : '';
+          }
+          if (el.type === 'radio') {
+            if (!el.name) return el.checked ? (el.value || 'on') : '';
+            const form = el.form;
+            const selector = 'input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]';
+            const radios = form ? form.querySelectorAll(selector) : document.querySelectorAll(selector);
+            for (var i = 0; i < radios.length; i++) {
+              if (radios[i].checked) return radios[i].value || 'on';
+            }
+            return '';
+          }
+          return el.value;
+        };
+
+        const getControl = (el) => {
+          if (el.hasAttribute('data-ak-select')) {
+            var container = el.nextElementSibling;
+            if (!container || !container.classList.contains('ak-select')) container = el;
+            var search = container.querySelector('.ak-select__search');
+            return search || el;
+          }
+          return el;
+        };
+
+        const getMsg = (el, rule, fallback) => {
+          return el.getAttribute('data-ak-msg-' + rule) || el.getAttribute('data-ak-msg') || fallback;
+        };
+
+        const parseRules = (el) => {
+          const str = el.getAttribute('data-ak-validate');
+          if (!str) return {};
+          return str.split('|').reduce((acc, r) => {
+            const [k, ...v] = r.split(':');
+            acc[k] = v.length ? v.join(':') : true;
+            return acc;
+          }, {});
+        };
+
+        const validateField = (el) => {
+          const rules = parseRules(el);
+          if (!Object.keys(rules).length) return true;
+
+          const container = getContainer(el);
+          const value = getValue(el);
+          const isEmpty = !value || (typeof value === 'string' && value.trim() === '');
+          let valid = true;
+          let errorMsg = '';
+
+          if (rules.required && isEmpty) {
+            valid = false;
+            errorMsg = getMsg(el, 'required', 'Este campo es obligatorio');
+          }
+
+          if (valid && rules.email && !isEmpty) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+              valid = false;
+              errorMsg = getMsg(el, 'email', 'Formato de email inválido');
+            }
+          }
+
+          if (valid && rules.min && !isEmpty) {
+            if (el.type === 'number') {
+              if (parseFloat(value) < parseFloat(rules.min)) {
+                valid = false;
+                errorMsg = getMsg(el, 'min', 'Valor mínimo ' + rules.min);
+              }
+            } else if (value.length < parseInt(rules.min, 10)) {
+              valid = false;
+              errorMsg = getMsg(el, 'min', 'Mínimo ' + rules.min + ' caracteres');
+            }
+          }
+
+          if (valid && rules.max && !isEmpty) {
+            if (el.type === 'number') {
+              if (parseFloat(value) > parseFloat(rules.max)) {
+                valid = false;
+                errorMsg = getMsg(el, 'max', 'Valor máximo ' + rules.max);
+              }
+            } else if (value.length > parseInt(rules.max, 10)) {
+              valid = false;
+              errorMsg = getMsg(el, 'max', 'Máximo ' + rules.max + ' caracteres');
+            }
+          }
+
+          if (valid && rules.pattern && !isEmpty) {
+            try {
+              if (!new RegExp(rules.pattern).test(value)) {
+                valid = false;
+                errorMsg = getMsg(el, 'pattern', 'Formato inválido');
+              }
+            } catch (_) { /* ignore invalid regex */ }
+          }
+
+          // Actualizar clases visuales (solo error)
+          container.classList.toggle('ak-is-invalid', !valid);
+          container.classList.remove('ak-is-valid');
+
+          // Radio group: limpiar error de todos los radios del mismo grupo al validar uno
+          if (el.type === 'radio' && valid && el.name) {
+            var radios = form.querySelectorAll('input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]');
+            radios.forEach(function(r) {
+              if (r !== el) {
+                var c = getContainer(r);
+                c.classList.remove('ak-is-invalid');
+                c.classList.remove('ak-is-valid');
+              }
+            });
+          }
+
+          // Mostrar feedback y label (auto-crea si no existe)
+          const parent = container.parentElement;
+          if (!parent) return valid;
+
+          const label = parent.querySelector('.ak-form-label');
+          if (label) {
+            label.classList.toggle('ak-text-danger', !valid);
+            if (valid) label.classList.remove('ak-text-success');
+          }
+
+          // Custom Select: usar sistema de error nativo (.ak-has-error + .ak-select__error-msg)
+          if (container.classList.contains('ak-select')) {
+            container.classList.toggle('ak-has-error', !valid);
+            const errMsg = container.querySelector('.ak-select__error-msg');
+            if (errMsg) errMsg.textContent = !valid ? errorMsg : '';
+            return valid;
+          }
+
+          let invalidEl = parent.querySelector('.ak-invalid-feedback');
+
+          if (!invalidEl && parent !== form) {
+            invalidEl = document.createElement('div');
+            invalidEl.className = 'ak-invalid-feedback';
+            parent.appendChild(invalidEl);
+          }
+
+          if (!valid && invalidEl) {
+            invalidEl.textContent = errorMsg;
+            invalidEl.style.display = 'block';
+          } else if (invalidEl) {
+            invalidEl.style.display = 'none';
+          }
+
+          return valid;
+        };
+
+        // Eventos en tiempo real
+        form.querySelectorAll('[data-ak-validate]').forEach(el => {
+          const events = el.type === 'file' || el.closest('.ak-form-file') || el.type === 'checkbox' || el.type === 'radio'
+            ? ['change']
+            : ['blur', 'input', 'change'];
+          events.forEach(evt => {
+            el.addEventListener(evt, () => {
+              if (form.classList.contains('ak-was-validated') ||
+                  el.classList.contains('ak-is-invalid') ||
+                  el.classList.contains('ak-is-valid')) {
+                validateField(el);
+              }
+            });
+          });
+        });
+
+        // Submit handler
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          form.classList.add('ak-was-validated');
+          const errors = [];
+          form.querySelectorAll('[data-ak-validate]').forEach(el => {
+            if (!validateField(el)) errors.push(el);
+          });
+
+          if (errors.length) {
+            if (opts.onError) opts.onError(form, errors);
+            const first = errors[0];
+            const input = getControl(first);
+            if (input && input.focus) input.focus();
+            return;
+          }
+
+          if (opts.onSuccess) {
+            opts.onSuccess(form);
+          } else if (form.getAttribute('action')) {
+            form.submit();
+          } else {
+            Helpers.emit(form, 'ak:form:valid', { form });
+          }
+        });
+      });
+    },
   };
 
   /* ==========================================================================
@@ -321,6 +574,9 @@
           if (node.hasAttribute("data-ak-scrollspy")) {
             AgrocityKit.scrollspy(node, { target: node.getAttribute("data-ak-target") });
           }
+          if (node.tagName === "FORM" && node.hasAttribute("data-ak-validation")) {
+            AgrocityKit.formValidation("init", node, {});
+          }
         });
       };
 
@@ -390,6 +646,10 @@
       });
       AgrocityKit.passwordToggle();
       AgrocityKit.fileInput();
+      document.querySelectorAll("form[data-ak-validation]").forEach((el) => {
+        if (el._akFvInit) return;
+        AgrocityKit.formValidation("init", el, {});
+      });
     },
 
     /**
@@ -462,14 +722,34 @@
         if (input._akFileInit) return;
         input._akFileInit = true;
 
-        const container = input.closest(".ak-form-file");
-        if (!container) return;
+        let container = input.closest(".ak-form-file");
+        const H = Helpers;
+
+        // Auto-build si no existe contenedor .ak-form-file
+        if (!container) {
+          container = H.el("div", { class: "ak-form-file" });
+          input.parentNode.insertBefore(container, input);
+          container.appendChild(input);
+          // Copiar atributos data-ak-* del input al contenedor
+          ["accept", "max-files", "max-size", "file-list"].forEach((a) => {
+            var v = input.getAttribute("data-ak-" + a);
+            if (v !== null) container.setAttribute("data-ak-" + a, v);
+          });
+          // Construir field
+          var fieldHtml = '<div class="ak-form-file-field"><span class="ak-form-file-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span><span class="ak-form-file-text">Seleccionar archivo...</span><button class="ak-form-file-clear" type="button" aria-label="Eliminar">&times;</button><button class="ak-form-file-list-btn" type="button" aria-label="Lista de archivos"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button></div>';
+          container.insertAdjacentHTML("beforeend", fieldHtml);
+          container.insertAdjacentHTML("beforeend", '<div class="ak-form-file-popover"></div>');
+          container.insertAdjacentHTML("beforeend", '<div class="ak-form-file-error"></div>');
+        }
 
         const textEl = container.querySelector(".ak-form-file-text");
         const field = container.querySelector(".ak-form-file-field");
         const clearBtn = container.querySelector(".ak-form-file-clear");
         const listBtn = container.querySelector(".ak-form-file-list-btn");
         const popover = container.querySelector(".ak-form-file-popover");
+        if (popover) document.body.appendChild(popover);
+        let popoverScrollHandler = null;
+        let popoverResizeHandler = null;
         let errorEl = container.querySelector(".ak-form-file-error");
         if (!errorEl) {
           errorEl = document.createElement("div");
@@ -574,8 +854,25 @@
           });
         };
 
+        const positionPopover = () => {
+          if (!popover || !popover.classList.contains("open")) return;
+          var rect = (field || container).getBoundingClientRect();
+          popover.style.position = "fixed";
+          popover.style.top = (rect.bottom + 4) + "px";
+          popover.style.left = rect.left + "px";
+          popover.style.right = "auto";
+          popover.style.width = rect.width + "px";
+          popover.style.minWidth = "200px";
+        };
+
         const closePopover = () => {
-          if (popover) popover.classList.remove("open");
+          if (popover) {
+            popover.classList.remove("open");
+            if (popoverScrollHandler) document.removeEventListener("scroll", popoverScrollHandler, true);
+            if (popoverResizeHandler) window.removeEventListener("resize", popoverResizeHandler);
+            popoverScrollHandler = null;
+            popoverResizeHandler = null;
+          }
         };
 
         const updateUI = () => {
@@ -659,12 +956,17 @@
             } else {
               buildList();
               popover.classList.add("open");
+              positionPopover();
+              popoverScrollHandler = () => positionPopover();
+              popoverResizeHandler = () => positionPopover();
+              document.addEventListener("scroll", popoverScrollHandler, true);
+              window.addEventListener("resize", popoverResizeHandler);
             }
           });
         }
 
         document.addEventListener("click", (e) => {
-          if (popover && !container.contains(e.target)) {
+          if (popover && !container.contains(e.target) && !popover.contains(e.target)) {
             closePopover();
           }
         });
@@ -685,6 +987,37 @@
       });
     },
 
+    /**
+     * Validación reactiva de formularios con feedback visual.
+     * Soporta campos estándar (input, select, textarea) y personalizados (ak-form-file).
+     *
+     * Modos:
+     *   'init'    — Inicializa validación en un formulario.
+     *               target: selector/elemento form. options: { onSuccess, onError }
+     *   'field'   — Re-valida un campo individual. Retorna true/false.
+     *               target: elemento del campo.
+     *
+     * Declarativo: usar data-ak-validation en el <form> y data-ak-validate en cada campo.
+     *   data-ak-validate="required|email|min:3|max:100|pattern:^[a-z]+$"
+     *   data-ak-msg="Mensaje genérico"
+     *   data-ak-msg-required="Mensaje específico para required"
+     *   data-ak-msg-email="Email inválido"
+     */
+    formValidation(action, target, options) {
+      if (action === 'init') {
+        return Helpers.formValidationInit(target, options);
+      }
+      if (action === 'field') {
+        // Force re-validate a single field
+        if (!target || !target.closest) return true;
+        const form = target.closest('[data-ak-validation]') || target.closest('form');
+        if (!form || !form._akFvInit) return true;
+        // Trigger validation by dispatching blur
+        target.dispatchEvent(new Event('blur', { bubbles: true }));
+        return !target.classList.contains('ak-is-invalid');
+      }
+    },
+
     _helpers: Helpers,
   };
 
@@ -703,7 +1036,7 @@
         continue;
       }
       val = el.dataset[attr];
-      if (val === "true") val = true;
+      if (val === "" || val === "true") val = true;
       else if (val === "false") val = false;
       else if (val !== "" && !isNaN(val)) val = Number(val);
       opts[key] = val;
@@ -723,7 +1056,7 @@
    * @class
    * @param {HTMLSelectElement} native - Elemento <select> nativo a reemplazar
    * @param {Object} options - Opciones de configuración
-   * @param {boolean} [options.search=false] - Habilita buscador interno
+   * @param {boolean} [options.search=true] - Habilita buscador interno
    * @param {boolean} [options.multiple] - Selección múltiple (hereda de native.multiple)
    * @param {string} [options.placeholder="Selecciona una opción..."]
    * @param {string} [options.noResultsText="Sin resultados"]
@@ -898,11 +1231,13 @@
 
       // Ensamblar
       this.root.appendChild(this.control);
-      this.root.appendChild(this.dropdown);
-      this.root.appendChild(this.backdrop);
       this.root.appendChild(this.errorMsg);
 
       this.native.parentNode.insertBefore(this.root, this.native.nextSibling);
+
+      // Dropdown y backdrop van al body para evitar clipping
+      document.body.appendChild(this.dropdown);
+      document.body.appendChild(this.backdrop);
 
       // Eventos del control
       this.control.addEventListener("click", (e) => {
@@ -1236,7 +1571,20 @@
       this.state.open = true;
       this.root.classList.add("ak-is-open");
       this.control.setAttribute("aria-expanded", "true");
-      this.root.classList.toggle("ak-is-mobile", Helpers.isMobile());
+      var isMobile = Helpers.isMobile();
+      this.root.classList.toggle("ak-is-mobile", isMobile);
+      this.dropdown.classList.add("ak-is-open");
+      this.dropdown.classList.toggle("ak-is-mobile", isMobile);
+      this.backdrop.classList.add("ak-is-open");
+      this.backdrop.classList.toggle("ak-is-mobile", isMobile);
+      // Posicionar dropdown sobre body
+      if (!isMobile) {
+        this._positionDropdown();
+        this._scrollHandler = () => this._positionDropdown();
+        this._resizeHandler = () => this.close();
+        document.addEventListener("scroll", this._scrollHandler, true);
+        window.addEventListener("resize", this._resizeHandler);
+      }
       document.addEventListener("click", this._boundOutside, true);
       // Foco al buscador o al control
       setTimeout(() => {
@@ -1245,23 +1593,34 @@
       Helpers.emit(this.native, "ak:select:open", { instance: this });
     }
 
+    _positionDropdown() {
+      var rect = this.control.getBoundingClientRect();
+      this.dropdown.style.position = "fixed";
+      this.dropdown.style.top = (rect.bottom + 4) + "px";
+      this.dropdown.style.left = rect.left + "px";
+      this.dropdown.style.right = "auto";
+      this.dropdown.style.width = rect.width + "px";
+    }
+
     close() {
       if (!this.state.open) return;
       this.state.open = false;
       this.state.activeIndex = -1;
-      this.root.classList.remove("ak-is-open");
+      this.root.classList.remove("ak-is-open", "ak-is-mobile");
+      this.dropdown.classList.remove("ak-is-open", "ak-is-mobile");
+      this.backdrop.classList.remove("ak-is-open", "ak-is-mobile");
       this.control.setAttribute("aria-expanded", "false");
+      if (this._scrollHandler) document.removeEventListener("scroll", this._scrollHandler, true);
+      if (this._resizeHandler) window.removeEventListener("resize", this._resizeHandler);
+      this._scrollHandler = null;
+      this._resizeHandler = null;
       document.removeEventListener("click", this._boundOutside, true);
-      if (this.searchInput) {
-        this.searchInput.value = "";
-        this.state.query = "";
-        this._renderOptions();
-      }
       Helpers.emit(this.native, "ak:select:close", { instance: this });
     }
 
     _onOutsideClick(e) {
-      if (!this.root.contains(e.target)) this.close();
+      if (this.root.contains(e.target) || this.dropdown.contains(e.target)) return;
+      this.close();
     }
 
     _onResize() {
@@ -1375,9 +1734,12 @@
 
     /** Destruye la instancia y restaura el <select> nativo. */
     destroy() {
+      this.close();
       document.removeEventListener("click", this._boundOutside, true);
       window.removeEventListener("resize", this._boundResize);
       if (this.root && this.root.parentNode) this.root.parentNode.removeChild(this.root);
+      if (this.dropdown && this.dropdown.parentNode) this.dropdown.parentNode.removeChild(this.dropdown);
+      if (this.backdrop && this.backdrop.parentNode) this.backdrop.parentNode.removeChild(this.backdrop);
       this.native.classList.remove("ak-select-native-hidden");
       this.native.removeAttribute("aria-hidden");
       this.native.removeAttribute("tabindex");
@@ -1958,7 +2320,7 @@
       }
 
       this.overlay = H.el("div", { class: "ak-datepicker__overlay" });
-      this.container.appendChild(this.overlay);
+      document.body.appendChild(this.overlay);
 
       this._render();
     }
@@ -1966,7 +2328,7 @@
     _bind() {
       this.input.addEventListener("focus", () => this._open());
       document.addEventListener("click", (e) => {
-        if (this.state.open && !this.container.contains(e.target)) this._close();
+        if (this.state.open && !this.container.contains(e.target) && !this.overlay.contains(e.target)) this._close();
       });
       this.input.addEventListener("keydown", (e) => {
         if (e.key === "Escape") this._close();
@@ -2466,8 +2828,21 @@
         ? new Date(this.state.selectedDate.getFullYear(), this.state.selectedDate.getMonth(), 1)
         : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       this._render();
+      this._positionOverlay();
       this.overlay.classList.add("ak-datepicker__overlay--open");
       this.container.classList.add("ak-datepicker--open");
+      this._scrollHandler = () => this._positionOverlay();
+      this._resizeHandler = () => this._close();
+      document.addEventListener("scroll", this._scrollHandler, true);
+      window.addEventListener("resize", this._resizeHandler);
+    }
+
+    _positionOverlay() {
+      var rect = this.container.getBoundingClientRect();
+      this.overlay.style.position = "fixed";
+      this.overlay.style.top = (rect.bottom + 4) + "px";
+      this.overlay.style.left = rect.left + "px";
+      this.overlay.style.right = "auto";
     }
 
     _close() {
@@ -2475,6 +2850,10 @@
       this.state.open = false;
       this.overlay.classList.remove("ak-datepicker__overlay--open");
       this.container.classList.remove("ak-datepicker--open");
+      if (this._scrollHandler) document.removeEventListener("scroll", this._scrollHandler, true);
+      if (this._resizeHandler) window.removeEventListener("resize", this._resizeHandler);
+      this._scrollHandler = null;
+      this._resizeHandler = null;
     }
 
     /* ---- API pública ------------------------------------------------- */
@@ -2497,6 +2876,7 @@
     }
 
     destroy() {
+      this._close();
       if (this.overlay && this.overlay.parentNode) this.overlay.remove();
       this.input.classList.remove("ak-datepicker-input");
       this.input.removeAttribute("readonly");
@@ -2573,6 +2953,8 @@
    * @param {string} [options.placeholder="Selecciona hora..."]
    * @param {number} [options.minuteStep=5]
    * @param {boolean} [options.autoclose=true]
+   * @param {boolean} [options.showTrigger=true] - Muestra botón trigger con icono de reloj
+   * @param {string} [options.triggerLabel="Abrir selector de hora"]
    * @fires ak:timepicker:change
    */
   class AkTimePicker {
@@ -2588,6 +2970,9 @@
         placeholder: "Selecciona hora...",
         minuteStep: 5,
         autoclose: true,
+        clearBtn: true,
+        showTrigger: true,
+        triggerLabel: "Abrir selector de hora",
       }, options);
 
       this.state = {
@@ -2633,8 +3018,24 @@
       this.input.parentNode.insertBefore(this.container, this.input.nextSibling);
       this.container.appendChild(this.input);
 
+      // Botón trigger (reloj)
+      if (this.opts.showTrigger !== false) {
+        const trigger = H.el("button", {
+          type: "button",
+          class: "ak-timepicker-trigger",
+          "aria-label": this.opts.triggerLabel,
+          tabindex: "-1",
+          onclick: (e) => { e.stopPropagation(); this._open(); },
+        });
+        trigger.innerHTML =
+          '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' +
+          '</svg>';
+        this.container.appendChild(trigger);
+      }
+
       this.overlay = H.el("div", { class: "ak-timepicker__overlay" });
-      this.container.appendChild(this.overlay);
+      document.body.appendChild(this.overlay);
 
       this._renderPicker();
     }
@@ -2686,6 +3087,24 @@
       }
 
       this.overlay.appendChild(body);
+
+      /* Footer con botones OK y Limpiar */
+      const footer = H.el("div", { class: "ak-timepicker__footer" });
+      if (this.opts.clearBtn) {
+        footer.appendChild(H.el("button", {
+          type: "button",
+          class: "ak-btn ak-btn-sm ak-btn-light",
+          text: "Limpiar",
+          onclick: (e) => { e.stopPropagation(); this._clearValue(); },
+        }));
+      }
+      footer.appendChild(H.el("button", {
+        type: "button",
+        class: "ak-btn ak-btn-sm ak-btn-primary",
+        text: "OK",
+        onclick: (e) => { e.stopPropagation(); this._updateValue(); this._close(); },
+      }));
+      this.overlay.appendChild(footer);
     }
 
     _mkCol(value, active, onUp, onDown, onClick) {
@@ -2770,12 +3189,22 @@
       Helpers.emit(this.input, "change", { source: "agrocity-kit" });
     }
 
+    _clearValue() {
+      this.input.value = "";
+      this.state.hour = 12;
+      this.state.minute = 0;
+      this.state.ampm = "AM";
+      this._close();
+      Helpers.emit(this.input, "ak:timepicker:change", { value: null });
+      Helpers.emit(this.input, "change", { source: "agrocity-kit" });
+    }
+
     /* ---- Open / Close ------------------------------------------------ */
 
     _bind() {
       this.input.addEventListener("focus", () => this._open());
       document.addEventListener("click", (e) => {
-        if (this.state.open && !this.container.contains(e.target)) this._close();
+        if (this.state.open && !this.container.contains(e.target) && !this.overlay.contains(e.target)) this._close();
       });
       this.input.addEventListener("keydown", (e) => {
         if (e.key === "Escape") { this._close(); return; }
@@ -2800,8 +3229,21 @@
       if (this.state.open) return;
       this.state.open = true;
       this._renderPicker();
+      this._positionOverlay();
       this.overlay.classList.add("ak-timepicker__overlay--open");
       this.container.classList.add("ak-timepicker--open");
+      this._scrollHandler = () => this._positionOverlay();
+      this._resizeHandler = () => this._close();
+      document.addEventListener("scroll", this._scrollHandler, true);
+      window.addEventListener("resize", this._resizeHandler);
+    }
+
+    _positionOverlay() {
+      var rect = this.container.getBoundingClientRect();
+      this.overlay.style.position = "fixed";
+      this.overlay.style.top = (rect.bottom + 4) + "px";
+      this.overlay.style.left = rect.left + "px";
+      this.overlay.style.right = "auto";
     }
 
     _close() {
@@ -2809,6 +3251,10 @@
       this.state.open = false;
       this.overlay.classList.remove("ak-timepicker__overlay--open");
       this.container.classList.remove("ak-timepicker--open");
+      if (this._scrollHandler) document.removeEventListener("scroll", this._scrollHandler, true);
+      if (this._resizeHandler) window.removeEventListener("resize", this._resizeHandler);
+      this._scrollHandler = null;
+      this._resizeHandler = null;
     }
 
     /* ---- API pública ------------------------------------------------- */
@@ -2829,9 +3275,11 @@
     }
 
     destroy() {
+      this._close();
       if (this.overlay && this.overlay.parentNode) this.overlay.remove();
       this.input.classList.remove("ak-timepicker-input");
       this.input.removeAttribute("readonly");
+
       this.input.removeAttribute("autocomplete");
       registry.delete(this.input);
     }
@@ -4458,7 +4906,17 @@
           }
           panel.classList.add("ak-active");
         }
-        // 3. Cerrar drawer en móvil (solo si NO es persistent)
+        // 3. Si el item está dentro de un drawer-sub, expandir el submenú padre
+        var parentSub = trigger.closest('.ak-drawer-sub');
+        if (parentSub) {
+          parentSub.classList.add('ak-show');
+          var parentToggle = drawerContent ? drawerContent.querySelector('[data-ak-toggle="drawer-sub"][data-ak-target="#' + parentSub.id + '"]') : null;
+          if (parentToggle) {
+            var chevron = parentToggle.querySelector('.bd-chevron');
+            if (chevron) chevron.style.transform = 'rotate(90deg)';
+          }
+        }
+        // 4. Cerrar drawer en móvil (solo si NO es persistent)
         if (drawer && !drawer.classList.contains("ak-drawer-persistent")) {
           drawer.classList.remove("ak-show");
         }

@@ -316,10 +316,6 @@ select[data-ak-select].ak-select-native-hidden {
 
 /* Dropdown */
 .ak-select__dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
   z-index: var(--ak-z-dropdown);
   background: var(--ak-surface);
   border: 1px solid var(--ak-border);
@@ -330,7 +326,7 @@ select[data-ak-select].ak-select-native-hidden {
   flex-direction: column;
   max-height: 320px;
 }
-.ak-select.ak-is-open .ak-select__dropdown {
+.ak-select__dropdown.ak-is-open {
   display: flex;
 }
 
@@ -488,7 +484,8 @@ select[data-ak-select].ak-select-native-hidden {
   color: var(--ak-danger);
   display: none;
 }
-.ak-select.ak-has-error .ak-select__error-msg {
+.ak-select.ak-has-error .ak-select__error-msg,
+.ak-select.ak-is-invalid .ak-select__error-msg {
   display: block;
 }
 
@@ -835,6 +832,10 @@ select[data-ak-select].ak-select-native-hidden {
 .ak-text-secondary { color: var(--ak-secondary) !important; }
 .ak-text-success   { color: var(--ak-success) !important; }
 .ak-text-danger    { color: var(--ak-danger) !important; }
+.ak-asterisk-field {
+  margin-left: 2px;
+  color: var(--ak-danger);
+}
 .ak-text-warning   { color: var(--ak-warning) !important; }
 .ak-text-info      { color: var(--ak-info) !important; }
 .ak-fw-bold   { font-weight: 700 !important; }
@@ -951,10 +952,10 @@ select[data-ak-select].ak-select-native-hidden {
 
 @media (max-width: 640px) {
   /* Select como bottom-sheet en móvil */
-  .ak-select.ak-is-open .ak-select__backdrop {
+  .ak-select__backdrop.ak-is-open {
     display: block;
   }
-  .ak-select.ak-is-mobile .ak-select__dropdown {
+  .ak-select__dropdown.ak-is-mobile {
     position: fixed;
     top: auto;
     left: 0;
@@ -1210,6 +1211,7 @@ select[data-ak-select].ak-select-native-hidden {
 /* ============================================================================
  * 10. FORMULARIOS
  * ========================================================================== */
+.ak-form-field-content { display: block; }
 .ak-form-label { display: inline-block; margin-bottom: 4px; font-weight: 500; }
 .ak-form-text { font-size: 0.85rem; color: var(--ak-text-muted); }
 
@@ -1296,6 +1298,14 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
   height: 18px;
   flex-shrink: 0;
   color: var(--ak-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ak-form-file-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .ak-form-file-text {
   flex: 1;
@@ -1355,12 +1365,7 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
 /* Popover con lista de archivos */
 .ak-form-file-popover {
   display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
   z-index: 100;
-  margin-top: 4px;
   background: var(--ak-surface);
   border: 1px solid var(--ak-border);
   border-radius: var(--ak-radius);
@@ -1672,7 +1677,7 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
   width: 100%;
 }
 .ak-password-wrap .ak-form-control {
-  padding-right: 42px;
+  padding-right: 40px;
   width: 100%;
 }
 .ak-password-toggle {
@@ -1683,19 +1688,20 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
   width: 36px;
   height: 36px;
   padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
   color: var(--ak-text-muted);
-  border-radius: 50%;
-  transition: background 150ms ease, color 150ms ease;
+  border-radius: var(--ak-radius);
+  transition: color var(--ak-transition), background var(--ak-transition);
+  z-index: 1;
 }
 .ak-password-toggle:hover {
-  background: var(--ak-gray-light);
-  color: var(--ak-text);
+  color: var(--ak-primary);
+  background: var(--ak-surface-alt);
 }
 .ak-password-toggle:focus-visible {
   outline: none;
@@ -1764,15 +1770,39 @@ textarea.ak-form-control { min-height: 90px; resize: vertical; }
   color: var(--ak-text-muted);
 }
 
-/* Validación */
-.ak-form-control.ak-is-valid, .ak-was-validated .ak-form-control:valid { border-color: var(--ak-success); }
+/* Validación (solo error — el éxito no muestra feedback) */
 .ak-form-control.ak-is-invalid, .ak-was-validated .ak-form-control:invalid { border-color: var(--ak-danger); }
-.ak-valid-feedback { display: none; width: 100%; margin-top: 4px; font-size: 0.85rem; color: var(--ak-success); }
+.ak-form-select.ak-is-invalid, .ak-was-validated .ak-form-select:invalid { border-color: var(--ak-danger); }
+.ak-form-file.ak-is-invalid .ak-form-file-field,
+.ak-form-file.ak-is-invalid .ak-form-file-field:hover { border-color: var(--ak-danger); }
+/* Custom Select */
+.ak-select.ak-is-invalid .ak-select__control,
+.ak-select.ak-is-invalid .ak-select__control:hover { border-color: var(--ak-danger); }
+.ak-select.ak-is-invalid.ak-is-open .ak-select__control,
+.ak-select.ak-is-invalid .ak-select__control:focus-visible { box-shadow: 0 0 0 3px rgba(192,57,43,0.3); }
+/* DatePicker (clase en contenedor .ak-datepicker) */
+.ak-datepicker.ak-is-invalid .ak-datepicker-input { border-color: var(--ak-danger); }
+/* TimePicker (clase en contenedor .ak-timepicker) */
+.ak-timepicker.ak-is-invalid .ak-timepicker-input { border-color: var(--ak-danger); }
+/* Password Wrap (clase en contenedor .ak-password-wrap) */
+.ak-password-wrap.ak-is-invalid .ak-form-control { border-color: var(--ak-danger); }
+/* Input group */
+.ak-input-group.ak-is-invalid .ak-form-control,
+.ak-input-group.ak-is-invalid .ak-input-group-text { border-color: var(--ak-danger); }
+/* Checkbox / Radio */
+.ak-form-check.ak-is-invalid .ak-form-check-input { border-color: var(--ak-danger); }
 .ak-invalid-feedback { display: none; width: 100%; margin-top: 4px; font-size: 0.85rem; color: var(--ak-danger); }
-.ak-form-control.ak-is-valid ~ .ak-valid-feedback,
-.ak-was-validated .ak-form-control:valid ~ .ak-valid-feedback { display: block; }
 .ak-form-control.ak-is-invalid ~ .ak-invalid-feedback,
-.ak-was-validated .ak-form-control:invalid ~ .ak-invalid-feedback { display: block; }
+.ak-was-validated .ak-form-control:invalid ~ .ak-invalid-feedback,
+.ak-datepicker.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-password-wrap.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-input-group.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-timepicker.ak-is-invalid ~ .ak-invalid-feedback { display: block; }
+.ak-form-select.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-was-validated .ak-form-select:invalid ~ .ak-invalid-feedback,
+.ak-select.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-form-file.ak-is-invalid ~ .ak-invalid-feedback,
+.ak-form-check.ak-is-invalid ~ .ak-invalid-feedback { display: block; }
 
 
 /* ============================================================================
@@ -2094,6 +2124,9 @@ a.ak-list-group-item:hover, button.ak-list-group-item:hover { background: var(--
   white-space: nowrap;
   width: 100%;
 }
+.ak-nav-tabs-vertical > .ak-nav-tabs .ak-nav-link:last-child {
+  border-radius: var(--ak-radius) 0 0 0;
+}
 .ak-nav-tabs-vertical > .ak-nav-tabs .ak-nav-link:hover {
   border-color: var(--ak-gray-light) transparent var(--ak-gray-light) var(--ak-gray-light);
 }
@@ -2106,7 +2139,7 @@ a.ak-list-group-item:hover, button.ak-list-group-item:hover { background: var(--
   padding: 16px 20px;
   border: 1px solid var(--ak-border);
   border-left: none;
-  border-radius: 0 var(--ak-radius-lg) var(--ak-radius-lg) var(--ak-radius-lg);
+  border-radius: 0 var(--ak-radius-lg) var(--ak-radius-lg) 0;
   background: var(--ak-surface);
 }
 .ak-nav-tabs-vertical .ak-tab-pane {
@@ -2285,6 +2318,9 @@ a.ak-list-group-item:hover, button.ak-list-group-item:hover { background: var(--
 .ak-modal-dialog-lg { max-width: 800px; }
 .ak-modal-dialog-sm { max-width: 340px; }
 .ak-modal-dialog-centered { display: flex; align-items: center; min-height: calc(100% - 48px); }
+.ak-modal-dialog-scrollable { height: calc(100% - 48px); }
+.ak-modal-dialog-scrollable .ak-modal-content { max-height: 100%; overflow: hidden; }
+.ak-modal-dialog-scrollable .ak-modal-body { overflow-y: auto; flex: 1 1 auto; }
 .ak-modal-content {
   display: flex;
   flex-direction: column;
@@ -2292,25 +2328,28 @@ a.ak-list-group-item:hover, button.ak-list-group-item:hover { background: var(--
   background: var(--ak-surface);
   border-radius: var(--ak-radius-lg);
   box-shadow: var(--ak-shadow-lg);
-  overflow: hidden;
 }
 .ak-modal-header {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--ak-border);
+  border-radius: var(--ak-radius-lg) var(--ak-radius-lg) 0 0;
 }
 .ak-modal-title { margin: 0; font-size: 1.2rem; font-weight: 600; }
 .ak-modal-body { padding: 20px; }
 .ak-modal-footer {
   display: flex;
+  flex-shrink: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   padding: 12px 20px;
   border-top: 1px solid var(--ak-border);
+  border-radius: 0 0 var(--ak-radius-lg) var(--ak-radius-lg);
 }
 body.ak-modal-open { overflow: hidden; }
 
@@ -3130,12 +3169,15 @@ body.ak-modal-open { overflow: hidden; }
   caret-color: transparent;
   padding-right: 40px;
 }
-.ak-datepicker-trigger {
+.ak-datepicker-trigger,
+.ak-timepicker-trigger {
   position: absolute;
-  right: 1px;
-  top: 1px;
-  bottom: 1px;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 36px;
+  height: 36px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3143,16 +3185,18 @@ body.ak-modal-open { overflow: hidden; }
   border: none;
   cursor: pointer;
   color: var(--ak-text-muted);
-  border-radius: 0 var(--ak-radius) var(--ak-radius) 0;
+  border-radius: var(--ak-radius);
   transition: color var(--ak-transition), background var(--ak-transition);
   z-index: 1;
 }
-.ak-datepicker-trigger:hover { color: var(--ak-primary); background: var(--ak-surface-alt); }
+.ak-datepicker-trigger:hover,
+.ak-timepicker-trigger:hover { color: var(--ak-primary); background: var(--ak-surface-alt); }
+.ak-datepicker-trigger:focus-visible,
+.ak-timepicker-trigger:focus-visible { outline: none; box-shadow: var(--ak-focus-ring); }
+.ak-datepicker-trigger svg,
+.ak-timepicker-trigger svg { width: 18px; height: 18px; display: block; }
 .ak-datepicker__overlay {
   display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
   z-index: var(--ak-z-dropdown);
   background: var(--ak-surface);
   border: 1px solid var(--ak-border);
@@ -3249,8 +3293,6 @@ body.ak-modal-open { overflow: hidden; }
   pointer-events: none;
 }
 [data-theme="dark"] .ak-datepicker-input {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A0A3A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
-}
 
 /* --- Vista de meses (4×3) y años (3×4) --------------------------------- */
 
@@ -3349,16 +3391,10 @@ body.ak-modal-open { overflow: hidden; }
 .ak-timepicker-input {
   cursor: pointer !important;
   caret-color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23696A6A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 36px;
+  padding-right: 40px;
 }
 .ak-timepicker__overlay {
   display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
   z-index: var(--ak-z-dropdown);
   background: var(--ak-surface);
   border: 1px solid var(--ak-border);
@@ -3376,6 +3412,13 @@ body.ak-modal-open { overflow: hidden; }
   justify-content: center;
   gap: 4px;
 }
+.ak-timepicker__footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
 .ak-timepicker__col {
   display: flex;
   flex-direction: column;

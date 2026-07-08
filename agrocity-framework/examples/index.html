@@ -301,191 +301,638 @@
          ================================================================ -->
     <section id="formularios">
       <h2>Formularios</h2>
-      <p>Inputs, selects, textareas, file uploads, floating labels, input groups y validación.</p>
+      <p>Inputs, selects, textareas, file uploads, floating labels, input groups, checkboxes, radios, switches, datepicker, timepicker y validación reactiva.</p>
 
-      <div class="ak-docs-card">
+      <h3>Estructura general</h3>
+      <p>Cada campo se envuelve en <code>.ak-form-field-content</code> que agrupa <code>.ak-form-label</code> + el input/select/textarea. Los feedbacks de validación se auto-crean dentro de este contenedor.</p>
+      <pre class="ak-docs-code">&lt;div class="ak-form-field-content"&gt;
+  &lt;label class="ak-form-label"&gt;Etiqueta&lt;/label&gt;
+  &lt;input class="ak-form-control" /&gt;
+  &lt;!-- .ak-invalid-feedback se crea automáticamente --&gt;
+&lt;/div&gt;</pre>
+
+      <h3>Demo completo con validación</h3>
+      <p>Todos los campos son obligatorios. Presiona <strong>Validar formulario completo</strong> para ver los estados de error.</p>
+
+      <form id="demoFormComplete" class="ak-docs-card" data-ak-validation novalidate>
+
+        <!-- 1. Text inputs -->
+        <h4 class="ak-h4 ak-mt-0">Text inputs</h4>
         <div class="ak-row ak-g-2">
-          <div class="ak-col-12 ak-col-md-6">
-            <label class="ak-form-label">Texto</label>
-            <input class="ak-form-control" placeholder="Ingrese texto" />
-          </div>
-          <div class="ak-col-12 ak-col-md-6">
-            <label class="ak-form-label">Email</label>
-            <input type="email" class="ak-form-control" placeholder="email@ejemplo.com" />
-          </div>
-          <div class="ak-col-12 ak-col-md-4">
-            <label class="ak-form-label">Número</label>
-            <input type="number" class="ak-form-control" placeholder="0" />
-          </div>
-          <div class="ak-col-12 ak-col-md-4">
-            <label class="ak-form-label">Teléfono</label>
-            <input type="tel" class="ak-form-control" placeholder="+56 9 1234 5678" />
-          </div>
-          <div class="ak-col-12 ak-col-md-4">
-            <label class="ak-form-label">Fecha</label>
-            <input type="date" class="ak-form-control" />
-          </div>
-          <div class="ak-col-12 ak-col-md-6">
-            <label class="ak-form-label" for="inp-password">Contraseña</label>
-            <input type="password" id="inp-password" class="ak-form-control" placeholder="••••••••" />
-          </div>
-
-          <div class="ak-col-12 ak-col-md-6">
-            <label class="ak-form-label">Select</label>
-            <select class="ak-form-select">
-              <option>Opción 1</option><option>Opción 2</option><option>Opción 3</option>
-            </select>
-          </div>
-          <div class="ak-col-12">
-            <label class="ak-form-label">Textarea</label>
-            <textarea class="ak-form-control" rows="2" placeholder="Comentarios..."></textarea>
-          </div>
-          <div class="ak-col-12">
-            <div class="ak-input-group">
-              <span class="ak-input-group-text">@</span>
-              <input class="ak-form-control" placeholder="Usuario" />
-              <button class="ak-btn ak-btn-primary">Verificar</button>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt1">Texto</label>
+              <input type="text" class="ak-form-control" id="dt1" placeholder="Nombre completo" data-ak-validate="required" data-ak-msg="Requerido" required />
             </div>
           </div>
-          <div class="ak-col-12">
-            <label class="ak-form-label">Rango</label>
-            <input type="range" class="ak-form-range" min="0" max="100" value="60" />
-          </div>
-          <div class="ak-col-12">
-            <div class="ak-form-floating">
-              <input class="ak-form-control" id="floatingInput" placeholder="Nombre" />
-              <label for="floatingInput">Floating label</label>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt2">Email</label>
+              <input type="email" class="ak-form-control" id="dt2" placeholder="email@ejemplo.com" data-ak-validate="required|email" data-ak-msg="Requerido" data-ak-msg-email="Email inválido" required />
             </div>
           </div>
-          <div class="ak-col-12" style="display:flex;gap:16px;flex-wrap:wrap;">
-            <label class="ak-form-check">
-              <input type="checkbox" class="ak-form-check-input" checked />
-              <span class="ak-form-check-label">Checkbox</span>
-            </label>
-            <label class="ak-form-check">
-              <input type="radio" name="r" class="ak-form-check-input" checked />
-              <span class="ak-form-check-label">Radio 1</span>
-            </label>
-            <label class="ak-form-check">
-              <input type="radio" name="r" class="ak-form-check-input" />
-              <span class="ak-form-check-label">Radio 2</span>
-            </label>
-            <label class="ak-form-check ak-form-switch">
-              <input type="checkbox" class="ak-form-switch-input" checked />
-              <span class="ak-form-switch-toggle"><span></span></span>
-              <span class="ak-form-check-label">Switch</span>
-            </label>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt3">Número (min 1, max 120)</label>
+              <input type="number" class="ak-form-control" id="dt3" placeholder="18" data-ak-validate="required|min:1|max:120" data-ak-msg-min="Mínimo 1" data-ak-msg-max="Máximo 120" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt4">Teléfono</label>
+              <input type="tel" class="ak-form-control" id="dt4" placeholder="+56 9 1234 5678" data-ak-validate="required" data-ak-msg="Requerido" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt5">URL</label>
+              <input type="url" class="ak-form-control" id="dt5" placeholder="https://ejemplo.com" data-ak-validate="required|url" data-ak-msg="Requerido" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt6">Contraseña (min 6)</label>
+              <input type="password" class="ak-form-control" id="dt6" placeholder="••••••••" data-ak-validate="required|min:6" data-ak-msg-min="Mínimo 6 caracteres" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dt7">Textarea (min 10)</label>
+              <textarea class="ak-form-control" id="dt7" rows="3" placeholder="Escriba al menos 10 caracteres..." data-ak-validate="required|min:10" data-ak-msg-min="Mínimo 10 caracteres" required></textarea>
+            </div>
           </div>
         </div>
+
+        <!-- 2. Floating labels -->
+        <h4 class="ak-h4">Floating labels (Material)</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <div class="ak-form-floating">
+                <input type="text" class="ak-form-control" id="dfl1" placeholder="Nombre" data-ak-validate="required" data-ak-msg="Requerido" required />
+                <label for="dfl1">Nombre</label>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <div class="ak-form-floating">
+                <select class="ak-form-select" id="dfl2" data-ak-validate="required" data-ak-msg="Seleccione" required>
+                  <option value=""></option>
+                  <option value="op1">Opción 1</option>
+                  <option value="op2">Opción 2</option>
+                  <option value="op3">Opción 3</option>
+                </select>
+                <label for="dfl2">Selecciona</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Selectores -->
+        <h4 class="ak-h4">Selectores</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="ds1">Select nativo</label>
+              <select class="ak-form-select" id="ds1" data-ak-validate="required" data-ak-msg="Seleccione una opción" required>
+                <option value="">Seleccione...</option>
+                <option value="op1">Opción 1</option>
+                <option value="op2">Opción 2</option>
+                <option value="op3">Opción 3</option>
+              </select>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="ds2">Custom Select con búsqueda</label>
+              <select class="ak-form-select" id="ds2" data-ak-select data-ak-placeholder="Buscar..." data-ak-validate="required" data-ak-msg="Seleccione" required>
+                <option value="">Seleccione...</option>
+                <option value="maiz">Maíz</option>
+                <option value="trigo">Trigo</option>
+                <option value="arroz">Arroz</option>
+                <option value="frijol">Frijol</option>
+                <option value="soya">Soya</option>
+                <option value="cafe">Café</option>
+              </select>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="ds3">Custom Select sin búsqueda</label>
+              <select class="ak-form-select" id="ds3" data-ak-select data-ak-search="false" data-ak-placeholder="Seleccione..." data-ak-validate="required" data-ak-msg="Seleccione" required>
+                <option value="">Seleccione...</option>
+                <option value="cdmx">CDMX</option>
+                <option value="chiapas">Chiapas</option>
+                <option value="chihuahua">Chihuahua</option>
+              </select>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="ds4">Custom Select múltiple con búsqueda</label>
+              <select class="ak-form-select" id="ds4" data-ak-select multiple data-ak-placeholder="Seleccione..." data-ak-max-selected-labels="2" data-ak-validate="required" data-ak-msg="Seleccione al menos uno" required>
+                <option value="maiz">Maíz</option>
+                <option value="trigo">Trigo</option>
+                <option value="arroz">Arroz</option>
+                <option value="frijol">Frijol</option>
+              </select>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="ds5">Custom Select múltiple sin búsqueda</label>
+              <select class="ak-form-select" id="ds5" data-ak-select multiple data-ak-search="false" data-ak-placeholder="Seleccione..." data-ak-max-selected-labels="2" data-ak-validate="required" data-ak-msg="Seleccione al menos uno" required>
+                <option value="cdmx">CDMX</option>
+                <option value="chiapas">Chiapas</option>
+                <option value="chihuahua">Chihuahua</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. DatePicker -->
+        <h4 class="ak-h4">DatePicker</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dd1">DatePicker con trigger</label>
+              <input type="text" class="ak-form-control" id="dd1" data-ak-datepicker data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dd2">DatePicker sin trigger</label>
+              <input type="text" class="ak-form-control" id="dd2" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dd3">DatePicker con hora</label>
+              <input type="text" class="ak-form-control" id="dd3" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm" data-ak-placeholder="DD/MM/AAAA HH:mm" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">DateRange (inicio — fin)</label>
+              <div data-ak-date-range class="ak-date-range">
+                <div style="flex:1;">
+                  <input type="text" class="ak-form-control" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="Inicio" data-ak-validate="required" data-ak-msg="Seleccione fecha inicio" required />
+                </div>
+                <div style="flex:1;">
+                  <input type="text" class="ak-form-control" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="Fin" data-ak-validate="required" data-ak-msg="Seleccione fecha fin" required />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. TimePicker -->
+        <h4 class="ak-h4">TimePicker</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dti1">TimePicker con trigger</label>
+              <input type="text" class="ak-form-control" id="dti1" data-ak-timepicker data-ak-placeholder="HH:MM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dti2">TimePicker sin trigger</label>
+              <input type="text" class="ak-form-control" id="dti2" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="HH:MM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dti3">TimePicker 12h (AM/PM)</label>
+              <input type="text" class="ak-form-control" id="dti3" data-ak-timepicker data-ak-ampm="true" data-ak-placeholder="hh:mm AM/PM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">TimeRange (inicio — fin)</label>
+              <div data-ak-time-range class="ak-date-range">
+                <div style="flex:1;">
+                  <input type="text" class="ak-form-control" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="Inicio" data-ak-validate="required" data-ak-msg="Seleccione hora inicio" required />
+                </div>
+                <div style="flex:1;">
+                  <input type="text" class="ak-form-control" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="Fin" data-ak-validate="required" data-ak-msg="Seleccione hora fin" required />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. File inputs -->
+        <h4 class="ak-h4">File inputs</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="df1">File nativo</label>
+              <input type="file" class="ak-form-control" id="df1" data-ak-validate="required" data-ak-msg="Seleccione un archivo" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Custom File single (PDF/JPG)</label>
+              <input type="file" class="ak-form-file-input" data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1" data-ak-validate="required" data-ak-msg="Seleccione un archivo" required />
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Custom File múltiple con popover</label>
+              <input type="file" class="ak-form-file-input" data-ak-file-list data-ak-accept=".jpg,.png,.gif" data-ak-max-files="5" data-ak-max-size="5MB" data-ak-validate="required" data-ak-msg="Seleccione al menos una imagen" required multiple />
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Checkboxes, Radios, Switch -->
+        <h4 class="ak-h4">Checkboxes, Radios, Switch</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Checkbox requerido</label>
+              <label class="ak-form-check">
+                <input type="checkbox" class="ak-form-check-input" data-ak-validate="required" data-ak-msg="Debe aceptar los términos" required />
+                <span class="ak-form-check-label">Acepto los términos y condiciones</span>
+              </label>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Radio group requerido</label>
+              <label class="ak-form-check ak-mb-1">
+                <input type="radio" class="ak-form-check-input" name="demoRadio" data-ak-validate="required" data-ak-msg="Seleccione una opción" required />
+                <span class="ak-form-check-label">Opción A</span>
+              </label>
+              <label class="ak-form-check ak-mb-1">
+                <input type="radio" class="ak-form-check-input" name="demoRadio" data-ak-validate="required" data-ak-msg="Seleccione una opción" required />
+                <span class="ak-form-check-label">Opción B</span>
+              </label>
+              <label class="ak-form-check">
+                <input type="radio" class="ak-form-check-input" name="demoRadio" data-ak-validate="required" data-ak-msg="Seleccione una opción" required />
+                <span class="ak-form-check-label">Opción C</span>
+              </label>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Switch toggle</label>
+              <label class="ak-form-check ak-form-switch ak-mb-1">
+                <input type="checkbox" class="ak-form-switch-input" checked />
+                <span class="ak-form-switch-toggle"><span></span></span>
+                <span class="ak-form-check-label">Notificaciones</span>
+              </label>
+              <label class="ak-form-check ak-form-switch">
+                <input type="checkbox" class="ak-form-switch-input" />
+                <span class="ak-form-switch-toggle"><span></span></span>
+                <span class="ak-form-check-label">Modo oscuro</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Range slider & Input group -->
+        <h4 class="ak-h4">Range slider &amp; Input group</h4>
+        <div class="ak-row ak-g-2">
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label" for="dr1">Rango de precio ($0 – $1000)</label>
+              <input type="range" class="ak-form-range" id="dr1" min="0" max="1000" step="10" value="500" />
+              <output class="ak-d-block ak-text-center ak-fw-bold ak-mt-1" id="dr1_output" for="dr1">$500</output>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-6 ak-mb-2">
+            <div class="ak-form-field-content">
+              <label class="ak-form-label">Input group</label>
+              <div class="ak-input-group">
+                <span class="ak-input-group-text">@</span>
+                <input type="text" class="ak-form-control" placeholder="usuario" data-ak-validate="required" data-ak-msg="Campo requerido" required />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ak-d-flex ak-justify-content-end ak-mt-3">
+          <button type="submit" class="ak-btn ak-btn-primary">Validar formulario completo</button>
+        </div>
+      </form>
+
+      <p class="ak-mt-3"><strong>Evento:</strong> <code>ak:form:valid</code> se dispara cuando el formulario es válido.</p>
+      <p><strong>JS API:</strong> <code>AgrocityKit.formValidation('init', selector, { onSuccess, onError })</code></p>
+
+      <!-- Documentación por tipo de campo -->
+      <h3>Documentación por tipo de campo</h3>
+
+      <!-- ── Text inputs ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">1. Text inputs</summary>
+      <p>Inputs de texto básicos, email, número, teléfono, URL, contraseña y textarea. Usan <code>.ak-form-control</code>.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:400px;margin:8px 0;">
+        <input type="text" class="ak-form-control ak-form-control-sm" placeholder="Small (.ak-form-control-sm)" />
+        <input type="text" class="ak-form-control" placeholder="Normal" />
+        <input type="text" class="ak-form-control ak-form-control-lg" placeholder="Large (.ak-form-control-lg)" />
       </div>
-      <pre class="ak-docs-code">&lt;!-- Tipos de input --&gt;
-&lt;input class="ak-form-control" placeholder="Texto" /&gt;
-&lt;input type="email" class="ak-form-control" /&gt;
-&lt;input type="number" class="ak-form-control" /&gt;
-&lt;input type="date" class="ak-form-control" /&gt;
-&lt;input type="password" class="ak-form-control" /&gt;
-&lt;select class="ak-form-select"&gt;...&lt;/select&gt;
-&lt;textarea class="ak-form-control"&gt;&lt;/textarea&gt;
-&lt;input type="range" class="ak-form-range" /&gt;
-
-&lt;!-- Floating label --&gt;
-&lt;div class="ak-form-floating"&gt;
-  &lt;input class="ak-form-control" id="f1" placeholder="Label" /&gt;
-  &lt;label for="f1"&gt;Label&lt;/label&gt;
-&lt;/div&gt;
-
-&lt;!-- Input group --&gt;
-&lt;div class="ak-input-group"&gt;
-  &lt;span class="ak-input-group-text"&gt;@&lt;/span&gt;
-  &lt;input class="ak-form-control" /&gt;
-  &lt;button class="ak-btn"&gt;Btn&lt;/button&gt;
+      <pre class="ak-docs-code">&lt;div class="ak-form-field-content"&gt;
+  &lt;label class="ak-form-label" for="id"&gt;Texto&lt;/label&gt;
+  &lt;input type="text" class="ak-form-control" id="id"
+    data-ak-validate="required|email|min:3|max:100"
+    data-ak-msg="Campo requerido"
+    data-ak-msg-email="Email inválido"
+    required /&gt;
 &lt;/div&gt;</pre>
-      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
       <table class="ak-docs-table">
-        <tr><th>Clase</th><th>Descripción</th></tr>
-        <tr><td><code>.ak-form-control</code></td><td>Input / textarea / file base</td></tr>
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>type="text|email|number|tel|url|password"</code></td><td>Tipo de input HTML</td></tr>
+        <tr><td><code>class="ak-form-control"</code></td><td>Clase base para todos los inputs</td></tr>
         <tr><td><code>.ak-form-control-sm</code></td><td>Input pequeño</td></tr>
         <tr><td><code>.ak-form-control-lg</code></td><td>Input grande</td></tr>
-        <tr><td><code>.ak-form-select</code></td><td>Select nativo estilizado</td></tr>
-        <tr><td><code>.ak-form-label</code></td><td>Label independiente</td></tr>
-        <tr><td><code>.ak-form-text</code></td><td>Texto de ayuda</td></tr>
-        <tr><td><code>.ak-form-floating</code></td><td>Wrapper para floating label</td></tr>
-        <tr><td><code>.ak-input-group</code></td><td>Grupo input + texto/botón</td></tr>
-        <tr><td><code>.ak-input-group-text</code></td><td>Texto/prefijo del grupo</td></tr>
-        <tr><td><code>.ak-form-file</code></td><td>File upload custom</td></tr>
-        <tr><td><code>.ak-form-range</code></td><td>Input range estilizado</td></tr>
-        <tr><td><code>.ak-password-wrap</code></td><td>Wrapper para password toggle</td></tr>
-        <tr><td><code>.ak-is-valid</code></td><td>Estado válido (verde)</td></tr>
-        <tr><td><code>.ak-is-invalid</code></td><td>Estado inválido (rojo)</td></tr>
-        <tr><td><code>.ak-valid-feedback</code></td><td>Mensaje de validación exitoso</td></tr>
-        <tr><td><code>.ak-invalid-feedback</code></td><td>Mensaje de error</td></tr>
+        <tr><td><code>placeholder</code></td><td>Texto de ayuda dentro del input</td></tr>
+        <tr><td><code>data-ak-validate</code></td><td>Reglas: <code>required</code>, <code>email</code>, <code>min:N</code>, <code>max:N</code>, <code>url</code></td></tr>
+        <tr><td><code>data-ak-msg</code></td><td>Mensaje genérico de error</td></tr>
+        <tr><td><code>data-ak-msg-{rule}</code></td><td>Mensaje específico por regla</td></tr>
+      </table>
+      <p>El password toggle se activa automáticamente en todo <code>input[type="password"]</code>. Desactivable con <code>data-ak-no-toggle</code>.</p>
+      </details>
+
+      <!-- ── Floating labels ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">2. Floating labels</summary>
+      <p>Estilo Material Design: la label flota sobre el input cuando tiene contenido o foco.</p>
+      <pre class="ak-docs-code">&lt;div class="ak-form-field-content"&gt;
+  &lt;div class="ak-form-floating"&gt;
+    &lt;input type="text" class="ak-form-control" id="f1"
+      placeholder="Label" data-ak-validate="required" required /&gt;
+    &lt;label for="f1"&gt;Label&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Clase</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-form-floating</code></td><td>Wrapper floating label. Input + label como hijos directos</td></tr>
+        <tr><td><code>.ak-form-control</code></td><td>Input dentro del floating</td></tr>
+        <tr><td><code>&lt;label for="id"&gt;</code></td><td>Debe tener <code>for</code> apuntando al input</td></tr>
+      </table>
+      <p><strong>Nota:</strong> el <code>placeholder</code> es obligatorio para que el floating funcione.</p>
+      </details>
+
+      <!-- ── Selectores ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">3. Selectores</summary>
+      <p>Soporta select nativo y custom select con búsqueda, múltiple y agrupación.</p>
+      <pre class="ak-docs-code">&lt;!-- Nativo --&gt;
+&lt;select class="ak-form-select" data-ak-validate="required" required&gt;
+  &lt;option value=""&gt;Seleccione...&lt;/option&gt;
+  &lt;option value="1">Opción 1&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Custom con búsqueda (data-ak-select) --&gt;
+&lt;select class="ak-form-select" data-ak-select
+  data-ak-placeholder="Buscar..."
+  data-ak-validate="required" required&gt;
+  ...
+&lt;/select&gt;
+
+&lt;!-- Custom múltiple --&gt;
+&lt;select class="ak-form-select" data-ak-select multiple
+  data-ak-placeholder="Seleccione..."
+  data-ak-max-selected-labels="2"&gt;
+  ...
+&lt;/select&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>class="ak-form-select"</code></td><td>Select nativo estilizado</td></tr>
+        <tr><td><code>data-ak-select</code></td><td>Activa custom select JS con búsqueda y dropdown</td></tr>
+        <tr><td><code>data-ak-search="false"</code></td><td>Deshabilita la búsqueda en custom select</td></tr>
+        <tr><td><code>data-ak-placeholder</code></td><td>Texto placeholder tanto en nativo como custom</td></tr>
+        <tr><td><code>multiple</code></td><td>Selección múltiple (nativo + custom select)</td></tr>
+        <tr><td><code>data-ak-max-selected-labels="N"</code></td><td>Máximo de chips visibles en múltiple</td></tr>
+        <tr><td><code>data-ak-validate="required"</code></td><td>Validación: requiere al menos una opción</td></tr>
       </table>
       </details>
 
-      <h3>Password toggle</h3>
-      <p>Se activa automáticamente al iniciar el kit. Solo necesitas un <code>&lt;input type="password"&gt;</code>.</p>
-      <div style="max-width:300px;">
-        <input type="password" class="ak-form-control" placeholder="••••••••" />
-      </div>
-      <pre class="ak-docs-code" style="margin-top:8px;">&lt;input type="password" class="ak-form-control" /&gt;
-&lt;script&gt;AgrocityKit.autoInit();&lt;/script&gt;</pre>
+      <!-- ── DatePicker ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">4. DatePicker</summary>
+      <p>Selector de fecha con calendario, soporta formato personalizado, hora, rango de fechas, y trigger opcional.</p>
+      <pre class="ak-docs-code">&lt;!-- DatePicker simple --&gt;
+&lt;input type="text" class="ak-form-control" data-ak-datepicker
+  data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA"
+  data-ak-validate="required" required /&gt;
 
-      <h3>Range slider</h3>
-      <input type="range" class="ak-form-range" min="0" max="100" value="60" style="max-width:300px;" />
+&lt;!-- Sin trigger (click en input abre calendario) --&gt;
+&lt;input type="text" data-ak-datepicker data-ak-show-trigger="false" /&gt;
 
-      <h3>File input custom</h3>
-      <p>Soporta drag &amp; drop, múltiples archivos y validación. Inicializado con JS automáticamente.</p>
-      <div class="ak-form-file ak-mt-2" data-ak-file-list="" data-ak-max-files="3" data-ak-max-size="2MB" data-ak-accept=".pdf,.doc,.docx,.jpg,.png,.csv" style="max-width:400px;">
-        <input type="file" id="file2" class="ak-form-file-input" multiple />
-        <div class="ak-form-file-field">
-          <svg class="ak-form-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span class="ak-form-file-text" data-placeholder="Máx. 3 archivos, 2MB c/u">Máx. 3 archivos, 2MB c/u</span>
-          <button class="ak-form-file-clear" type="button" aria-label="Limpiar">×</button>
-          <button class="ak-form-file-list-btn" type="button" aria-label="Ver lista">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-          </button>
-        </div>
-        <div class="ak-form-file-popover"></div>
-        <div class="ak-form-file-error"></div>
-      </div>
-      <pre class="ak-docs-code">&lt;div class="ak-form-file" data-ak-file-list data-ak-max-files="3" data-ak-max-size="2MB" data-ak-accept=".pdf,.doc,.jpg"&gt;
-  &lt;input type="file" class="ak-form-file-input" multiple /&gt;
-  &lt;div class="ak-form-file-field"&gt;
-    &lt;svg class="ak-form-file-icon"&gt;...&lt;/svg&gt;
-    &lt;span class="ak-form-file-text"&gt;Arrastra archivos&lt;/span&gt;
-    &lt;button class="ak-form-file-clear"&gt;×&lt;/button&gt;
-    &lt;button class="ak-form-file-list-btn"&gt;
-      &lt;svg&gt;...&lt;/svg&gt;
-    &lt;/button&gt;
+&lt;!-- DateRange --&gt;
+&lt;div data-ak-date-range class="ak-date-range"&gt;
+  &lt;div style="flex:1;"&gt;
+    &lt;input type="text" data-ak-datepicker data-ak-show-trigger="false"
+      data-ak-placeholder="Inicio" /&gt;
   &lt;/div&gt;
-  &lt;div class="ak-form-file-popover"&gt;&lt;/div&gt;
-  &lt;div class="ak-form-file-error"&gt;&lt;/div&gt;
+  &lt;div style="flex:1;"&gt;
+    &lt;input type="text" data-ak-datepicker data-ak-show-trigger="false"
+      data-ak-placeholder="Fin" /&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>data-ak-datepicker</code></td><td>Activa DatePicker en el input</td></tr>
+        <tr><td><code>data-ak-format</code></td><td>Formato de fecha (ej: <code>DD/MM/YYYY</code>, <code>YYYY-MM-DD</code>)</td></tr>
+        <tr><td><code>data-ak-placeholder</code></td><td>Texto placeholder</td></tr>
+        <tr><td><code>data-ak-show-trigger="false"</code></td><td>Oculta el icono trigger, abre al hacer clic en el input</td></tr>
+        <tr><td><code>data-ak-exclude-dates</code></td><td>Fechas excluidas (separadas por coma)</td></tr>
+        <tr><td><code>data-ak-date-range</code></td><td>Wrapper para rango de fechas (dos datepickers)</td></tr>
+      </table>
+      </details>
 
-      <h3>Validación</h3>
-      <p>Clases de estado <code>.ak-is-valid</code> / <code>.ak-is-invalid</code> con feedback.</p>
-      <div style="display:flex;flex-direction:column;gap:12px;max-width:400px;">
-        <div>
-          <input class="ak-form-control ak-is-valid" value="ok@email.com" />
-          <div class="ak-valid-feedback">¡Correcto!</div>
-        </div>
-        <div>
-          <input class="ak-form-control ak-is-invalid" value="email-invalido" />
-          <div class="ak-invalid-feedback">Correo inválido.</div>
-        </div>
-      </div>
-      <pre class="ak-docs-code">&lt;input class="ak-form-control ak-is-valid" /&gt;
-&lt;div class="ak-valid-feedback"&gt;Correcto&lt;/div&gt;
+      <!-- ── TimePicker ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">5. TimePicker</summary>
+      <p>Selector de hora con formato 24h o 12h (AM/PM), trigger opcional, y botón limpiar.</p>
+      <pre class="ak-docs-code">&lt;!-- TimePicker simple --&gt;
+&lt;input type="text" class="ak-form-control" data-ak-timepicker
+  data-ak-placeholder="HH:MM"
+  data-ak-validate="required" required /&gt;
 
-&lt;input class="ak-form-control ak-is-invalid" /&gt;
-&lt;div class="ak-invalid-feedback"&gt;Error&lt;/div&gt;</pre>
+&lt;!-- Formato 12h --&gt;
+&lt;input type="text" data-ak-timepicker data-ak-ampm="true"
+  data-ak-placeholder="hh:mm AM/PM" /&gt;
 
-      <h3>Tamaños</h3>
-      <div style="display:flex;flex-direction:column;gap:8px;max-width:300px;">
-        <input class="ak-form-control ak-form-control-sm" placeholder="Small (.ak-form-control-sm)" />
-        <input class="ak-form-control" placeholder="Normal" />
-        <input class="ak-form-control ak-form-control-lg" placeholder="Large (.ak-form-control-lg)" />
-      </div>
+&lt;!-- TimeRange --&gt;
+&lt;div data-ak-time-range class="ak-date-range"&gt;
+  ... dos timepickers ...
+&lt;/div&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>data-ak-timepicker</code></td><td>Activa TimePicker en el input</td></tr>
+        <tr><td><code>data-ak-ampm="true"</code></td><td>Formato 12h con AM/PM</td></tr>
+        <tr><td><code>data-ak-show-trigger="false"</code></td><td>Oculta el icono trigger</td></tr>
+        <tr><td><code>data-ak-placeholder</code></td><td>Texto placeholder</td></tr>
+        <tr><td><code>data-ak-time-range</code></td><td>Wrapper para rango de horas</td></tr>
+      </table>
+      </details>
+
+      <!-- ── File inputs ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">6. File inputs</summary>
+      <p>Dos modalidades: nativo (<code>.ak-form-control</code>) o custom (<code>.ak-form-file-input</code>). El custom auto-construye la UI con drag &amp; drop, popover de lista, y botón limpiar.</p>
+      <pre class="ak-docs-code">&lt;!-- Nativo --&gt;
+&lt;input type="file" class="ak-form-control"
+  data-ak-validate="required" data-ak-msg="Seleccione archivo" required /&gt;
+
+&lt;!-- Custom simple (auto-build) --&gt;
+&lt;input type="file" class="ak-form-file-input"
+  data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1"
+  data-ak-validate="required" required /&gt;
+
+&lt;!-- Custom múltiple con popover --&gt;
+&lt;input type="file" class="ak-form-file-input" multiple
+  data-ak-file-list data-ak-accept=".jpg,.png"
+  data-ak-max-files="5" data-ak-max-size="5MB"
+  data-ak-validate="required" required /&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>class="ak-form-control"</code></td><td>File input nativo (estilo normal)</td></tr>
+        <tr><td><code>class="ak-form-file-input"</code></td><td>Custom file input (auto-construye UI)</td></tr>
+        <tr><td><code>data-ak-accept</code></td><td>Tipos de archivo permitidos (ej: <code>.pdf,.jpg</code>)</td></tr>
+        <tr><td><code>data-ak-max-files</code></td><td>Máximo número de archivos</td></tr>
+        <tr><td><code>data-ak-max-size</code></td><td>Tamaño máximo por archivo (ej: <code>5MB</code>)</td></tr>
+        <tr><td><code>data-ak-file-list</code></td><td>Activa popover con lista de archivos seleccionados</td></tr>
+        <tr><td><code>multiple</code></td><td>Permite selección múltiple de archivos</td></tr>
+      </table>
+      <p><strong>Nota:</strong> Con <code>class="ak-form-file-input"</code> el framework crea automáticamente el wrapper <code>.ak-form-file</code> y todos los elementos internos (field, popover, error).</p>
+      </details>
+
+      <!-- ── Checkbox / Radio / Switch ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">7. Checkbox / Radio / Switch</summary>
+      <p>Checkbox y radio usan <code>.ak-form-check</code> como wrapper. Switch usa <code>.ak-form-switch</code>. Todos soportan validación <code>required</code>.</p>
+      <pre class="ak-docs-code">&lt;!-- Checkbox --&gt;
+&lt;label class="ak-form-check"&gt;
+  &lt;input type="checkbox" class="ak-form-check-input"
+    data-ak-validate="required" data-ak-msg="Debe aceptar" required /&gt;
+  &lt;span class="ak-form-check-label"&gt;Acepto términos&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Radio group (mismo name) --&gt;
+&lt;label class="ak-form-check"&gt;
+  &lt;input type="radio" class="ak-form-check-input" name="grupo"
+    data-ak-validate="required" data-ak-msg="Seleccione" required /&gt;
+  &lt;span class="ak-form-check-label"&gt;Opción 1&lt;/span&gt;
+&lt;/label&gt;
+&lt;label class="ak-form-check"&gt;
+  &lt;input type="radio" class="ak-form-check-input" name="grupo"
+    data-ak-validate="required" data-ak-msg="Seleccione" required /&gt;
+  &lt;span class="ak-form-check-label"&gt;Opción 2&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;!-- Switch --&gt;
+&lt;label class="ak-form-check ak-form-switch"&gt;
+  &lt;input type="checkbox" class="ak-form-switch-input" checked /&gt;
+  &lt;span class="ak-form-switch-toggle"&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="ak-form-check-label"&gt;Notificaciones&lt;/span&gt;
+&lt;/label&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Clase / Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-form-check</code></td><td>Wrapper de checkbox o radio</td></tr>
+        <tr><td><code>.ak-form-check-input</code></td><td>Input checkbox o radio</td></tr>
+        <tr><td><code>.ak-form-check-label</code></td><td>Label visual (texto al lado del input)</td></tr>
+        <tr><td><code>.ak-form-switch</code></td><td>Agregar a <code>.ak-form-check</code> para estilo switch</td></tr>
+        <tr><td><code>.ak-form-switch-input</code></td><td>Input oculto del switch</td></tr>
+        <tr><td><code>.ak-form-switch-toggle</code></td><td>Toggle visual del switch</td></tr>
+        <tr><td><code>data-ak-validate="required"</code></td><td>Valida que el checkbox esté marcado o al menos un radio seleccionado</td></tr>
+      </table>
+      <p><strong>Validación radio:</strong> al seleccionar un radio se limpia el error de todos los radios del mismo <code>name</code> automáticamente.</p>
+      </details>
+
+      <!-- ── Input group & Range ── -->
+      <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">8. Input group &amp; Range</summary>
+      <p>Input group agrupa input + texto/botón en una sola línea visual. Range slider estilizado con color primario.</p>
+      <pre class="ak-docs-code">&lt;!-- Input group --&gt;
+&lt;div class="ak-input-group"&gt;
+  &lt;span class="ak-input-group-text"&gt;@&lt;/span&gt;
+  &lt;input type="text" class="ak-form-control"
+    data-ak-validate="required" required /&gt;
+  &lt;button class="ak-btn ak-btn-primary"&gt;Verificar&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Range slider --&gt;
+&lt;input type="range" class="ak-form-range" min="0" max="100" value="50" /&gt;</pre>
+      <table class="ak-docs-table">
+        <tr><th>Clase / Atributo</th><th>Descripción</th></tr>
+        <tr><td><code>.ak-input-group</code></td><td>Wrapper flex del grupo input + texto/botón</td></tr>
+        <tr><td><code>.ak-input-group-text</code></td><td>Texto o span dentro del grupo</td></tr>
+        <tr><td><code>.ak-form-range</code></td><td>Input range estilizado</td></tr>
+      </table>
+      </details>
+
+      <!-- ── Validación reactiva ── -->
+      <details open style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.95rem;color:var(--ak-primary);font-weight:600;">9. Validación reactiva (sistema completo)</summary>
+      <p>El framework tiene un sistema de validación declarativa. Agrega <code>data-ak-validation</code> al <code>&lt;form&gt;</code> y <code>data-ak-validate</code> a cada campo.</p>
+
+      <h5>Reglas de validación</h5>
+      <table class="ak-docs-table">
+        <tr><th>Regla</th><th>Descripción</th><th>Ejemplo</th></tr>
+        <tr><td><code>required</code></td><td>Campo obligatorio (soporta checkbox, radio, file)</td><td><code>required</code></td></tr>
+        <tr><td><code>email</code></td><td>Formato de email válido</td><td><code>email</code></td></tr>
+        <tr><td><code>url</code></td><td>Formato de URL válida</td><td><code>url</code></td></tr>
+        <tr><td><code>min:N</code></td><td>Mínimo N caracteres (text) o valor mínimo (number)</td><td><code>min:3</code></td></tr>
+        <tr><td><code>max:N</code></td><td>Máximo N caracteres (text) o valor máximo (number)</td><td><code>max:100</code></td></tr>
+        <tr><td><code>pattern:REGEX</code></td><td>Expresión regular</td><td><code>pattern:^[A-Z]\d{3}$</code></td></tr>
+      </table>
+
+      <h5>Atributos de validación</h5>
+      <table class="ak-docs-table">
+        <tr><th>Atributo</th><th>Elemento</th><th>Descripción</th></tr>
+        <tr><td><code>data-ak-validation</code></td><td><code>&lt;form&gt;</code></td><td>Habilita validación reactiva en el formulario</td></tr>
+        <tr><td><code>data-ak-validate</code></td><td>Input/Select/Textarea/File</td><td>Reglas separadas por <code>|</code></td></tr>
+        <tr><td><code>data-ak-msg</code></td><td>Campo validado</td><td>Mensaje de error genérico</td></tr>
+        <tr><td><code>data-ak-msg-{rule}</code></td><td>Campo validado</td><td>Mensaje específico por regla</td></tr>
+        <tr><td><code>required</code></td><td>Campo</td><td>Atributo HTML nativo (necesario para auto-star)</td></tr>
+      </table>
+
+      <h5>Auto-star</h5>
+      <p>Si el label dentro de <code>.ak-form-field-content</code> no tiene <code>&lt;span class="ak-asterisk-field"&gt;*&lt;/span&gt;</code> y el campo tiene <code>required</code>, el framework lo agrega automáticamente al inicializar el formulario. El asterisco tiene color rojo (<code>var(--ak-danger)</code>) y <code>margin-left: 2px</code>.</p>
+
+      <h5>Campos soportados</h5>
+      <table class="ak-docs-table">
+        <tr><th>Tipo de campo</th><th>Contenedor de error</th><th>Feedback CSS</th></tr>
+        <tr><td>Text / Email / Number / Tel / URL / Password</td><td><code>.ak-form-control</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Textarea</td><td><code>.ak-form-control</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Select nativo</td><td><code>.ak-form-select</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Custom Select</td><td><code>.ak-select</code></td><td><code>.ak-has-error + .ak-select__error-msg</code></td></tr>
+        <tr><td>DatePicker</td><td><code>.ak-datepicker</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>TimePicker</td><td><code>.ak-timepicker</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>File nativo</td><td><code>.ak-form-control</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Custom File</td><td><code>.ak-form-file</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Password toggle</td><td><code>.ak-password-wrap</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Input group</td><td><code>.ak-input-group</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+        <tr><td>Checkbox / Radio</td><td><code>.ak-form-check</code></td><td><code>.ak-is-invalid ~ .ak-invalid-feedback</code></td></tr>
+      </table>
+
+      <h5>Comportamiento</h5>
+      <ul>
+        <li>Los feedbacks <code>.ak-invalid-feedback</code> se crean automáticamente si no existen</li>
+        <li>Las etiquetas <code>.ak-form-label</code> cambian a rojo cuando el campo es inválido</li>
+        <li>El formulario se valida en blur/input/change después del primer submit (o al tocar el campo)</li>
+        <li>Checkbox/radio validan solo en <code>change</code></li>
+        <li>El submit se intercepta automáticamente; si hay errores enfoca el primer campo inválido</li>
+        <li>Los Custom Select, DatePicker, TimePicker y File Input se detectan automáticamente</li>
+      </ul>
+
+      <h5>API JavaScript</h5>
+      <pre class="ak-docs-code">// Inicialización manual
+AgrocityKit.formValidation('init', '#miForm', {
+  onSuccess(form) {
+    AgrocityKit.showToast('Guardado', { type: 'success' });
+  },
+  onError(form, errors) {
+    AgrocityKit.showToast('Corrige los errores', { type: 'danger' });
+  }
+});
+
+// Re-validar un campo específico
+AgrocityKit.formValidation('field', elementoInput);</pre>
+
+      <h5>Evento</h5>
+      <pre class="ak-docs-code">document.addEventListener('ak:form:valid', (e) =&gt; {
+  const form = e.detail.form;
+  // Enviar datos con google.script.run, fetch, etc.
+});</pre>
+      </details>
+
     </section>
 
     <!-- ================================================================
@@ -685,18 +1132,18 @@
         </div>
 
         <div class="ak-modal" id="modalScroll" tabindex="-1" aria-hidden="true">
-          <div class="ak-modal-dialog">
-            <div class="ak-modal-content" style="max-height:80vh;">
-              <div class="ak-modal-header" style="flex-shrink:0;">
+          <div class="ak-modal-dialog ak-modal-dialog-scrollable">
+            <div class="ak-modal-content">
+              <div class="ak-modal-header">
                 <h5 class="ak-modal-title">Modal con scroll interno</h5>
                 <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
               </div>
-              <div class="ak-modal-body" style="overflow-y:auto;min-height:200px;flex:1;">
+              <div class="ak-modal-body">
                 <p>Header y footer fijos. Solo el body hace scroll.</p>
                 <p>Item 1</p><p>Item 2</p><p>Item 3</p><p>Item 4</p><p>Item 5</p>
                 <p>Item 6</p><p>Item 7</p><p>Item 8</p><p>Item 9</p><p>Item 10</p>
               </div>
-              <div class="ak-modal-footer" style="flex-shrink:0;">
+              <div class="ak-modal-footer">
                 <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cerrar</button>
                 <button class="ak-btn ak-btn-primary">Guardar</button>
               </div>
@@ -723,7 +1170,8 @@
   &lt;/div&gt;
 &lt;/div&gt;
 
-&lt;!-- Tamaños: .ak-modal-dialog-lg (800px), .ak-modal-dialog-sm (340px) --&gt;</pre>
+&lt;!-- Tamaños: .ak-modal-dialog-lg (800px), .ak-modal-dialog-sm (340px) --&gt;
+&lt;!-- Scroll interno: .ak-modal-dialog-scrollable (body scroll, header/footer fijos) --&gt;</pre>
       <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
       <table class="ak-docs-table">
         <tr><th>Clase</th><th>Descripción</th></tr>
@@ -733,6 +1181,7 @@
         <tr><td><code>.ak-modal-dialog-lg</code></td><td>Modal grande (800px)</td></tr>
         <tr><td><code>.ak-modal-dialog-sm</code></td><td>Modal pequeño (340px)</td></tr>
         <tr><td><code>.ak-modal-dialog-centered</code></td><td>Centrado verticalmente</td></tr>
+        <tr><td><code>.ak-modal-dialog-scrollable</code></td><td>Scroll interno en el body (header/footer fijos)</td></tr>
         <tr><td><code>.ak-modal-content</code></td><td>Contenido con border-radius + shadow</td></tr>
         <tr><td><code>.ak-modal-header</code></td><td>Encabezado con título + close</td></tr>
         <tr><td><code>.ak-modal-title</code></td><td>Título del modal</td></tr>
@@ -2452,6 +2901,11 @@ Ak(function(){
 
   window.addEventListener("scroll", updateActive);
   updateActive();
+
+  // Form validation: evento ak:form:valid
+  document.addEventListener('ak:form:valid', function(e) {
+    AgrocityKit.showToast('Formulario válido — todos los campos correctos', { type: 'success', title: 'Validación exitosa' });
+  });
 
   // initDynamic — ejemplo para sección Init dinámico
   window.addDynamic = function(){

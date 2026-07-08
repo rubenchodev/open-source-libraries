@@ -490,10 +490,26 @@ document.getElementById('mi-input').addEventListener('ak:timepicker:change', (e)
 
 ### File input (tipo form-control con popover de archivos y drag & drop)
 
-- Diseño visual idéntico a `.ak-form-control` (padding, border, focus ring)
+- **Auto-build**: solo necesitas `<input type="file" class="ak-form-file-input">` con atributos `data-ak-*`. El framework crea automáticamente el wrapper `.ak-form-file`, el campo visual `.ak-form-file-field`, el icono, el texto, botón limpiar, popover y mensaje de error.
 - **Drag & drop**: arrastra y suelta archivos sobre el campo (feedback visual con borde dashed + sombra)
 - Botón **×** para limpiar toda la selección (aparece solo cuando hay archivos)
 - Atributo `data-ak-file-list` agrega un botón **☰** que abre un popover con la lista de archivos seleccionados y botón eliminar individual
+
+```html
+<!-- Simple (sin lista popover) — se auto-construye -->
+<input type="file" class="ak-form-file-input"
+  data-ak-accept=".pdf,.jpg,.png"
+  data-ak-max-files="1"
+  data-ak-validate="required" required />
+
+<!-- Con popover + validación — se auto-construye -->
+<input type="file" class="ak-form-file-input" multiple
+  data-ak-file-list
+  data-ak-accept=".pdf,.doc,.jpg,.png,.csv"
+  data-ak-max-files="3"
+  data-ak-max-size="2MB"
+  data-ak-validate="required" required />
+```
 
 **Atributos de validación:**
 
@@ -502,47 +518,21 @@ document.getElementById('mi-input').addEventListener('ak:timepicker:change', (e)
 | `data-ak-max-files` | Máximo número de archivos permitidos | `data-ak-max-files="3"` |
 | `data-ak-max-size` | Tamaño máximo por archivo (B, KB, MB, GB) | `data-ak-max-size="2MB"` |
 | `data-ak-accept` | Tipos de archivo permitidos (extensiones o MIME) | `data-ak-accept=".pdf,.jpg,.png"` |
+| `data-ak-file-list` | Activa el botón **☰** y popover con lista de archivos | `data-ak-file-list` |
 
-Los archivos que no cumplan se filtran automáticamente y se muestra un mensaje de error debajo del campo (`.ak-form-file-error` generado automáticamente).
-
-```html
-<!-- Simple (sin lista popover) -->
-<div class="ak-form-file">
-  <input type="file" id="f1" class="ak-form-file-input" accept=".pdf,.jpg" />
-  <div class="ak-form-file-field">
-    <svg class="ak-form-file-icon">…</svg>
-    <span class="ak-form-file-text" data-placeholder="Suelta o selecciona archivo...">Suelta o selecciona archivo...</span>
-    <button class="ak-form-file-clear" type="button" aria-label="Limpiar">&times;</button>
-  </div>
-</div>
-
-<!-- Con popover + validación -->
-<div class="ak-form-file" data-ak-file-list
-     data-ak-max-files="3"
-     data-ak-max-size="2MB"
-     data-ak-accept=".pdf,.doc,.docx,.jpg,.png,.csv">
-  <input type="file" id="f2" class="ak-form-file-input" multiple />
-  <div class="ak-form-file-field">
-    <svg class="ak-form-file-icon">…</svg>
-    <span class="ak-form-file-text" data-placeholder="Máx. 3 archivos, 2MB c/u">Máx. 3 archivos, 2MB c/u</span>
-    <button class="ak-form-file-clear" type="button" aria-label="Limpiar">&times;</button>
-    <button class="ak-form-file-list-btn" type="button" aria-label="Ver lista">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="ak-form-file-popover"></div>
-</div>
-```
+Los archivos que no cumplan se filtran automáticamente y se muestra un mensaje de error debajo del campo.
 
 - `data-ak-file-list` activa el botón **☰** y el popover con nombres y botón de eliminar individual
 - Auto-init via `AgrocityKit.fileInput()`
-- Drag & drop: arrastra archivos sobre `.ak-form-file-field` (se resalta con borde dashed + sombra)
+- Drag & drop: arrastra archivos sobre el campo (se resalta con borde dashed + sombra)
 - El botón limpiar (`×`) elimina toda la selección
 - En el popover cada archivo tiene su propio botón de eliminar que reconstruye el FileList vía `DataTransfer`
 - El popover se cierra al hacer clic fuera
-- Los mensajes de error se muestran en `.ak-form-file-error` (se crea automáticamente si no existe)
+- Los mensajes de error se muestran en `.ak-form-file-error` (generado automáticamente)
 
 ### Validación
+
+#### Validación estática (clases CSS)
 
 ```html
 <!-- Campo válido -->
@@ -552,6 +542,207 @@ Los archivos que no cumplan se filtran automáticamente y se muestra un mensaje 
 <!-- Campo inválido -->
 <input type="text" class="ak-form-control ak-is-invalid" />
 <div class="ak-invalid-feedback">Este campo es requerido.</div>
+```
+
+#### Validación reactiva (declarativa)
+
+El framework ofrece un sistema de validación reactiva sin necesidad de JavaScript manual. Solo agrega `data-ak-validation` al `<form>` y `data-ak-validate` con las reglas en cada campo.
+
+**Atributos:**
+
+| Atributo | Elemento | Descripción |
+|---|---|---|
+| `data-ak-validation` | `<form>` | Habilita la validación reactiva en el formulario |
+| `data-ak-validate` | Input/Select/Textarea/File | Reglas separadas por `\|` (ej: `required\|email\|min:3\|max:100\|pattern:^[A-Z]`) |
+| `data-ak-msg` | Campo validado | Mensaje de error genérico |
+| `data-ak-msg-{rule}` | Campo validado | Mensaje específico por regla (ej: `data-ak-msg-required`) |
+
+**Reglas soportadas:**
+
+| Regla | Descripción | Ejemplo |
+|---|---|---|
+| `required` | Campo obligatorio (soporta checkbox, radio, file) | `required` |
+| `email` | Formato de email válido | `email` |
+| `url` | Formato de URL válida | `url` |
+| `min:N` | Mínimo N caracteres (texto) o valor mínimo (number) | `min:3` |
+| `max:N` | Máximo N caracteres (texto) o valor máximo (number) | `max:100` |
+| `pattern:REGEX` | Expresión regular | `pattern:^[A-Z]\d{3}$` |
+
+**Ejemplo completo con todos los tipos de campo:**
+
+```html
+<form data-ak-validation novalidate>
+  <!-- Text inputs -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Nombre</label>
+    <input type="text" class="ak-form-control"
+           data-ak-validate="required" data-ak-msg="Campo requerido" required />
+  </div>
+
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Email</label>
+    <input type="email" class="ak-form-control"
+           data-ak-validate="required|email"
+           data-ak-msg="Campo requerido"
+           data-ak-msg-email="Email inválido" required />
+  </div>
+
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Edad</label>
+    <input type="number" class="ak-form-control"
+           data-ak-validate="required|min:18|max:120"
+           data-ak-msg-min="Edad mínima 18 años" required />
+  </div>
+
+  <!-- Select nativo -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Tipo</label>
+    <select class="ak-form-select" data-ak-validate="required" data-ak-msg="Seleccione" required>
+      <option value="">Seleccione...</option>
+      <option value="A">Opción A</option>
+      <option value="B">Opción B</option>
+    </select>
+  </div>
+
+  <!-- Custom Select -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Cultivo</label>
+    <select class="ak-form-select" data-ak-select
+            data-ak-placeholder="Buscar cultivo..."
+            data-ak-validate="required" required>
+      <option value="">Seleccione...</option>
+      <option value="maiz">Maíz</option>
+      <option value="trigo">Trigo</option>
+    </select>
+  </div>
+
+  <!-- DatePicker -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Fecha</label>
+    <input type="text" class="ak-form-control" data-ak-datepicker
+           data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA"
+           data-ak-validate="required" required />
+  </div>
+
+  <!-- TimePicker -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Hora</label>
+    <input type="text" class="ak-form-control" data-ak-timepicker
+           data-ak-placeholder="HH:MM"
+           data-ak-validate="required" required />
+  </div>
+
+  <!-- Custom file (auto-build) -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Archivo</label>
+    <input type="file" class="ak-form-file-input"
+           data-ak-accept=".pdf,.jpg" data-ak-max-files="1"
+           data-ak-validate="required" required />
+  </div>
+
+  <!-- Input group -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Usuario</label>
+    <div class="ak-input-group">
+      <span class="ak-input-group-text">@</span>
+      <input type="text" class="ak-form-control"
+             data-ak-validate="required" required />
+    </div>
+  </div>
+
+  <!-- Checkbox -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Términos</label>
+    <label class="ak-form-check">
+      <input type="checkbox" class="ak-form-check-input"
+             data-ak-validate="required" data-ak-msg="Debe aceptar" required />
+      <span class="ak-form-check-label">Acepto los términos</span>
+    </label>
+  </div>
+
+  <!-- Radio group -->
+  <div class="ak-form-field-content">
+    <label class="ak-form-label">Género</label>
+    <label class="ak-form-check">
+      <input type="radio" class="ak-form-check-input" name="genero"
+             data-ak-validate="required" required />
+      <span class="ak-form-check-label">Masculino</span>
+    </label>
+    <label class="ak-form-check">
+      <input type="radio" class="ak-form-check-input" name="genero"
+             data-ak-validate="required" required />
+      <span class="ak-form-check-label">Femenino</span>
+    </label>
+  </div>
+
+  <button type="submit" class="ak-btn ak-btn-primary">Guardar</button>
+</form>
+```
+
+**Comportamiento:**
+- Los feedbacks `.ak-valid-feedback` y `.ak-invalid-feedback` se crean automáticamente si no existen en el DOM
+- Las etiquetas `.ak-form-label` cambian a rojo cuando el campo es inválido
+- El formulario se valida en blur/input/change después del primer submit (o al tocar el campo)
+- Checkbox/radio validan solo en `change` (no blur ni input)
+- Al seleccionar un radio se limpia el error de todos los radios del mismo grupo automáticamente
+- El submit se intercepta automáticamente; si hay errores enfoca el primer campo inválido
+- Los Custom Select (`data-ak-select`), DatePicker (`data-ak-datepicker`), TimePicker (`data-ak-timepicker`) y File Input (`ak-form-file-input`) se detectan automáticamente
+- Input group: `ak-is-invalid` se aplica al `.ak-input-group`, coloreando input y texto del grupo
+
+**Auto-star:**
+Si el `<label class="ak-form-label">` dentro de `.ak-form-field-content` tiene el campo `required` pero **no tiene** `<span class="ak-asterisk-field">*</span>`, el framework lo agrega automáticamente al inicializar el formulario. No se duplica si ya existe. El asterisco se muestra en color rojo (`var(--ak-danger)`) con `margin-left: 2px`.
+
+```html
+<!-- El * se agrega automáticamente -->
+<div class="ak-form-field-content">
+  <label class="ak-form-label">Nombre</label>
+  <!-- Se convierte en: Nombre<span class="ak-asterisk-field">*</span> -->
+  <input type="text" required />
+</div>
+```
+
+**Campos soportados para validación:**
+
+| Tipo de campo | Clase contenedora | Eventos de validación |
+|---|---|---|
+| Text / Email / Number / Tel / URL / Password | `.ak-form-control` | blur, input, change |
+| Textarea | `.ak-form-control` | blur, input, change |
+| Select nativo | `.ak-form-select` | blur, input, change |
+| Custom Select | `.ak-select` | blur, input, change |
+| DatePicker | `.ak-datepicker` | blur, input, change |
+| TimePicker | `.ak-timepicker` | blur, input, change |
+| File nativo | `.ak-form-control` | change |
+| Custom File | `.ak-form-file` | change |
+| Input group | `.ak-input-group` | blur, input, change |
+| Password toggle | `.ak-password-wrap` | blur, input, change |
+| Checkbox | `.ak-form-check` | change |
+| Radio | `.ak-form-check` | change |
+
+**API JavaScript:**
+
+```js
+// Inicialización manual (auto-init con data-ak-validation)
+AgrocityKit.formValidation('init', '#miForm', {
+  onSuccess(form) {
+    AgrocityKit.showToast('Guardado', { type: 'success' });
+    // form.submit(); // submit real si se desea
+  },
+  onError(form, errors) {
+    AgrocityKit.showToast('Corrige los errores', { type: 'danger' });
+  }
+});
+
+// Re-validar un campo específico
+AgrocityKit.formValidation('field', elementoInput);
+```
+
+**Evento:**
+
+```js
+document.addEventListener('ak:form:valid', (e) => {
+  const form = e.detail.form;
+  // Enviar datos con google.script.run, fetch, etc.
+});
 ```
 
 ---
@@ -951,11 +1142,12 @@ AgrocityKit.dropdown('#mi-dropdown').toggle();
 </div>
 ```
 
-**Modificadores de tamaño:**
+**Modificadores:**
 ```html
-<div class="ak-modal-dialog ak-modal-dialog-lg">      <!-- grande 800px -->
-<div class="ak-modal-dialog ak-modal-dialog-sm">      <!-- pequeño 340px -->
-<div class="ak-modal-dialog ak-modal-dialog-centered"> <!-- centrado vertical -->
+<div class="ak-modal-dialog ak-modal-dialog-lg">               <!-- grande 800px -->
+<div class="ak-modal-dialog ak-modal-dialog-sm">               <!-- pequeño 340px -->
+<div class="ak-modal-dialog ak-modal-dialog-centered">          <!-- centrado vertical -->
+<div class="ak-modal-dialog ak-modal-dialog-scrollable">        <!-- scroll interno en body, header/footer fijos -->
 ```
 
 **Via JS:**
@@ -2126,6 +2318,7 @@ columns: [
 
 | Versión | Descripción                        |
 |---------|------------------------------------|
+| 1.2.1   | Modal scrollable, tabs vertical border-radius, asterisk fix, mejoras de validación |
 | 1.2.0   | DatePicker (3 vistas), TimePicker, `initElement()`, DateRange vinculado |
 | 1.1.0   | Diseño intermedio Bootstrap × Material Design, password toggle, switches y floating labels mejorados |
 | 1.0.0   | Release inicial — todos los componentes Bootstrap 5 parity |

@@ -740,6 +740,10 @@ Patrón: `ak-{m|p}{t|b|s|e|x|y}-{0..5}` + `.ak-m-auto`
 | `data-ak-max-size` | File Input | Máx tamaño (ej: 2MB) |
 | `data-ak-accept` | File Input | Tipos permitidos (.pdf,.jpg) |
 | `data-ak-exclude-dates` | DatePicker | Fechas excluidas |
+| `data-ak-validation` | Form | Habilita validación reactiva en el formulario |
+| `data-ak-validate` | Input/Select/Textarea/File | Reglas de validación separadas por `\|` (ej: `required\|email\|min:3`) |
+| `data-ak-msg` | Campo validado | Mensaje de error genérico |
+| `data-ak-msg-{rule}` | Campo validado | Mensaje específico por regla (ej: `data-ak-msg-required`) |
 | `data-ak-multiple` | Accordion | Permite múltiples paneles abiertos |
 
 ---
@@ -776,6 +780,8 @@ AgrocityKit.scrollspy(selector, { target, offset });
 // Utilidades
 AgrocityKit.passwordToggle(root);
 AgrocityKit.fileInput(root);
+AgrocityKit.formValidation('init', formSelector, { onSuccess, onError });
+AgrocityKit.formValidation('field', fieldElement);
 AgrocityKit.showToast(message, { type, position, duration, title });
 AgrocityKit.loader(show, [messages]);
 AgrocityKit.alert(msg);
@@ -871,24 +877,21 @@ Clases para iconos:
 
 ### Formulario con validación
 ```html
-<form class="ak-container ak-mt-4" novalidate>
+<form class="ak-container ak-mt-4" data-ak-validation novalidate>
   <div class="ak-row">
     <div class="ak-col-12 ak-col-md-6 ak-mb-3">
-      <label class="ak-form-label" for="nombre">Nombre</label>
-      <input type="text" id="nombre" class="ak-form-control" required />
-      <div class="ak-invalid-feedback">Campo requerido</div>
+      <label class="ak-form-label" for="nombre">Nombre <span class="ak-text-danger">*</span></label>
+      <input type="text" id="nombre" name="nombre" class="ak-form-control" data-ak-validate="required" data-ak-msg="Campo requerido" required />
     </div>
     <div class="ak-col-12 ak-col-md-6 ak-mb-3">
-      <label class="ak-form-label" for="tipo">Tipo</label>
-      <select id="tipo" class="ak-form-select">
-        <option>Opción 1</option>
-        <option>Opción 2</option>
-      </select>
+      <label class="ak-form-label" for="email">Email <span class="ak-text-danger">*</span></label>
+      <input type="email" id="email" name="email" class="ak-form-control" data-ak-validate="required|email" data-ak-msg-email="Email inválido" required />
     </div>
   </div>
   <button type="submit" class="ak-btn ak-btn-primary">Guardar</button>
 </form>
 ```
+> Los divs `.ak-valid-feedback` y `.ak-invalid-feedback` se crean automáticamente si no existen en el DOM.
 
 ### Tabla con DataTable
 ```html

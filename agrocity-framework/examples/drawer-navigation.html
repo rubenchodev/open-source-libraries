@@ -8,11 +8,6 @@
   <style>
     .ak-navbar { position: sticky; top: 0; z-index: 1020; }
     .ak-app-main { padding: 32px 40px; }
-
-    .demo-card {
-      background: var(--ak-surface-alt); border: 1px solid var(--ak-border);
-      border-radius: var(--ak-radius); padding: 24px; margin: 16px 0;
-    }
     .log-container {
       background: #1a1a2e; color: #00ff88; font-family: monospace;
       padding: 16px; border-radius: var(--ak-radius); font-size: 0.8rem;
@@ -26,18 +21,18 @@
   <!-- ═══════════════════════════════════════════════════════════════════
        NAVBAR
        ═══════════════════════════════════════════════════════════════════ -->
-  <nav class="ak-navbar" id="mainNavbar">
+  <nav class="ak-navbar">
     <div class="ak-container-fluid ak-d-flex ak-align-items-center ak-justify-content-between">
       <div class="ak-d-flex ak-align-items-center ak-gap-2">
         <button class="ak-navbar-toggler" data-ak-toggle="drawer" data-ak-target="#appDrawer">
           <span data-ak-icon="menu"></span>
         </button>
-        <span class="ak-h5 ak-m-0 ak-text-white">Agrocity Kit — Drawer Navigation</span>
+        <span class="ak-h5 ak-m-0 ak-text-white">Agrocity App — Trámites</span>
       </div>
       <div class="ak-nav-user">
         <div class="ak-nav-user-text">
           <div class="ak-nav-user-name">Demo User</div>
-          <div class="ak-nav-user-email">demo@agrocity.app</div>
+          <div class="ak-nav-user-email ak-fst-italic ak-text-white">demo@agrocity.app</div>
         </div>
         <img class="ak-avatar" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="Avatar" />
       </div>
@@ -45,7 +40,7 @@
   </nav>
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       LAYOUT: DRAWER (persistent) + MAIN
+       LAYOUT: DRAWER + MAIN
        ═══════════════════════════════════════════════════════════════════ -->
   <div class="ak-app-body">
 
@@ -56,8 +51,8 @@
         <div class="ak-drawer-header">
           <div class="ak-drawer-header-avatar" data-ak-icon="droplet"></div>
           <div>
-            <div class="ak-drawer-header-title">Agrocity App</div>
-            <div class="ak-drawer-header-subtitle">Panel de navegación</div>
+            <div class="ak-drawer-header-title">Trámites Conagua</div>
+            <div class="ak-drawer-header-subtitle">Buzón del agua</div>
           </div>
           <button class="ak-btn-close" data-ak-dismiss="drawer" style="margin-left:auto;"></button>
         </div>
@@ -66,33 +61,10 @@
 
             <div class="ak-drawer-subheader">General</div>
 
-            <a href="#inicio" class="ak-drawer-item ak-active" data-ak-toggle="drawer-item">
+            <a href="#homePage" class="ak-drawer-item ak-active" data-ak-toggle="drawer-item">
               <span class="ak-drawer-item-icon" data-ak-icon="home"></span>
               <span>Inicio</span>
             </a>
-
-            <div class="ak-drawer-subheader">Módulos</div>
-
-            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subCultivos">
-              <span class="ak-drawer-item-icon" data-ak-icon="sprout"></span>
-              <span>Cultivos</span>
-              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <div id="subCultivos" class="ak-drawer-sub">
-              <a href="#maiz" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Maíz</a>
-              <a href="#trigo" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Trigo</a>
-              <a href="#soya" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Soya</a>
-            </div>
-
-            <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subInventario">
-              <span class="ak-drawer-item-icon" data-ak-icon="package"></span>
-              <span>Inventario</span>
-              <svg class="bd-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;transition:transform .2s;"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <div id="subInventario" class="ak-drawer-sub">
-              <a href="#insumos" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Insumos</a>
-              <a href="#herramientas" class="ak-drawer-sub-item" data-ak-toggle="drawer-item">Herramientas</a>
-            </div>
 
             <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subMenuProcedures">
               <span class="ak-drawer-item-icon" data-ak-icon="file"></span>
@@ -105,11 +77,6 @@
 
             <div class="ak-drawer-subheader">Sistema</div>
 
-            <a href="#callback-demo" class="ak-drawer-item" data-ak-toggle="drawer-item" data-ak-callback="onCustomClick">
-              <span class="ak-drawer-item-icon" data-ak-icon="star"></span>
-              <span>Callback Demo</span>
-            </a>
-
             <a href="#event-log" class="ak-drawer-item" data-ak-toggle="drawer-item">
               <span class="ak-drawer-item-icon" data-ak-icon="file"></span>
               <span>Event Log</span>
@@ -118,10 +85,7 @@
           </nav>
         </div>
         <div class="ak-drawer-footer">
-          <button class="ak-drawer-item">
-            <span class="ak-drawer-item-icon" data-ak-icon="log-out"></span>
-            <span>Cerrar sesión</span>
-          </button>
+          <div class="ak-drawer-item">@Agrocity</div>
         </div>
       </div>
     </div>
@@ -130,118 +94,595 @@
     <main class="ak-app-main">
 
       <!-- Panel: Inicio -->
-      <section id="inicio" class="ak-page ak-active">
+      <section id="homePage" class="ak-page ak-active">
         <div class="ak-my-5">
           <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">Inicio</h2>
-          <p class="ak-text-muted">Panel principal con resumen del sistema. Usa el menú lateral para navegar entre las secciones.</p>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:16px;">
-            <div class="demo-card" style="text-align:center;">
-              <div style="font-size:2rem;" data-ak-icon="sprout"></div>
-              <div style="font-size:1.2rem;font-weight:700;">12</div>
-              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Cultivos activos</div>
+          <p class="ak-text-muted">
+            Seleccione el trámite que desea realizar. A continuación encontrará el listado
+            de servicios disponibles; haga clic sobre la opción correspondiente para conocer
+            los requisitos y dar inicio al proceso.
+          </p>
+          <div class="ak-row ak-justify-content-center" id="procedureListContainer"></div>
+        </div>
+      </section>
+
+      <!-- Panel: Trámite 1 -->
+      <section id="procedurePanel21" class="ak-page">
+        <div class="ak-my-5">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-between ak-mb-2">
+            <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-0">Prórroga de títulos de concesión y/o permisos de descarga</h2>
+            <button class="ak-btn ak-btn-primary ak-d-flex ak-align-items-center ak-gap-1" id="btnNewProcedure21">
+              <span data-ak-icon="plus"></span> Nueva solicitud
+            </button>
+          </div>
+          <p class="ak-text-muted">La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b, y séptimo párrafo de la Ley de Puertos, emitidos por la DGP, en cumplimiento a lo previsto por los artículos 8, 17 y 21 del Reglamento de la Ley de Puertos.</p>
+          <table id="dt_procedurePanel21" class="ak-table ak-table-striped ak-table-hover ak-mt-4">
+            <thead>
+              <tr>
+                <th data-key="folio">Folio</th>
+                <th data-key="solicitante">Solicitante</th>
+                <th data-key="fecha">Fecha</th>
+                <th data-key="estado">Estado</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Panel: Form Trámite 1 (Expediente) -->
+      <section id="procedureForm21" class="ak-page">
+        <form id="formProcedure21" class="ak-form" data-ak-validation novalidate>
+          <h2 class="ak-h3 ak-text-primary ak-fw-bold ak-mb-3">Expediente</h2>
+          <p class="ak-text-muted">Por favor ingresa los siguientes datos:</p>
+
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header">
+              <h4 class="ak-h4 ak-mb-0">Documentos del expediente</h4>
             </div>
-            <div class="demo-card" style="text-align:center;">
-              <div style="font-size:2rem;" data-ak-icon="package"></div>
-              <div style="font-size:1.2rem;font-weight:700;">48</div>
-              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Productos</div>
+            <div class="ak-card-body ak-d-flex ak-flex-column ak-gap-3">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-mb-3">
+                  <label class="ak-form-label ak-fw-semibold">Acuse de entrega de expediente </label>
+                  <div class="ak-form-file required" data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1">
+                    <input type="file" class="ak-form-file-input" data-ak-validate="required" data-ak-msg="Seleccione un archivo*" data-ak-msg-required="Obligatorio*" required />
+                    <div class="ak-form-file-field">
+                      <span class="ak-form-file-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                      </span>
+                      <span class="ak-form-file-text">Seleccionar archivo...</span>
+                      <button class="ak-form-file-clear" type="button" aria-label="Eliminar">&times;</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-mb-3">
+                  <label class="ak-form-label ak-fw-semibold">Solicitud de atención por trámite </label>
+                  <div class="ak-form-file required" data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1">
+                    <input type="file" class="ak-form-file-input" data-ak-validate="required" required />
+                    <div class="ak-form-file-field">
+                      <span class="ak-form-file-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                      </span>
+                      <span class="ak-form-file-text">Seleccionar archivo...</span>
+                      <button class="ak-form-file-clear" type="button" aria-label="Eliminar">&times;</button>
+                    </div>
+                  </div>
+                  <div class="ak-valid-feedback">Correcto</div>
+                  <div class="ak-invalid-feedback">Seleccione un archivo</div>
+                </div>
+
+                <div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-mb-3">
+                  <label class="ak-form-label ak-fw-semibold">Solicitud única de servicios hídricos </label>
+                  <div class="ak-form-file required" data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1">
+                    <input type="file" class="ak-form-file-input" data-ak-validate="required" required />
+                    <div class="ak-form-file-field">
+                      <span class="ak-form-file-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                      </span>
+                      <span class="ak-form-file-text">Seleccionar archivo...</span>
+                      <button class="ak-form-file-clear" type="button" aria-label="Eliminar">&times;</button>
+                    </div>
+                  </div>
+                  <div class="ak-valid-feedback">Correcto</div>
+                  <div class="ak-invalid-feedback">Seleccione un archivo</div>
+                </div>
+              </div>
             </div>
-            <div class="demo-card" style="text-align:center;">
-              <div style="font-size:2rem;" data-ak-icon="trending-up"></div>
-              <div style="font-size:1.2rem;font-weight:700;">+15%</div>
-              <div style="font-size:0.85rem;color:var(--ak-text-muted);">Rendimiento</div>
+          </div>
+
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header">
+              <h4 class="ak-h4 ak-mb-0">Información general</h4>
+            </div>
+            <div class="ak-card-body ak-d-flex ak-flex-column ak-gap-3">
+
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <label class="ak-form-label" for="numTitulo_21">Número de título de concesión o permiso prorrogar </label>
+                  <input type="text" class="ak-form-control" id="numTitulo_21" data-ak-validate="required" data-ak-msg="Este campo es obligatorio" required />
+                  <div class="ak-valid-feedback">Correcto</div>
+                  <div class="ak-invalid-feedback">Este campo es obligatorio</div>
+                </div>
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <label class="ak-form-label" for="tipoConcesion_21">Tipo de concesión o permiso </label>
+                  <select class="ak-form-select" id="tipoConcesion_21" data-ak-validate="required" data-ak-msg="Seleccione una opción" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Concesión">Concesión</option>
+                    <option value="Permiso">Permiso</option>
+                    <option value="Ambos">Ambos</option>
+                  </select>
+                  <div class="ak-valid-feedback">Correcto</div>
+                  <div class="ak-invalid-feedback">Seleccione una opción</div>
+                </div>
+              </div>
+
+              <div class="ak-mb-3">
+                <label class="ak-form-label" for="descHechos_21">
+                  Describa brevemente los hechos o razones que dan motivo a su petición 
+                  <small class="ak-text-muted">(especificando el punto donde realiza o realizará sus descargas)</small>
+                </label>
+                <textarea class="ak-form-control" id="descHechos_21" data-ak-validate="required" data-ak-msg="Este campo es obligatorio" rows="4" required></textarea>
+                <div class="ak-valid-feedback">Correcto</div>
+                <div class="ak-invalid-feedback">Este campo es obligatorio</div>
+              </div>
+
+              <div class="ak-mb-3">
+                <label class="ak-form-label" for="infoAdicional_21">
+                  Proporcione información adicional que considere importante para su trámite
+                  <small class="ak-text-muted">(opcional)</small>
+                </label>
+                <textarea class="ak-form-control" id="infoAdicional_21" rows="3"></textarea>
+              </div>
+
+              <div class="ak-mb-3">
+                <label class="ak-form-label">Firma o huella digital del (de los) solicitante(s) o representante(s) legal(es) </label>
+                <div class="ak-form-file required" data-ak-accept=".jpg,.png,.pdf" data-ak-max-files="1">
+<input type="file" class="ak-form-file-input" data-ak-validate="required" data-ak-msg="Adjunte la firma o huella" required />
+                    <div class="ak-form-file-field">
+                      <span class="ak-form-file-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                      </span>
+                      <span class="ak-form-file-text">Subir imagen de firma o huella...</span>
+                      <button class="ak-form-file-clear" type="button" aria-label="Eliminar">&times;</button>
+                    </div>
+                    <div class="ak-valid-feedback">Correcto</div>
+                    <div class="ak-invalid-feedback">Adjunte la firma o huella</div>
+                  </div>
+              </div>
             </div>
           </div>
 
-          <div class="ak-my-5">
-            <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">Trámites disponibles</h2>
-            <p class="ak-text-muted">Selecciona un trámite para iniciar el proceso.</p>
-            <div class="ak-row ak-justify-content-center" id="procedureListContainer"></div>
+          <div class="ak-d-flex ak-justify-content-end ak-gap-2">
+            <button class="ak-btn ak-btn-secondary" type="button">Cancelar</button>
+            <button class="ak-btn ak-btn-primary" type="submit">Guardar expediente</button>
           </div>
+        </form>
+      </section>
+
+      <!-- Panel: Trámite 2 -->
+      <section id="procedurePanel22" class="ak-page">
+        <div class="ak-my-5">
+          <div class="ak-d-flex ak-align-items-center ak-justify-content-between ak-mb-2">
+            <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-0">Trámite 22</h2>
+            <button class="ak-btn ak-btn-primary ak-d-flex ak-align-items-center ak-gap-1" id="btnNewProcedure22">
+              <span data-ak-icon="plus"></span> Nueva solicitud
+            </button>
+          </div>
+          <p class="ak-text-muted">La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b, y séptimo párrafo de la Ley de Puertos, emitidos por la DGP, en cumplimiento a lo previsto por los artículos 8, 17 y 21 del Reglamento de la Ley de Puertos.</p>
+          <table id="dt_procedurePanel22" class="ak-table ak-table-striped ak-table-hover ak-mt-4">
+            <thead>
+              <tr>
+                <th data-key="folio">Folio</th>
+                <th data-key="solicitante">Solicitante</th>
+                <th data-key="fecha">Fecha</th>
+                <th data-key="estado">Estado</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </section>
 
-      <!-- Panel: Maíz -->
-      <section id="maiz" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌽 Maíz</h2>
-          <p class="ak-text-muted">Información detallada del cultivo de maíz.</p>
-          <div class="demo-card">
-            <p style="margin:0;">Temporada: Primavera-Verano · Área: 12.5 ha · Rendimiento esperado: 8.2 t/ha</p>
-          </div>
-          <div class="demo-card">
-            <p><strong>Etapa actual:</strong> Floración</p>
-            <div class="ak-progress" style="margin-top:8px;">
-              <div class="ak-progress-bar" style="width:65%;">65%</div>
+      <!-- Panel: Form Trámite 2 (validación completa de todos los tipos de campo) -->
+      <section id="procedureForm22" class="ak-page">
+        <form id="formProcedure22" class="ak-form" data-ak-validation novalidate>
+          <h2 class="ak-h3 ak-text-primary ak-fw-bold ak-mb-3">Formulario completo — todos los tipos de campo</h2>
+          <p class="ak-text-muted">Demostración de validación reactiva con todos los componentes del framework. <strong>Todos los campos son obligatorios</strong> para ver los estados de error al enviar.</p>
+
+          <!-- ─── 1. Text inputs ─────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Text inputs</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t1">Texto</label>
+                    <input type="text" class="ak-form-control" id="t1" placeholder="Nombre completo" data-ak-validate="required" data-ak-msg="Requerido" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t2">Email</label>
+                    <input type="email" class="ak-form-control" id="t2" placeholder="email@ejemplo.com" data-ak-validate="required|email" data-ak-msg="Requerido" data-ak-msg-email="Email inválido" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t3">Número (min 1, max 120)</label>
+                    <input type="number" class="ak-form-control" id="t3" placeholder="18" data-ak-validate="required|min:1|max:120" data-ak-msg-min="Mínimo 1" data-ak-msg-max="Máximo 120" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t4">Teléfono</label>
+                    <input type="tel" class="ak-form-control" id="t4" placeholder="+56 9 1234 5678" data-ak-validate="required" data-ak-msg="Requerido" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t5">URL</label>
+                    <input type="url" class="ak-form-control" id="t5" placeholder="https://ejemplo.com" data-ak-validate="required|url" data-ak-msg="Requerido" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t6">Contraseña (min 6, auto toggle) </label>
+                    <input type="password" class="ak-form-control" id="t6" placeholder="••••••••" data-ak-validate="required|min:6" data-ak-msg-min="Mínimo 6 caracteres" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="t7">Textarea (min 10) </label>
+                    <textarea class="ak-form-control" id="t7" rows="3" placeholder="Escriba al menos 10 caracteres..." data-ak-validate="required|min:10" data-ak-msg-min="Mínimo 10 caracteres" required></textarea>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Panel: Trigo -->
-      <section id="trigo" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌾 Trigo</h2>
-          <p class="ak-text-muted">Información detallada del cultivo de trigo.</p>
-          <div class="demo-card">
-            <p style="margin:0;">Temporada: Otoño-Invierno · Área: 8.0 ha · Rendimiento esperado: 6.5 t/ha</p>
-          </div>
-          <div class="demo-card">
-            <p><strong>Etapa actual:</strong> Maduración</p>
-            <div class="ak-progress" style="margin-top:8px;">
-              <div class="ak-progress-bar" style="width:85%;">85%</div>
+          <!-- ─── 2. Floating labels (Material) ──────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Floating labels (Material Design)</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <div class="ak-form-floating">
+                      <input type="text" class="ak-form-control" id="fl1" placeholder="Nombre" data-ak-validate="required" data-ak-msg="Requerido" required />
+                      <label for="fl1">Nombre </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <div class="ak-form-floating">
+                      <select class="ak-form-select" id="fl2" data-ak-validate="required" data-ak-msg="Seleccione" required>
+                        <option value=""></option>
+                        <option value="op1">Opción 1</option>
+                        <option value="op2">Opción 2</option>
+                        <option value="op3">Opción 3</option>
+                      </select>
+                      <label for="fl2">Selecciona </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Panel: Soya -->
-      <section id="soya" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🌱 Soya</h2>
-          <p class="ak-text-muted">Información detallada del cultivo de soya.</p>
-          <div class="demo-card">
-            <p style="margin:0;">Temporada: Primavera-Verano · Área: 20.0 ha · Rendimiento esperado: 3.2 t/ha</p>
+          <!-- ─── 3. Selectores ──────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Selectores</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="s1">Select nativo </label>
+                    <select class="ak-form-select" id="s1" data-ak-validate="required" data-ak-msg="Seleccione una opción" required>
+                      <option value="">Seleccione...</option>
+                      <option value="op1">Opción 1</option>
+                      <option value="op2">Opción 2</option>
+                      <option value="op3">Opción 3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="s2">Custom Select con búsqueda </label>
+                    <select class="ak-form-select" id="s2" data-ak-select data-ak-placeholder="Buscar cultivo..." data-ak-validate="required" data-ak-msg="Seleccione un cultivo" required>
+                      <option value="">Seleccione...</option>
+                      <option value="maiz">Maíz</option>
+                      <option value="trigo">Trigo</option>
+                      <option value="arroz">Arroz</option>
+                      <option value="frijol">Frijol</option>
+                      <option value="soya">Soya</option>
+                      <option value="cafe">Café</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="s3">Custom Select sin búsqueda </label>
+                    <select class="ak-form-select" id="s3" data-ak-select data-ak-search="false" data-ak-placeholder="Seleccione un estado..." data-ak-validate="required" data-ak-msg="Seleccione" required>
+                      <option value="">Seleccione...</option>
+                      <option value="aguascalientes">Aguascalientes</option>
+                      <option value="baja-california">Baja California</option>
+                      <option value="cdmx">CDMX</option>
+                      <option value="chiapas">Chiapas</option>
+                      <option value="chihuahua">Chihuahua</option>
+                      <option value="durango">Durango</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="s4">Custom Select múltiple con búsqueda </label>
+                    <select class="ak-form-select" id="s4" data-ak-select multiple data-ak-placeholder="Seleccione cultivos..." data-ak-max-selected-labels="2" data-ak-validate="required" data-ak-msg="Seleccione al menos uno" required>
+                      <option value="maiz">Maíz</option>
+                      <option value="trigo">Trigo</option>
+                      <option value="arroz">Arroz</option>
+                      <option value="frijol">Frijol</option>
+                      <option value="soya">Soya</option>
+                      <option value="cafe">Café</option>
+                      <option value="jitomate">Jitomate</option>
+                      <option value="chile">Chile</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="s5">Custom Select múltiple sin búsqueda </label>
+                    <select class="ak-form-select" id="s5" data-ak-select multiple data-ak-search="false" data-ak-placeholder="Seleccione estados..." data-ak-max-selected-labels="2" data-ak-validate="required" data-ak-msg="Seleccione al menos uno" required>
+                      <option value="aguascalientes">Aguascalientes</option>
+                      <option value="baja-california">Baja California</option>
+                      <option value="cdmx">CDMX</option>
+                      <option value="chiapas">Chiapas</option>
+                      <option value="chihuahua">Chihuahua</option>
+                      <option value="durango">Durango</option>
+                      <option value="guanajuato">Guanajuato</option>
+                      <option value="jalisco">Jalisco</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Panel: Insumos -->
-      <section id="insumos" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">📦 Insumos</h2>
-          <p class="ak-text-muted">Gestión de insumos agrícolas.</p>
-          <div class="demo-card">
-            <p style="margin:0;">Fertilizantes, semillas y agroquímicos disponibles en almacén.</p>
+          <!-- ─── 4. DatePicker ──────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">DatePicker</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="d1">DatePicker con trigger </label>
+                    <input type="text" class="ak-form-control" id="d1" data-ak-datepicker data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="d2">DatePicker sin trigger </label>
+                    <input type="text" class="ak-form-control" id="d2" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="DD/MM/AAAA" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="d3">DatePicker con hora (datetime) </label>
+                    <input type="text" class="ak-form-control" id="d3" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm" data-ak-placeholder="DD/MM/AAAA HH:mm" data-ak-validate="required" data-ak-msg="Seleccione fecha" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">DateRange (inicio  — fin )</label>
+                    <div data-ak-date-range class="ak-date-range">
+                      <div style="flex:1;">
+                        <input type="text" class="ak-form-control" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="Inicio" data-ak-validate="required" data-ak-msg="Seleccione fecha inicio" required />
+                      </div>
+                      <div style="flex:1;">
+                        <input type="text" class="ak-form-control" data-ak-datepicker data-ak-show-trigger="false" data-ak-format="DD/MM/YYYY" data-ak-placeholder="Fin" data-ak-validate="required" data-ak-msg="Seleccione fecha fin" required />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Panel: Herramientas -->
-      <section id="herramientas" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">🔧 Herramientas</h2>
-          <p class="ak-text-muted">Equipo y maquinaria registrada.</p>
-          <div class="demo-card">
-            <p style="margin:0;">Tractores, sembradoras y sistemas de riego disponibles.</p>
+          <!-- ─── 5. TimePicker ──────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">TimePicker</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="ti1">TimePicker con trigger </label>
+                    <input type="text" class="ak-form-control" id="ti1" data-ak-timepicker data-ak-placeholder="HH:MM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="ti2">TimePicker sin trigger </label>
+                    <input type="text" class="ak-form-control" id="ti2" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="HH:MM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="ti3">TimePicker 12h (AM/PM) </label>
+                    <input type="text" class="ak-form-control" id="ti3" data-ak-timepicker data-ak-ampm="true" data-ak-placeholder="hh:mm AM/PM" data-ak-validate="required" data-ak-msg="Seleccione hora" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">TimeRange (inicio  — fin )</label>
+                    <div data-ak-time-range class="ak-date-range">
+                      <div style="flex:1;">
+                        <input type="text" class="ak-form-control" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="Inicio" data-ak-validate="required" data-ak-msg="Seleccione hora inicio" required />
+                      </div>
+                      <div style="flex:1;">
+                        <input type="text" class="ak-form-control" data-ak-timepicker data-ak-show-trigger="false" data-ak-placeholder="Fin" data-ak-validate="required" data-ak-msg="Seleccione hora fin" required />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Panel: Callback Demo -->
-      <section id="callback-demo" class="ak-page">
-        <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">⭐ Callback Demo</h2>
-          <p class="ak-text-muted">Este panel se activa mediante <code>data-ak-callback</code>.</p>
-          <div class="ak-alert ak-alert-info">
-            El callback ejecutó <code>onCustomClick(item, panel)</code> al hacer clic en el item del menú.
+          <!-- ─── 6. File inputs ─────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">File inputs</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="f1">File nativo </label>
+                    <input type="file" class="ak-form-control" id="f1" data-ak-validate="required" data-ak-msg="Seleccione un archivo" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Custom File single (PDF/JPG) </label>
+                    <input type="file" class="ak-form-file-input" data-ak-accept=".pdf,.jpg,.png" data-ak-max-files="1" data-ak-validate="required" data-ak-msg="Seleccione un archivo" required />
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Custom File múltiple con popover lista (imágenes) </label>
+                    <input type="file" class="ak-form-file-input" data-ak-file-list data-ak-accept=".jpg,.png,.gif" data-ak-max-files="5" data-ak-max-size="5MB" data-ak-validate="required" data-ak-msg="Seleccione al menos una imagen" required multiple />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <!-- ─── 7. Checkboxes, Radios, Switch ─────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Checkboxes, Radios, Switch</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Checkbox inline</label>
+                    <label class="ak-form-check ak-mb-1">
+                      <input type="checkbox" class="ak-form-check-input" data-ak-validate="required" />
+                      <span class="ak-form-check-label">Opción 1</span>
+                    </label>
+                    <label class="ak-form-check ak-mb-1">
+                      <input type="checkbox" class="ak-form-check-input" data-ak-validate="required" />
+                      <span class="ak-form-check-label">Opción 2</span>
+                    </label>
+                    <label class="ak-form-check">
+                      <input type="checkbox" class="ak-form-check-input" data-ak-validate="required" />
+                      <span class="ak-form-check-label">Deshabilitado</span>
+                    </label>
+                  </div>
+                  <div class="ak-form-field-content ak-mt-2">
+                    <label class="ak-form-label">Checkbox requerido </label>
+                    <label class="ak-form-check">
+                      <input type="checkbox" class="ak-form-check-input" data-ak-validate="required" data-ak-msg="Debe aceptar los términos" required />
+                      <span class="ak-form-check-label">Acepto los términos y condiciones</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Radio group requerido </label>
+                    <label class="ak-form-check ak-mb-1">
+                      <input type="radio" class="ak-form-check-input" name="radioReq" data-ak-validate="required" data-ak-msg="Seleccione un género" required />
+                      <span class="ak-form-check-label">Masculino</span>
+                    </label>
+                    <label class="ak-form-check ak-mb-1">
+                      <input type="radio" class="ak-form-check-input" name="radioReq" data-ak-validate="required" data-ak-msg="Seleccione un género" required />
+                      <span class="ak-form-check-label">Femenino</span>
+                    </label>
+                    <label class="ak-form-check">
+                      <input type="radio" class="ak-form-check-input" name="radioReq" data-ak-validate="required" data-ak-msg="Seleccione un género" required />
+                      <span class="ak-form-check-label">Otro</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-4 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Switch toggle</label>
+                    <label class="ak-form-check ak-form-switch ak-mb-1">
+                      <input type="checkbox" class="ak-form-switch-input" checked />
+                      <span class="ak-form-switch-toggle"><span></span></span>
+                      <span class="ak-form-check-label">Notificaciones</span>
+                    </label>
+                    <label class="ak-form-check ak-form-switch ak-mb-1">
+                      <input type="checkbox" class="ak-form-switch-input" />
+                      <span class="ak-form-switch-toggle"><span></span></span>
+                      <span class="ak-form-check-label">Modo oscuro</span>
+                    </label>
+                    <label class="ak-form-check ak-form-switch">
+                      <input type="checkbox" class="ak-form-switch-input" disabled />
+                      <span class="ak-form-switch-toggle"><span></span></span>
+                      <span class="ak-form-check-label">Deshabilitado</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ─── 8. Range slider, Input group ──────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Range slider &amp; Input group</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-row">
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label" for="r1">Rango de precio ($0 – $1000)</label>
+                    <input type="range" class="ak-form-range" id="r1" min="0" max="1000" step="10" value="500" />
+                    <output class="ak-d-block ak-text-center ak-fw-bold ak-mt-1" id="r1_output" for="r1">$500</output>
+                  </div>
+                </div>
+                <div class="ak-col-12 ak-col-md-6 ak-mb-3">
+                  <div class="ak-form-field-content">
+                    <label class="ak-form-label">Input group </label>
+                    <div class="ak-input-group">
+                      <span class="ak-input-group-text">@</span>
+                      <input type="text" class="ak-form-control" placeholder="usuario" data-ak-validate="required" data-ak-msg="Campo requerido" required />
+                    </div>
+                    <div class="ak-input-group ak-mt-2">
+                      <input type="text" class="ak-form-control" placeholder="Cantidad" />
+                      <span class="ak-input-group-text">kg</span>
+                    </div>
+                    <div class="ak-input-group ak-mt-2">
+                      <span class="ak-input-group-text">$</span>
+                      <input type="number" class="ak-form-control" placeholder="0.00" step="0.01" />
+                      <span class="ak-input-group-text">MXN</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ─── 9. Button group ────────────────────────────────────────── -->
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-header"><h4 class="ak-h4 ak-mb-0">Button group</h4></div>
+            <div class="ak-card-body">
+              <div class="ak-btn-group">
+                <button class="ak-btn ak-btn-outline-primary ak-active" type="button">Día</button>
+                <button class="ak-btn ak-btn-outline-primary" type="button">Semana</button>
+                <button class="ak-btn ak-btn-outline-primary" type="button">Mes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ak-d-flex ak-justify-content-end ak-gap-2">
+            <button class="ak-btn ak-btn-secondary" type="button">Cancelar</button>
+            <button class="ak-btn ak-btn-primary" type="submit">Validar formulario completo</button>
+          </div>
+        </form>
       </section>
 
       <!-- Panel: Event Log -->
       <section id="event-log" class="ak-page">
         <div class="ak-my-5">
-          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">📄 Event Log</h2>
+          <h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2">Event Log</h2>
           <p class="ak-text-muted">Registro de eventos <code>ak:drawer:item:click</code>.</p>
           <div class="log-container" id="logContainer">
             <div class="log-entry">// Esperando navegación...</div>
@@ -252,30 +693,50 @@
     </main>
   </div>
 
+  <!-- ─── Modal: Nueva solicitud ─────────────────────────────────────── -->
+  <div class="ak-modal" id="modalNuevaSolicitud" tabindex="-1" aria-hidden="true">
+    <div class="ak-modal-dialog ak-modal-dialog-centered">
+      <div class="ak-modal-content">
+        <div class="ak-modal-header">
+          <h5 class="ak-modal-title">Nueva solicitud</h5>
+          <button class="ak-btn-close" data-ak-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="ak-modal-body">
+          <form id="formNuevaSolicitud" novalidate>
+            <div class="ak-mb-3">
+              <label class="ak-form-label" for="inputFolio">Folio</label>
+              <input type="text" id="inputFolio" class="ak-form-control" required />
+            </div>
+            <div class="ak-mb-3">
+              <label class="ak-form-label" for="inputSolicitante">Solicitante</label>
+              <input type="text" id="inputSolicitante" class="ak-form-control" required />
+            </div>
+            <div class="ak-mb-3">
+              <label class="ak-form-label" for="inputFecha">Fecha</label>
+              <input type="date" id="inputFecha" class="ak-form-control" required />
+            </div>
+            <div class="ak-mb-3">
+              <label class="ak-form-label" for="inputEstado">Estado</label>
+              <select id="inputEstado" class="ak-form-select">
+                <option value="Pendiente">Pendiente</option>
+                <option value="En revisión">En revisión</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Rechazado">Rechazado</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="ak-modal-footer">
+          <button class="ak-btn ak-btn-secondary" data-ak-dismiss="modal">Cancelar</button>
+          <button class="ak-btn ak-btn-primary" id="btnGuardarSolicitud">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../dist/js/agrocity-kit.min.js"></script>
   <script>
-    // Escuchar el evento personalizado
-    document.addEventListener('ak:drawer:item:click', function(e) {
-      var log = document.getElementById('logContainer');
-      if (!log) return;
-      var entry = document.createElement('div');
-      entry.className = 'log-entry';
-      entry.textContent = '→ Navegando a: ' + e.detail.target + ' | Panel: ' + (e.detail.panel ? e.detail.panel.id : 'null');
-      log.appendChild(entry);
-      log.scrollTop = log.scrollHeight;
-    });
-
-    // Callback personalizado via data-ak-callback
-    function onCustomClick(item, panel) {
-      AgrocityKit.showToast('Callback ejecutado desde: ' + item.textContent.trim(), {
-        type: 'success',
-        title: 'data-ak-callback',
-        duration: 3000
-      });
-    }
-
-    // ─── Ejemplo dinámico: Trámites ─────────────────────────────────────
-
+    // ─── Datos de ejemplo ───────────────────────────────────────────────
     var proceduresData_ = [
       {
         rowIndex: 2, id: 'CONAGUA-01-021',
@@ -283,7 +744,15 @@
         shortName: 'Prórroga de títulos',
         logo: 'https://agrocity.mx/cdn/shop/articles/monito_9627e6a5-75e1-47b5-aead-605010b76b49_1200x1200.jpg',
         description: 'La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b, y séptimo párrafo de la Ley de Puertos.',
-        status: 'Activo', panelId: '#procedurePanel21'
+        status: 'Activo', panelId: '#procedurePanel21', formPanelId: '#procedureForm21',
+        solicitudes: [
+          { folio: 'CON-2026-001', solicitante: 'Juan Pérez López', fecha: '2026-03-15', estado: 'En revisión' },
+          { folio: 'CON-2026-002', solicitante: 'María García Hernández', fecha: '2026-04-02', estado: 'Aprobado' },
+          { folio: 'CON-2026-003', solicitante: 'Carlos Mendoza Ruiz', fecha: '2026-04-18', estado: 'Pendiente' },
+          { folio: 'CON-2026-004', solicitante: 'Ana Torres Vázquez', fecha: '2026-05-01', estado: 'En revisión' },
+          { folio: 'CON-2026-005', solicitante: 'Roberto Sánchez Díaz', fecha: '2026-05-12', estado: 'Rechazado' },
+          { folio: 'CON-2026-006', solicitante: 'Diana Rojas Castillo', fecha: '2026-05-28', estado: 'Aprobado' }
+        ]
       },
       {
         rowIndex: 3, id: 'CONAGUA-01-022',
@@ -291,41 +760,137 @@
         shortName: 'Prórroga 3',
         logo: 'https://agrocity.mx/cdn/shop/articles/monito_9627e6a5-75e1-47b5-aead-605010b76b49_1200x1200.jpg',
         description: 'La información que se presenta corresponde a los títulos de permiso otorgados, conforme lo establecido por el artículo 20 fracción II inciso b.',
-        status: 'Activo', panelId: '#procedurePanel22'
+        status: 'Activo', panelId: '#procedurePanel22', formPanelId: '#procedureForm22',
+        solicitudes: [
+          { folio: 'PRB-2026-001', solicitante: 'Lucía Ramírez Ortiz', fecha: '2026-02-10', estado: 'Aprobado' },
+          { folio: 'PRB-2026-002', solicitante: 'Pedro Infante Cruz', fecha: '2026-03-22', estado: 'En revisión' },
+          { folio: 'PRB-2026-003', solicitante: 'Sofía Medina Ríos', fecha: '2026-04-05', estado: 'Pendiente' }
+        ]
       }
     ];
 
-    function escapeJs_(str) {
-      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+    // ─── Inicializar datatables (extrae columnas del <thead>) ────────────
+    function initDataTable_(tableId) {
+      var dt = AgrocityKit.dataTable('#' + tableId, {
+        data: [],
+        pageSize: 5,
+        search: true,
+        searchPlaceholder: 'Buscar solicitud...'
+      });
+      // Render personalizado para columnas de tipo estado
+      dt.columns.forEach(function(col) {
+        if (col.label === 'Estado' || col.key === 'estado') {
+          col.render = function(v) {
+            var badges = { 'Aprobado': 'success', 'Rechazado': 'danger', 'Pendiente': 'warning', 'En revisión': 'info' };
+            return '<span class="ak-badge ak-badge-' + (badges[v] || 'secondary') + '">' + v + '</span>';
+          };
+        }
+      });
+      return dt;
     }
 
+    initDataTable_('dt_procedurePanel21');
+    initDataTable_('dt_procedurePanel22');
+
+    // ─── Cargar solicitudes al navegar al panel ───────────────────────────
+    document.addEventListener('ak:drawer:item:click', function(e) {
+      var log = document.getElementById('logContainer');
+      if (log) {
+        var entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.textContent = '→ Navegando a: ' + e.detail.target + ' | Panel: ' + (e.detail.panel ? e.detail.panel.id : 'null');
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      var panel = e.detail.panel;
+      if (!panel) return;
+      AgrocityKit.initElement(panel);
+
+      var panelId = panel.id;
+      if (panelId === 'homePage' || panelId === 'event-log') return;
+
+      var procedure = proceduresData_.find(function(p) {
+        return p.panelId === '#' + panelId || p.formPanelId === '#' + panelId;
+      });
+      if (!procedure) return;
+
+      var dt = AgrocityKit.dataTable('#dt_' + panelId);
+      if (dt) {
+        dt.data = procedure.solicitudes || [];
+        dt.refresh();
+      }
+    });
+
+    // ─── Botón "Nueva solicitud" ─────────────────────────────────────────
+    var currentProcedurePanel_ = null;
+
+    document.getElementById('btnNewProcedure21').addEventListener('click', function() {
+      currentProcedurePanel_ = 'procedurePanel21';
+      AgrocityKit.modal('#modalNuevaSolicitud').show();
+    });
+
+    document.getElementById('btnNewProcedure22').addEventListener('click', function() {
+      currentProcedurePanel_ = 'procedurePanel22';
+      AgrocityKit.modal('#modalNuevaSolicitud').show();
+    });
+
+    document.getElementById('btnGuardarSolicitud').addEventListener('click', function() {
+      if (!currentProcedurePanel_) return;
+
+      var procedure = proceduresData_.find(function(p) {
+        return p.panelId === '#' + currentProcedurePanel_;
+      });
+      if (!procedure) return;
+
+      var folio = document.getElementById('inputFolio').value.trim();
+      var solicitante = document.getElementById('inputSolicitante').value.trim();
+      var fecha = document.getElementById('inputFecha').value;
+      var estado = document.getElementById('inputEstado').value;
+
+      if (!folio || !solicitante || !fecha) {
+        AgrocityKit.showToast('Todos los campos son obligatorios', { type: 'warning', title: 'Formulario incompleto' });
+        return;
+      }
+
+      procedure.solicitudes.push({ folio: folio, solicitante: solicitante, fecha: fecha, estado: estado });
+
+      var dt = AgrocityKit.dataTable('#dt_' + currentProcedurePanel_);
+      if (dt) {
+        dt.data = procedure.solicitudes;
+        dt.refresh();
+      }
+
+      AgrocityKit.modal('#modalNuevaSolicitud').hide();
+      document.getElementById('formNuevaSolicitud').reset();
+      currentProcedurePanel_ = null;
+
+      AgrocityKit.showToast('Solicitud creada correctamente', { type: 'success', title: 'Guardado' });
+    });
+
+    // ─── Renderizar lista de trámites ────────────────────────────────────
     function renderProceduresList_(proceduresArray_) {
       var subMenuProcedures_ = Ak('#subMenuProcedures');
       var procedureListContainer_ = Ak('#procedureListContainer');
-      var mainContent_ = Ak('.ak-app-main');
 
       subMenuProcedures_.html('');
       procedureListContainer_.html('');
 
       proceduresArray_.forEach(function(procedure_) {
-        // Sub-item en el drawer
+        // Sub-item en el drawer (panel)
         var subItem = Ak('<a class="ak-drawer-sub-item" data-ak-toggle="drawer-item"></a>')
           .attr('href', procedure_.panelId)
           .text(procedure_.shortName);
         subMenuProcedures_.append(subItem);
 
-        // Panel del trámite (oculto hasta navegar)
-        var panelId = procedure_.panelId.replace('#', '');
-        var panel = Ak('<section class="ak-page" id="' + panelId + '"></section>')
-          .append(
-            Ak('<div class="ak-my-5"></div>')
-              .append(Ak('<h2 class="ak-h2 ak-text-primary ak-fw-bold ak-mb-2"></h2>').text(procedure_.name))
-              .append(Ak('<p class="ak-text-muted"></p>').text(procedure_.description))
-          );
-        mainContent_.append(panel);
+        // Sub-item en el drawer (formulario)
+        var formSubItem = Ak('<a class="ak-drawer-sub-item" data-ak-toggle="drawer-item"></a>')
+          .attr('href', procedure_.formPanelId)
+          .text('Expediente - ' + procedure_.shortName);
+        subMenuProcedures_.append(formSubItem);
 
-        // Card en la grilla de inicio (igual altura, botón centrado al fondo)
-        var cardCol = Ak('<div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-d-flex"></div>');
+        // Card en la grilla de inicio
+        var cardCol = Ak('<div class="ak-col-12 ak-col-md-6 ak-col-lg-4 ak-d-flex ak-m-2"></div>');
         var card = Ak('<div class="ak-card ak-h-100"></div>')
           .append(
             Ak('<div class="ak-card-img-container"></div>')
@@ -334,13 +899,19 @@
           .append(
             Ak('<div class="ak-card-body ak-d-flex ak-flex-column ak-align-items-center ak-text-center"></div>')
               .append(Ak('<h3 class="ak-h3"></h3>').text(procedure_.name))
-              .append(Ak('<p class="ak-card-text ak-fst-italic"></p>').text(procedure_.description))
+              .append(Ak('<p class="ak-card-text ak-fst-italic ak-text-muted"></p>').text(procedure_.description))
               .append(
-                Ak('<div class="ak-mt-auto ak-pt-3"></div>')
+                Ak('<div class="ak-mt-auto ak-pt-3 ak-d-flex ak-flex-column ak-gap-2"></div>')
                   .append(
-                    Ak('<button class="ak-btn ak-btn-primary">Ingresar al trámite</button>')
+                    Ak('<button class="ak-btn ak-btn-primary ak-btn-block">Ver solicitudes</button>')
                       .on('click', function() {
                         subItem[0].click();
+                      })
+                  )
+                  .append(
+                    Ak('<button class="ak-btn ak-btn-outline-primary ak-btn-block">Solicitar trámite</button>')
+                      .on('click', function() {
+                        formSubItem[0].click();
                       })
                   )
               )
@@ -349,6 +920,13 @@
         procedureListContainer_.append(cardCol);
       });
     }
+
+    // ─── Validación de formularios (declarativa via data-ak-validation) ───
+    // Los forms con data-ak-validation se auto-inicializan al cargar la página
+    // y también cuando se navega a un panel (initElement ya lo maneja).
+    document.addEventListener('ak:form:valid', function(e) {
+      AgrocityKit.showToast('Expediente guardado correctamente', { type: 'success', title: 'Guardado' });
+    });
 
     renderProceduresList_(proceduresData_);
   </script>
