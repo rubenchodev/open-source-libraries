@@ -1258,6 +1258,7 @@ Drawer de navegación con header + body + footer, items con icono, submenús col
     </div>
     <div class="ak-drawer-footer">
       <button class="ak-drawer-item">🚪 Cerrar sesión</button>
+      <div class="ak-drawer-copyright">© 2026 Agrocity</div>
     </div>
   </div>
 </div>
@@ -1276,6 +1277,7 @@ Drawer de navegación con header + body + footer, items con icono, submenús col
 | `.ak-drawer-header-subtitle` | Subtítulo (email/rol) |
 | `.ak-drawer-body` | Área scrollable con items |
 | `.ak-drawer-footer` | Footer fijo (logout, settings link) |
+| `.ak-drawer-copyright` | Texto de copyright en el footer (11px, muted, centrado) |
 | `.ak-drawer-subheader` | Etiqueta de sección (mayúscula) |
 | `.ak-drawer-divider` | Separador horizontal |
 | `.ak-drawer-item` | Elemento de navegación (icono + texto) |

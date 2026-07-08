@@ -2512,6 +2512,12 @@ body.ak-modal-open { overflow: hidden; }
   border-top: 1px solid var(--ak-border);
   flex-shrink: 0;
 }
+.ak-drawer-copyright {
+  padding: 12px 20px;
+  font-size: 11px;
+  color: var(--ak-text-muted);
+  text-align: center;
+}
 
 .ak-drawer-subheader {
   padding: 14px 20px 6px;

@@ -5003,6 +5003,7 @@
             });
           }
           panel.classList.add("ak-active");
+          window.scrollTo({ top: 0, behavior: "instant" });
         }
         // 3. Si el item está dentro de un drawer-sub, expandir el submenú padre
         var parentSub = trigger.closest('.ak-drawer-sub');
