@@ -2063,7 +2063,9 @@ AgrocityKit.prompt("Ingrese valor", "default", function(valor){ ... });</pre>
          ================================================================ -->
     <section id="card">
       <h2>Card</h2>
-      <p>Contenedor con borde, sombra y hover elevado.</p>
+      <p>Contenedor con borde, sombra y hover elevado. Además de las variantes estándar, el framework incluye cards con imagen de fondo + overlay, badge posicionable y hover pronunciado.</p>
+
+      <h3>Cards estándar</h3>
       <div class="ak-docs-card">
         <div class="ak-row ak-g-3">
           <div class="ak-col-12 ak-col-md-4">
@@ -2117,6 +2119,96 @@ AgrocityKit.prompt("Ingrese valor", "default", function(valor){ ... });</pre>
   &lt;div class="ak-card-body"&gt;...&lt;/div&gt;
   &lt;div class="ak-card-footer"&gt;Footer&lt;/div&gt;
 &lt;/div&gt;</pre>
+
+      <h3>Card con imagen de fondo (cover)</h3>
+      <p>Usa <code>.ak-card-cover</code> para una card con imagen como fondo y overlay degradado. El texto se muestra sobre la imagen con buen contraste.</p>
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-cover" style="min-height:300px;">
+              <img class="ak-card-img-cover" src="https://picsum.photos/seed/arequipa/400/300" alt="Vista de Arequipa" loading="lazy" />
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Arequipa</h5>
+                <span class="ak-badge ak-badge-success ak-card-badge">Disponible</span>
+                <p class="ak-card-text">Mapa geoespacial de fertilidad del suelo.</p>
+                <div class="ak-d-flex ak-gap-2 ak-mt-2">
+                  <a href="#" class="ak-btn ak-btn-sm ak-btn-light">Ver aquí</a>
+                  <a href="#" class="ak-btn ak-btn-sm ak-btn-outline-light">Descargar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-cover" style="min-height:300px;">
+              <img class="ak-card-img-cover" src="https://picsum.photos/seed/cajamarca/400/300" alt="Vista de Cajamarca" loading="lazy" />
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Cajamarca</h5>
+                <span class="ak-badge ak-badge-success ak-card-badge">Disponible</span>
+                <p class="ak-card-text">Mapa geoespacial de fertilidad del suelo.</p>
+                <div class="ak-d-flex ak-gap-2 ak-mt-2">
+                  <a href="#" class="ak-btn ak-btn-sm ak-btn-light">Ver aquí</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-cover" style="min-height:300px;">
+              <img class="ak-card-img-cover" src="https://picsum.photos/seed/amazonas/400/300" alt="Vista de Amazonas" loading="lazy" />
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Amazonas</h5>
+                <span class="ak-badge ak-badge-warning ak-card-badge">Próximamente</span>
+                <p class="ak-card-text">Mapa de fertilidad del suelo — en preparación.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-card ak-card-cover" style="min-height:300px;"&gt;
+  &lt;img class="ak-card-img-cover" src="foto.jpg" alt="..." loading="lazy" /&gt;
+  &lt;div class="ak-card-body"&gt;
+    &lt;span class="ak-badge ak-badge-success ak-card-badge"&gt;Disponible&lt;/span&gt;
+    &lt;h5 class="ak-card-title"&gt;Título&lt;/h5&gt;
+    &lt;p class="ak-card-text"&gt;Descripción&lt;/p&gt;
+    &lt;a href="#" class="ak-btn ak-btn-sm ak-btn-light"&gt;Ver aquí&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+      <h3>Card con hover pronunciado</h3>
+      <p>Agrega <code>.ak-card-hover</code> para un efecto de elevación mayor al hacer hover (translateY -4px + shadow-lg).</p>
+      <div class="ak-docs-card">
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-hover" style="cursor:pointer;">
+              <div style="background:var(--ak-primary-light);padding:60px 20px;text-align:center;font-size:2rem;">🌱</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Cultivos</h5>
+                <p class="ak-card-text">Gestión de cultivos con métricas en tiempo real.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-hover" style="cursor:pointer;">
+              <div style="background:var(--ak-secondary-light);padding:60px 20px;text-align:center;font-size:2rem;">📊</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Reportes</h5>
+                <p class="ak-card-text">Reportes automatizados de rendimiento y fertilidad.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ak-col-12 ak-col-md-4">
+            <div class="ak-card ak-card-hover" style="cursor:pointer;">
+              <div style="background:var(--ak-warning);padding:60px 20px;text-align:center;font-size:2rem;">🚜</div>
+              <div class="ak-card-body">
+                <h5 class="ak-card-title">Maquinaria</h5>
+                <p class="ak-card-text">Seguimiento de flota y mantenimiento programado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="ak-docs-code">&lt;div class="ak-card ak-card-hover"&gt;
+  ...
+&lt;/div&gt;</pre>
       <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
       <table class="ak-docs-table">
         <tr><th>Clase</th><th>Descripción</th></tr>
@@ -2129,6 +2221,9 @@ AgrocityKit.prompt("Ingrese valor", "default", function(valor){ ... });</pre>
         <tr><td><code>.ak-card-text</code></td><td>Párrafo de texto</td></tr>
         <tr><td><code>.ak-card-img-top</code></td><td>Imagen en la parte superior</td></tr>
         <tr><td><code>.ak-card-link</code></td><td>Link con color secundario</td></tr>
+        <tr><td><code>.ak-card-cover</code></td><td>Card con imagen de fondo + overlay degradado. Texto en blanco sobre la imagen. Usar <code>style="background-image:url(...)"</code></td></tr>
+        <tr><td><code>.ak-card-badge</code></td><td>Badge posicionado en esquina superior derecha de la card. Usar con <code>.ak-badge</code> dentro de <code>.ak-card-cover</code></td></tr>
+        <tr><td><code>.ak-card-hover</code></td><td>Hover pronunciado: translateY(-4px) + shadow-lg</td></tr>
       </table>
       </details>
     </section>

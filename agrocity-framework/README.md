@@ -830,6 +830,7 @@ AgrocityKit.alert('#mi-alerta').close();
 ## 🃏 Cards
 
 ```html
+<!-- Card estándar -->
 <div class="ak-card">
   <img src="imagen.jpg" class="ak-card-img-top" alt="..." />
   <div class="ak-card-header">Título del header</div>
@@ -842,7 +843,35 @@ AgrocityKit.alert('#mi-alerta').close();
   </div>
   <div class="ak-card-footer ak-text-muted">Pie de la card</div>
 </div>
+
+<!-- Card con imagen <img> + overlay + badge (estilo galería) -->
+<div class="ak-card ak-card-cover" style="min-height:300px;">
+  <img class="ak-card-img-cover" src="foto.jpg" alt="Vista del departamento" loading="lazy" />
+  <div class="ak-card-body">
+    <span class="ak-badge ak-badge-success ak-card-badge">Disponible</span>
+    <h5 class="ak-card-title">Departamento</h5>
+    <p class="ak-card-text">Descripción del mapa.</p>
+    <a href="#" class="ak-btn ak-btn-sm ak-btn-light">Ver aquí</a>
+  </div>
+</div>
+
+<!-- Card con hover pronunciado -->
+<div class="ak-card ak-card-hover" style="cursor:pointer;">
+  <div class="ak-card-body">
+    <h5 class="ak-card-title">Cultivos</h5>
+    <p class="ak-card-text">Texto de la card.</p>
+  </div>
+</div>
 ```
+
+**Clases adicionales:**
+
+| Clase | Descripción |
+|-------|-------------|
+| `.ak-card-cover` | Card con `<img class="ak-card-img-cover">` como fondo + overlay degradado. Texto blanco sobre la imagen |
+| `.ak-card-img-cover` | Imagen que se posiciona absolute como fondo de la card cover (usar `object-fit: cover`) |
+| `.ak-card-badge` | Badge en esquina superior derecha. Usar con `.ak-badge` dentro de `.ak-card-cover` |
+| `.ak-card-hover` | Hover pronunciado: `translateY(-4px)` + `shadow-lg` |
 
 ---
 

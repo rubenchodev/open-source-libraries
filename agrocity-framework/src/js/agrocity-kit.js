@@ -1021,7 +1021,12 @@
     _helpers: Helpers,
   };
 
-  /** Lee opciones desde data-attributes (booleans/números básicos). */
+  /**
+   * @desc Parsea opciones desde data-attributes del elemento.
+   * @param {HTMLElement} el - Elemento con atributos data-*
+   * @param {string} prefix - Prefijo del componente (ej. akSelect)
+   * @returns {Object} Opciones parseadas
+   */
   function parseDataOptions(el, prefix) {
     const opts = {};
     for (const attr in el.dataset) {
@@ -1127,7 +1132,7 @@
       this._applyStates();
     }
 
-    /* ---- Construcción del DOM ------------------------------------------ */
+    /** @desc Construye el DOM del custom select, control, dropdown y backdrop. */
     _build() {
       const H = Helpers;
       this.native.classList.add("ak-select-native-hidden");
@@ -1249,7 +1254,7 @@
       window.addEventListener("resize", this._boundResize);
     }
 
-    /* ---- Lectura de <option>/<optgroup> nativos ------------------------ */
+    /** @desc Lee las opciones del <select> nativo al modelo interno. */
     _readNativeOptions() {
       this.items = [];
       const walk = (parent, group) => {
@@ -1271,7 +1276,8 @@
       walk(this.native, null);
     }
 
-    /* ---- Carga remota (AJAX / callback) -------------------------------- */
+    /** @desc Carga opciones vía fetch o callback remoto.
+     *  @param {string} query - Texto de búsqueda */
     _loadRemote(query) {
       this.state.loading = true;
       this._renderSpinner(true);
@@ -1310,6 +1316,8 @@
       }
     }
 
+    /** @desc Muestra/oculta el spinner de carga en los indicadores.
+     *  @param {boolean} show */
     _renderSpinner(show) {
       let sp = this.indicators.querySelector(".ak-select__spinner");
       if (show && !sp) {
@@ -1320,7 +1328,7 @@
       }
     }
 
-    /* ---- Render de la lista de opciones -------------------------------- */
+    /** @desc Renderiza la lista de opciones en el dropdown, con filtro y agrupación. */
     _renderOptions() {
       const H = Helpers;
       this.list.innerHTML = "";
@@ -1394,6 +1402,7 @@
       });
     }
 
+    /** @desc Resalta la opción activa en la lista y la hace visible. */
     _highlightActive() {
       const options = this.list.querySelectorAll(".ak-select__option");
       options.forEach((o) => {
@@ -1407,6 +1416,7 @@
     }
 
     /* ---- Selección ----------------------------------------------------- */
+    /** @desc Alterna la selección de un item (multiple) o selecciona uno solo (simple). */
     _toggleItem(item) {
       if (item.disabled) return;
       if (this.opts.multiple) {
@@ -1422,6 +1432,7 @@
       if (this.opts.closeOnSelect) this.close();
     }
 
+    /** @desc Selecciona todos los items visibles (filtrados). */
     _selectAll() {
       const q = this.state.query.toLowerCase();
       this.items.forEach((it) => {
@@ -1442,6 +1453,7 @@
       this._emitChange();
     }
 
+    /** @desc Sincroniza el <select> nativo con el modelo interno de items. */
     _syncNativeFromItems() {
       const selected = new Set(this.items.filter((i) => i.selected).map((i) => i.value));
       // Reconstruye options nativas si vinieron de remoto
@@ -1462,7 +1474,7 @@
       Helpers.emit(this.native, "change", { source: "agrocity-kit" });
     }
 
-    /* ---- Render del valor (chips / texto) ------------------------------ */
+    /** @desc Renderiza el valor seleccionado: chips en múltiple, texto en simple. */
     _renderValue() {
       const H = Helpers;
       this.valueWrap.innerHTML = "";
@@ -1535,7 +1547,7 @@
       }
     }
 
-    /* ---- Estados: disabled / readonly / error -------------------------- */
+    /** @desc Aplica las clases CSS de estado (disabled, readonly, error). */
     _applyStates() {
       this.root.classList.toggle("ak-is-disabled", !!this.opts.disabled);
       this.root.classList.toggle("ak-is-readonly", !!this.opts.readonly);
@@ -1561,11 +1573,13 @@
     }
 
     /* ---- Abrir / cerrar ------------------------------------------------ */
+    /** @desc Alterna el estado abierto/cerrado del dropdown. */
     toggle() {
       if (this.opts.disabled || this.opts.readonly) return;
       this.state.open ? this.close() : this.open();
     }
 
+    /** @desc Abre el dropdown y posiciona el overlay. */
     open() {
       if (this.opts.disabled || this.opts.readonly || this.state.open) return;
       this.state.open = true;
@@ -1593,6 +1607,7 @@
       Helpers.emit(this.native, "ak:select:open", { instance: this });
     }
 
+    /** @desc Posiciona el dropdown flotante respecto al control. */
     _positionDropdown() {
       var rect = this.control.getBoundingClientRect();
       this.dropdown.style.position = "fixed";
@@ -1602,6 +1617,7 @@
       this.dropdown.style.width = rect.width + "px";
     }
 
+    /** @desc Cierra el dropdown y limpia event listeners. */
     close() {
       if (!this.state.open) return;
       this.state.open = false;
@@ -1618,16 +1634,19 @@
       Helpers.emit(this.native, "ak:select:close", { instance: this });
     }
 
+    /** @desc Cierra el dropdown al hacer clic fuera. */
     _onOutsideClick(e) {
       if (this.root.contains(e.target) || this.dropdown.contains(e.target)) return;
       this.close();
     }
 
+    /** @desc Actualiza clase mobile al redimensionar ventana. */
     _onResize() {
       this.root.classList.toggle("ak-is-mobile", Helpers.isMobile());
     }
 
     /* ---- Búsqueda ------------------------------------------------------ */
+    /** @desc Maneja el input de búsqueda y actualiza opciones. @param {string} value */
     _onSearch(value) {
       this.state.query = value.trim();
       this.state.activeIndex = -1;
@@ -1639,6 +1658,7 @@
     }
 
     /* ---- Navegación por teclado ---------------------------------------- */
+    /** @desc Maneja teclas Enter, Escape, flechas, Tab en el control. @param {KeyboardEvent} e */
     _onKeydown(e) {
       const key = e.key;
       if (!this.state.open) {
@@ -1677,6 +1697,7 @@
       }
     }
 
+    /** @desc Emite evento ak:select:change con el valor seleccionado. */
     _emitChange() {
       const selected = this.items.filter((i) => i.selected);
       Helpers.emit(this.native, "ak:select:change", {
@@ -1807,7 +1828,7 @@
       this.render();
     }
 
-    /* ---- Si no hay data/columns, extraer del <table> HTML existente ---- */
+    /** @desc Extrae data/columns desde una <table> HTML si no se proveyeron. */
     _extractDataIfNeeded() {
       if (this.opts.columns && this.opts.data) return;
       const table = this.target.tagName === "TABLE" ? this.target : this.target.querySelector("table");
@@ -1834,7 +1855,7 @@
       }
     }
 
-    /* ---- Construir estructura contenedora ------------------------------ */
+    /** @desc Construye el DOM del DataTable: toolbar, tabla, footer. */
     _build() {
       const H = Helpers;
       this.data = Array.isArray(this.opts.data) ? this.opts.data.slice() : [];
@@ -1905,7 +1926,7 @@
       this._renderHead();
     }
 
-    /* ---- Cabecera con ordenamiento ------------------------------------- */
+    /** @desc Renderiza el thead con columnas sorteables. */
     _renderHead() {
       const H = Helpers;
       this.thead.innerHTML = "";
@@ -1939,6 +1960,7 @@
       this.thead.appendChild(tr);
     }
 
+    /** @desc Alterna orden asc/desc/null para una columna. @param {string} key */
     _toggleSort(key) {
       if (this.state.sortKey === key) {
         this.state.sortDir =
@@ -1957,7 +1979,7 @@
       });
     }
 
-    /* ---- Filtro + orden ------------------------------------------------ */
+    /** @desc Aplica filtro y orden a los datos. @returns {Array} */
     _getProcessedData() {
       let rows = this.data;
       // Filtro global
@@ -1978,7 +2000,7 @@
       return rows;
     }
 
-    /* ---- Render principal ---------------------------------------------- */
+    /** @desc Renderiza cuerpo, paginación e info del DataTable. */
     render() {
       if (this.state.loading) {
         this._renderSkeleton();
@@ -2006,6 +2028,7 @@
       this._renderFooter(total, start, end);
     }
 
+    /** @desc Renderiza el tbody con filas y estado vacío. @param {Array} rows @param {number} total */
     _renderBody(rows, total) {
       const H = Helpers;
       this.tbody.innerHTML = "";
@@ -2037,6 +2060,7 @@
       });
     }
 
+    /** @desc Crea el elemento de estado vacío con ilustración. @returns {HTMLElement} */
     _emptyState() {
       const H = Helpers;
       const wrap = H.el("div", { class: "ak-dt__empty" });
@@ -2055,6 +2079,7 @@
       return wrap;
     }
 
+    /** @desc Renderiza filas skeleton para estado de carga. */
     _renderSkeleton() {
       const H = Helpers;
       this.tbody.innerHTML = "";
@@ -2070,6 +2095,7 @@
       }
     }
 
+    /** @desc Renderiza paginación, info de registros y selector de pageSize. */
     _renderFooter(total, start, end) {
       const H = Helpers;
       this.footer.innerHTML = "";
@@ -2291,8 +2317,7 @@
       this._bind();
     }
 
-    /* ---- Construcción del DOM ---------------------------------------- */
-
+    /** @desc Construye el DOM del datepicker container, trigger y overlay. */
     _build() {
       const H = Helpers;
       this.input.setAttribute("autocomplete", "off");
@@ -2325,6 +2350,7 @@
       this._render();
     }
 
+    /** @desc Vincula eventos de click y teclado al input. */
     _bind() {
       this.input.addEventListener("focus", () => this._open());
       document.addEventListener("click", (e) => {
@@ -2338,6 +2364,7 @@
       });
     }
 
+    /** @desc Maneja navegación por teclado en las vistas. @param {KeyboardEvent} e */
     _handleKeyboard(e) {
       if (this.state.viewLevel === V_TIME) {
         if (e.key === "ArrowUp") {
@@ -2389,6 +2416,7 @@
       }
     }
 
+    /** @desc Actualiza el input con la hora/minuto actual del estado. */
     _updateTimeValue() {
       if (this.state.selectedDate) {
         this.state.selectedDate.setHours(this.state.hour, this.state.minute, 0, 0);
@@ -2396,6 +2424,7 @@
       }
     }
 
+    /** @desc Busca la fecha habilitada más cercana. @param {Date} date @returns {Date} */
     _findClosestEnabled(date) {
       for (let offset = 0; offset < 31; offset++) {
         const fwd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset);
@@ -2406,6 +2435,7 @@
       return date;
     }
 
+    /** @desc Limita la fecha de navegación entre minDate y maxDate. @param {Date} d @returns {Date} */
     _clampViewDate(d) {
       const clamped = new Date(d);
       if (this.opts.minDate && clamped < this._parseDate(this.opts.minDate)) {
@@ -2417,8 +2447,7 @@
       return clamped;
     }
 
-    /* ---- Renderizado ------------------------------------------------ */
-
+    /** @desc Renderiza la vista activa (días, meses, años o tiempo). */
     _render() {
       this.overlay.innerHTML = "";
       switch (this.state.viewLevel) {
@@ -2459,8 +2488,7 @@
       return h;
     }
 
-    /* ---- Footer compartido (todayBtn, clearBtn) --------------------- */
-
+    /** @desc Renderiza footer con botones Hoy, Limpiar y selector hora. */
     _renderFooter() {
       const H = Helpers;
       const showToday = this.opts.todayBtn;
@@ -2523,8 +2551,7 @@
       this.overlay.appendChild(footer);
     }
 
-    /* ---- Deshabilitado ---------------------------------------------- */
-
+    /** @desc Verifica si una fecha está deshabilitada. @param {Date} date @returns {boolean} */
     _isDisabled(date) {
       if (!date) return true;
       const ds = this._fmtDate(date);
@@ -2535,8 +2562,7 @@
       return false;
     }
 
-    /* --- Vista DÍAS --------------------------------------------------- */
-
+    /** @desc Renderiza la vista de días del calendario. */
     _renderDaysView() {
       const H = Helpers;
       const year = this.state.viewDate.getFullYear();
@@ -2589,8 +2615,7 @@
       this.overlay.appendChild(grid);
     }
 
-    /* --- Vista MESES -------------------------------------------------- */
-
+    /** @desc Renderiza la vista de meses del calendario. */
     _renderMonthsView() {
       const H = Helpers;
       const year = this.state.viewDate.getFullYear();
@@ -2634,8 +2659,7 @@
       this.overlay.appendChild(grid);
     }
 
-    /* --- Vista AÑOS --------------------------------------------------- */
-
+    /** @desc Renderiza la vista de años (década). */
     _renderYearsView() {
       const H = Helpers;
       const year = this.state.viewDate.getFullYear();
@@ -2677,8 +2701,7 @@
       this.overlay.appendChild(grid);
     }
 
-    /* --- Vista HORA --------------------------------------------------- */
-
+    /** @desc Renderiza la vista de selección de hora/minuto. */
     _renderTimeView() {
       const H = Helpers;
       const header = H.el("div", { class: "ak-datepicker__header" });
@@ -2737,6 +2760,8 @@
       this.overlay.appendChild(applyRow);
     }
 
+    /** @desc Crea columna de hora/minuto con flechas arriba/abajo.
+     *  @param {string} value @param {boolean} active @param {Function} onUp @param {Function} onDown @param {Function} onClick @returns {HTMLElement} */
     _mkTimeCol(value, active, onUp, onDown, onClick) {
       const H = Helpers;
       const col = H.el("div", { class: "ak-timepicker__col" });
@@ -2761,8 +2786,7 @@
       return col;
     }
 
-    /* ---- Selección y formato ----------------------------------------- */
-
+    /** @desc Selecciona una fecha, actualiza el input y emite evento. @param {Date} date */
     _selectDate(date) {
       this.state.selectedDate = date;
       if (this.hasTime) {
@@ -2776,6 +2800,7 @@
       Helpers.emit(this.input, "change", { source: "agrocity-kit" });
     }
 
+    /** @desc Limpia la fecha seleccionada y emite evento. */
     _clearDate() {
       this.state.selectedDate = null;
       this.input.value = "";
@@ -2784,6 +2809,7 @@
       Helpers.emit(this.input, "change", { source: "agrocity-kit" });
     }
 
+    /** @desc Parsea un string según el formato configurado. @param {string} str @returns {Date|null} */
     _parseDate(str) {
       if (!str) return null;
       const fmt = this.opts.format;
@@ -2803,6 +2829,7 @@
       return null;
     }
 
+    /** @desc Formatea una fecha según el formato configurado. @param {Date} date @returns {string} */
     _fmtDate(date) {
       if (!date) return "";
       let out = this.opts.format;
@@ -2818,8 +2845,7 @@
       return out;
     }
 
-    /* ---- Open / Close ------------------------------------------------ */
-
+    /** @desc Abre el overlay del datepicker y lo posiciona. */
     _open() {
       if (this.state.open) return;
       this.state.open = true;
@@ -2837,6 +2863,7 @@
       window.addEventListener("resize", this._resizeHandler);
     }
 
+    /** @desc Posiciona el overlay flotante respecto al contenedor. */
     _positionOverlay() {
       var rect = this.container.getBoundingClientRect();
       this.overlay.style.position = "fixed";
@@ -2845,6 +2872,7 @@
       this.overlay.style.right = "auto";
     }
 
+    /** @desc Cierra el overlay y limpia event listeners. */
     _close() {
       if (!this.state.open) return;
       this.state.open = false;
@@ -2858,11 +2886,16 @@
 
     /* ---- API pública ------------------------------------------------- */
 
+    /** @desc Abre el datepicker programáticamente. */
     show() { this._open(); }
+    /** @desc Cierra el datepicker programáticamente. */
     hide() { this._close(); }
+    /** @desc Alterna el estado abierto/cerrado. */
     toggle() { this.state.open ? this._close() : this._open(); }
 
+    /** @returns {string|null} Fecha formateada o null. */
     getValue() { return this.input.value || null; }
+    /** @param {string} dateStr - Fecha en formato configurado */
     setValue(dateStr) {
       const d = this._parseDate(dateStr);
       this.state.selectedDate = d;
@@ -2871,10 +2904,12 @@
       if (this.state.open) { this.state.viewLevel = V_DAYS; this._render(); }
     }
 
+    /** @desc Re-renderiza si está abierto. */
     refresh() {
       if (this.state.open) this._render();
     }
 
+    /** @desc Destruye la instancia y limpia el DOM. */
     destroy() {
       this._close();
       if (this.overlay && this.overlay.parentNode) this.overlay.remove();
@@ -2912,6 +2947,7 @@
       this.end.input.addEventListener("ak:datepicker:change", () => this._syncStart());
     }
 
+    /** @desc Sincroniza minDate del picker fin con la fecha inicio. */
     _syncEnd() {
       const startVal = this.start.getValue();
       if (startVal) {
@@ -2922,6 +2958,7 @@
       this.end.refresh();
     }
 
+    /** @desc Sincroniza maxDate del picker inicio con la fecha fin. */
     _syncStart() {
       const endVal = this.end.getValue();
       if (endVal) {
@@ -2932,9 +2969,12 @@
       this.start.refresh();
     }
 
+    /** @returns {AkDatePicker} Instancia del picker inicio. */
     getStart() { return this.start; }
+    /** @returns {AkDatePicker} Instancia del picker fin. */
     getEnd() { return this.end; }
 
+    /** @desc Destruye ambos datepickers. */
     destroy() {
       if (this.start && this.start.destroy) this.start.destroy();
       if (this.end && this.end.destroy) this.end.destroy();
@@ -2988,6 +3028,7 @@
       this._bind();
     }
 
+    /** @desc Parsea el valor inicial del input al estado interno. */
     _parseFromValue() {
       if (this.input.value) {
         const m = this.input.value.match(/^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?$/i);
@@ -3007,6 +3048,7 @@
       }
     }
 
+    /** @desc Construye el DOM del timepicker. */
     _build() {
       const H = Helpers;
       this.input.setAttribute("autocomplete", "off");
@@ -3040,8 +3082,7 @@
       this._renderPicker();
     }
 
-    /* ---- Render ------------------------------------------------------- */
-
+    /** @desc Renderiza el cuerpo del timepicker con columnas y botones. */
     _renderPicker() {
       const H = Helpers;
       this.overlay.innerHTML = "";
@@ -3107,6 +3148,8 @@
       this.overlay.appendChild(footer);
     }
 
+    /** @desc Crea columna de hora/minuto con chevrones arriba/abajo.
+     *  @param {string} value @param {boolean} active @param {Function} onUp @param {Function} onDown @param {Function} onClick @returns {HTMLElement} */
     _mkCol(value, active, onUp, onDown, onClick) {
       const H = Helpers;
       const col = H.el("div", { class: "ak-timepicker__col" });
@@ -3123,6 +3166,7 @@
       return col;
     }
 
+    /** @desc Crea un botón chevron (arriba/abajo). @param {string} dir @param {Function} action @returns {HTMLElement} */
     _mkChevron(dir, action) {
       const H = Helpers;
       const d = dir === "up"
@@ -3136,6 +3180,7 @@
       return btn;
     }
 
+    /** @desc Retorna la hora en formato 12h o 24h. @returns {string} */
     _displayHour() {
       if (this.opts.ampm) {
         if (this.state.hour === 0) return "12";
@@ -3145,8 +3190,7 @@
       return String(this.state.hour).padStart(2, "0");
     }
 
-    /* ---- Ajustes ------------------------------------------------------ */
-
+    /** @desc Ajusta la hora con dirección (+1 o -1). @param {number} dir */
     _adjustHour(dir) {
       let h = this.state.hour + dir;
       if (this.opts.ampm) {
@@ -3161,6 +3205,7 @@
       this._renderPicker();
     }
 
+    /** @desc Ajusta los minutos con dirección (+1 o -1). @param {number} dir */
     _adjustMinute(dir) {
       let m = this.state.minute + dir * this.opts.minuteStep;
       if (m >= 60) m = 0;
@@ -3170,6 +3215,7 @@
       this._renderPicker();
     }
 
+    /** @desc Formatea hora y minutos a string según ampm. @returns {string} */
     _formatValue() {
       let displayH = this._displayHour();
       let m = String(this.state.minute).padStart(2, "0");
@@ -3182,6 +3228,7 @@
       return displayH + ":" + m;
     }
 
+    /** @desc Actualiza el input con el valor formateado y emite evento. */
     _updateValue() {
       const val = this._formatValue();
       this.input.value = val;
@@ -3189,6 +3236,7 @@
       Helpers.emit(this.input, "change", { source: "agrocity-kit" });
     }
 
+    /** @desc Limpia el valor del input y resetea el estado. */
     _clearValue() {
       this.input.value = "";
       this.state.hour = 12;
@@ -3199,8 +3247,7 @@
       Helpers.emit(this.input, "change", { source: "agrocity-kit" });
     }
 
-    /* ---- Open / Close ------------------------------------------------ */
-
+    /** @desc Vincula eventos de click, teclado y focus al input. */
     _bind() {
       this.input.addEventListener("focus", () => this._open());
       document.addEventListener("click", (e) => {
@@ -3225,6 +3272,7 @@
       });
     }
 
+    /** @desc Abre el overlay del timepicker. */
     _open() {
       if (this.state.open) return;
       this.state.open = true;
@@ -3238,6 +3286,7 @@
       window.addEventListener("resize", this._resizeHandler);
     }
 
+    /** @desc Posiciona el overlay flotante respecto al contenedor. */
     _positionOverlay() {
       var rect = this.container.getBoundingClientRect();
       this.overlay.style.position = "fixed";
@@ -3246,6 +3295,7 @@
       this.overlay.style.right = "auto";
     }
 
+    /** @desc Cierra el overlay y limpia event listeners. */
     _close() {
       if (!this.state.open) return;
       this.state.open = false;
@@ -3259,21 +3309,28 @@
 
     /* ---- API pública ------------------------------------------------- */
 
+    /** @desc Abre el timepicker programáticamente. */
     show() { this._open(); }
+    /** @desc Cierra el timepicker programáticamente. */
     hide() { this._close(); }
+    /** @desc Alterna el estado abierto/cerrado. */
     toggle() { this.state.open ? this._close() : this._open(); }
 
+    /** @returns {string|null} Hora formateada o null. */
     getValue() { return this.input.value || null; }
+    /** @param {string} val - Hora en formato HH:mm */
     setValue(val) {
       this.input.value = val || "";
       this._parseFromValue();
       if (this.state.open) this._renderPicker();
     }
 
+    /** @desc Re-renderiza si está abierto. */
     refresh() {
       if (this.state.open) this._renderPicker();
     }
 
+    /** @desc Destruye la instancia y limpia el DOM. */
     destroy() {
       this._close();
       if (this.overlay && this.overlay.parentNode) this.overlay.remove();
@@ -3355,6 +3412,8 @@
   const H = Helpers;
 
   /* ---- Utilidad: resolver un único elemento --------------------------- */
+  /** @desc Resuelve un selector/elemento a un único elemento DOM.
+   *  @param {string|Element} target @returns {Element|null} */
   function one(target) {
     const els = H.resolveElements(target);
     return els.length ? els[0] : null;
@@ -3369,7 +3428,9 @@
    * @fires ak:alert:closed - Después de eliminar
    */
   class AkAlert {
+    /** @param {HTMLElement} el */
     constructor(el) { this.el = el; }
+    /** @desc Cierra la alerta con animación. */
     close() {
       H.emit(this.el, "ak:alert:close", {});
       this.el.classList.add("ak-hiding");
@@ -3390,7 +3451,9 @@
    * @param {HTMLElement} el - Elemento botón
    */
   class AkButton {
+    /** @param {HTMLElement} el */
     constructor(el) { this.el = el; }
+    /** @desc Alterna estado active/inactive del botón. */
     toggle() {
       const active = this.el.classList.toggle("ak-active");
       this.el.setAttribute("aria-pressed", active ? "true" : "false");
@@ -3406,8 +3469,11 @@
    * @fires ak:collapse:hide - Cuando se cierra
    */
   class AkCollapse {
+    /** @param {HTMLElement} el */
     constructor(el) { this.el = el; }
+    /** @desc Verifica si está visible. @returns {boolean} */
     _isShown() { return this.el.classList.contains("ak-show"); }
+    /** @desc Abre el collapse con animación. */
     show() {
       if (this._isShown()) return;
       this.el.classList.remove("ak-collapse");
@@ -3424,6 +3490,7 @@
       this.el.addEventListener("transitionend", done);
       H.emit(this.el, "ak:collapse:show", {});
     }
+    /** @desc Cierra el collapse con animación. */
     hide() {
       if (!this._isShown()) return;
       this.el.style.height = this.el.scrollHeight + "px";
@@ -3439,6 +3506,7 @@
       this.el.addEventListener("transitionend", done);
       H.emit(this.el, "ak:collapse:hide", {});
     }
+    /** @desc Alterna el estado del collapse. */
     toggle() { this._isShown() ? this.hide() : this.show(); }
   }
 
@@ -3452,6 +3520,7 @@
    * @fires ak:dropdown:hide - Cuando se cierra
    */
   class AkDropdown {
+    /** @param {HTMLElement} el - Botón toggler dentro de .ak-dropdown */
     constructor(el) {
       // el es el toggler; busca el menú hermano dentro del contenedor .ak-dropdown
       this.toggle = el;
@@ -3474,6 +3543,7 @@
       openDropdowns.delete(this);
       H.emit(this.toggle, "ak:dropdown:hide", {});
     }
+    /** @desc Alterna la visibilidad del menú. */
     toggleMenu() {
       this.menu && this.menu.classList.contains("ak-show") ? this.hide() : this.show();
     }
@@ -3498,6 +3568,7 @@
    * @fires ak:modal:hidden - Cuando termina de cerrarse
    */
   class AkModal {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign({ backdrop: true, keyboard: true }, options);
@@ -3552,6 +3623,7 @@
    * @fires ak:offcanvas:hide - Cuando se cierra
    */
   class AkOffcanvas {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign({ backdrop: true, keyboard: true }, options);
@@ -3595,7 +3667,9 @@
    * @fires ak:tab:show - Cuando se activa el tab {target}
    */
   class AkTab {
-    constructor(el) { this.el = el; } // el = nav-link
+    /** @param {HTMLElement} el - Elemento nav-link */
+    constructor(el) { this.el = el; }
+    /** @desc Activa el tab y su panel asociado. */
     show() {
       const targetSel = this.el.getAttribute("data-ak-target") || this.el.getAttribute("href");
       if (!targetSel) return;
@@ -3631,6 +3705,7 @@
    * @fires ak:toast:hidden - Cuando se oculta
    */
   class AkToast {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign({ delay: 4000, autohide: true }, options);
@@ -3750,6 +3825,7 @@
    * @param {string} [options.placement="top"] - Posición: top|bottom|left|right
    */
   class AkTooltip {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign(
@@ -3760,12 +3836,14 @@
       this.tip = null;
       this._bind();
     }
+    /** @desc Vincula eventos mouseenter/mouseleave y focus/blur. */
     _bind() {
       this.el.addEventListener("mouseenter", () => this.show());
       this.el.addEventListener("mouseleave", () => this.hide());
       this.el.addEventListener("focus", () => this.show());
       this.el.addEventListener("blur", () => this.hide());
     }
+    /** @desc Muestra el tooltip. */
     show() {
       if (this.tip || !this.opts.title) return;
       this.tip = Helpers.el("div", {
@@ -3778,7 +3856,7 @@
       this._positionPopup(this.tip, this.opts.placement);
       requestAnimationFrame(() => this.tip && this.tip.classList.add("ak-show"));
     }
-    /** Calcula posición con auto-flipping según viewport */
+    /** @desc Calcula posición con auto-flipping según viewport. */
     _positionPopup(tip, preferredPlacement) {
       const r = this.el.getBoundingClientRect();
       const t = tip.getBoundingClientRect();
@@ -3808,6 +3886,7 @@
       tip.style.top = top + "px";
       tip.style.left = Math.max(gap, Math.min(left, window.innerWidth - t.width - gap)) + "px";
     }
+    /** @desc Oculta y elimina el tooltip. */
     hide() {
       if (!this.tip) return;
       const tip = this.tip;
@@ -3830,6 +3909,7 @@
    * @param {string} [options.trigger="click"] - Activación: click|hover
    */
   class AkPopover {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign(
@@ -3844,6 +3924,7 @@
       this.pop = null;
       this._bind();
     }
+    /** @desc Vincula eventos según trigger configurado (click/hover). */
     _bind() {
       if (this.opts.trigger === "hover") {
         this.el.addEventListener("mouseenter", () => this.show());
@@ -3855,6 +3936,7 @@
         });
       }
     }
+    /** @desc Muestra el popover. */
     show() {
       if (this.pop) return;
       this.pop = Helpers.el("div", { class: "ak-popover", role: "tooltip" }, [
@@ -3866,7 +3948,7 @@
       this._positionPopup(this.pop, this.opts.placement);
       requestAnimationFrame(() => this.pop && this.pop.classList.add("ak-show"));
     }
-    /** Calcula posición automática con viewport flipping y flecha */
+    /** @desc Calcula posición con viewport flipping y posiciona flecha. */
     _positionPopup(pop, preferredPlacement) {
       const r = this.el.getBoundingClientRect();
       const p = pop.getBoundingClientRect();
@@ -3925,6 +4007,7 @@
         }
       }
     }
+    /** @desc Oculta y elimina el popover. */
     hide() {
       if (!this.pop) return;
       const pop = this.pop;
@@ -3947,6 +4030,7 @@
    * @fires ak:carousel:slide - Al cambiar de slide {index}
    */
   class AkCarousel {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el;
       this.opts = Object.assign({ interval: 5000, ride: true }, options);
@@ -3957,6 +4041,7 @@
       this._bind();
       if (this.opts.ride) this._start();
     }
+    /** @desc Vincula controles, indicadores y hover pause. */
     _bind() {
       const prev = this.el.querySelector(".ak-carousel-control-prev");
       const next = this.el.querySelector(".ak-carousel-control-next");
@@ -3966,15 +4051,21 @@
       this.el.addEventListener("mouseenter", () => this._stop());
       this.el.addEventListener("mouseleave", () => { if (this.opts.ride) this._start(); });
     }
+    /** @desc Actualiza slide e indicadores activos. */
     _render() {
       this.items.forEach((it, i) => it.classList.toggle("ak-active", i === this.index));
       this.indicators.forEach((b, i) => b.classList.toggle("ak-active", i === this.index));
       H.emit(this.el, "ak:carousel:slide", { index: this.index });
     }
+    /** @desc Va al slide i. @param {number} i */
     to(i) { this.index = (i + this.items.length) % this.items.length; this._render(); }
+    /** @desc Va al siguiente slide. */
     next() { this.to(this.index + 1); }
+    /** @desc Va al slide anterior. */
     prev() { this.to(this.index - 1); }
+    /** @desc Inicia auto-play. */
     _start() { this._stop(); this._timer = setInterval(() => this.next(), this.opts.interval); }
+    /** @desc Detiene auto-play. */
     _stop() { clearTimeout(this._timer); clearInterval(this._timer); }
   }
 
@@ -3989,6 +4080,7 @@
    * @param {number} [options.offset=10] - Offset en px antes del elemento
    */
   class AkScrollSpy {
+    /** @param {HTMLElement} el @param {Object} [options] */
     constructor(el, options = {}) {
       this.el = el; // contenedor con scroll (o window si es body)
       this.opts = Object.assign({ target: null, offset: 10 }, options);
@@ -4003,6 +4095,7 @@
       scroller.addEventListener("scroll", this._onScroll, { passive: true });
       this._spy();
     }
+    /** @desc Actualiza link activo según posición del scroll. */
     _spy() {
       const scrollY = window.scrollY;
       const scrollTop = (this.el === document.body ? scrollY : this.el.scrollTop) + this.opts.offset + 1;
@@ -4295,7 +4388,10 @@
     for (var i = 0; i < elements.length; i++) { this[i] = elements[i]; }
   }
 
-  /** Itera sobre cada elemento ejecutando fn(indice, elemento) */
+  /**
+   * @desc Itera sobre cada elemento ejecutando fn(indice, elemento).
+   * @param {Function} fn
+   */
   AkCollection.prototype.each = function (fn) {
     for (var i = 0; i < this.length; i++) fn.call(this[i], i, this[i]);
     return this;
@@ -4756,34 +4852,34 @@
     return new AkCollection([]);
   }
 
-  /** Elimina espacios al inicio y final del string */
+  /** @desc Elimina espacios al inicio y final del string. @param {string} str @returns {string} */
   Ak.trim = function (str) { return String(str).trim(); };
-  /** Itera sobre un array o AkCollection */
+  /** @desc Itera sobre un array o AkCollection. @param {Array|AkCollection} arr @param {Function} fn */
   Ak.each = function (arr, fn) {
     if (arr instanceof AkCollection) { arr.each(fn); return arr; }
     for (var i = 0; i < arr.length; i++) { fn.call(arr[i], i, arr[i]); }
     return arr;
   };
-  /** Transforma cada elemento de un array y retorna nuevo array */
+  /** @desc Transforma cada elemento y retorna nuevo array. @param {Array} arr @param {Function} fn @returns {Array} */
   Ak.map = function (arr, fn) {
     var r = [];
     for (var i = 0; i < arr.length; i++) r.push(fn.call(arr[i], i, arr[i]));
     return r;
   };
-  /** Retorna true si el valor es un array */
+  /** @returns {boolean} True si el valor es un array. */
   Ak.isArray = function (v) { return Array.isArray(v); };
-  /** Retorna true si el valor es una función */
+  /** @returns {boolean} True si el valor es una función. */
   Ak.isFunction = function (v) { return typeof v === "function"; };
-  /** Retorna true si el valor es un objeto plano */
+  /** @returns {boolean} True si el valor es un objeto plano. */
   Ak.isPlainObject = function (v) {
     return Object.prototype.toString.call(v) === "[object Object]";
   };
-  /** Busca un valor en un array; retorna índice o -1 */
+  /** @desc Busca un valor en un array. @param {*} value @param {Array} arr @returns {number} índice o -1 */
   Ak.inArray = function (value, arr) {
     for (var i = 0; i < arr.length; i++) { if (arr[i] === value) return i; }
     return -1;
   };
-  /** Mezcla objetos (como jQuery.extend) — soporta deep merge */
+  /** @desc Mezcla objetos con soporte deep merge. @returns {Object} */
   Ak.extend = function () {
     var deep = false, target = arguments[0] || {}, i = 1, len = arguments.length;
     if (typeof target === "boolean") { deep = target; target = arguments[1] || {}; i = 2; }
@@ -4807,6 +4903,8 @@
   window.Ak = Ak;
 
   /* ---- Registrar métodos de plugin en AgrocityKit --------------------- */
+  /** @desc Fábrica que envuelve un constructor en método AgrocityKit.*().
+   *  @param {Function} Ctor - Constructor del plugin @returns {Function} */
   function pluginFactory(Ctor) {
     return function (target, options = {}) {
       const el = one(target);
@@ -4835,7 +4933,7 @@
   AgrocityKit.confirm = dialogConfirm;
   AgrocityKit.prompt = dialogPrompt;
 
-  /* ---- Cableado por atributos data-ak-* (delegación global) ----------- */
+  /** @desc Conecta manejadores de eventos por data-ak-toggle y data-ak-dismiss. */
   function wireDataAttributes() {
     // Toggles genéricos: data-ak-toggle="modal|offcanvas|collapse|dropdown|tab|tooltip|popover"
     document.addEventListener("click", (e) => {
@@ -5017,6 +5115,7 @@
   /* ==========================================================================
    * 6. AUTO-INIT
    * ======================================================================== */
+  /** @desc Ejecuta fn cuando el DOM esté listo. @param {Function} fn */
   function ready(fn) {
     if (document.readyState !== "loading") fn();
     else document.addEventListener("DOMContentLoaded", fn);
