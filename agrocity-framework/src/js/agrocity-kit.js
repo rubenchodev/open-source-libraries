@@ -501,6 +501,68 @@
       return new AkTimeRange(startInput, endInput, options);
     },
 
+    /** API de datos geográficos de México (ESTADO → Municipio → Colonia) */
+    geo: {
+      baseUrl: 'https://cdn.jsdelivr.net/gh/rubenchodev/open-source-libraries@main/agrocity-framework/dist/mxGeoJSON/',
+      cache: {},
+      loading: {},
+
+      /**
+       * @desc Carga la lista de estados desde index.json.
+       * @returns {Promise<Array<{id:string, name:string}>>}
+       */
+      fetchStates() {
+        if (this.cache.states) return Promise.resolve(this.cache.states);
+        if (this.loading.states) return this.loading.states;
+        this.loading.states = fetch(this.baseUrl + 'index.json')
+          .then(function(r) { if (!r.ok) throw new Error('Error al cargar estados'); return r.json(); })
+          .then(function(data) { this.cache.states = data; delete this.loading.states; return data; }.bind(this))
+          .catch(function(e) { delete this.loading.states; Helpers.warn('geo.fetchStates: ' + e.message); return []; }.bind(this));
+        return this.loading.states;
+      },
+
+      /**
+       * @desc Carga los datos completos de un estado (municipios + colonias).
+       * @param {string} stateId - Código INEGI del estado (01-32)
+       * @returns {Promise<Object>}
+       */
+      fetchStateData(stateId) {
+        if (this.cache[stateId]) return Promise.resolve(this.cache[stateId]);
+        if (this.loading[stateId]) return this.loading[stateId];
+        this.loading[stateId] = fetch(this.baseUrl + stateId + '.json')
+          .then(function(r) { if (!r.ok) throw new Error('Error al cargar estado ' + stateId); return r.json(); })
+          .then(function(data) { this.cache[stateId] = data; delete this.loading[stateId]; return data; }.bind(this))
+          .catch(function(e) { delete this.loading[stateId]; Helpers.warn('geo.fetchStateData: ' + e.message); return { municipalities: [] }; }.bind(this));
+        return this.loading[stateId];
+      },
+
+      /**
+       * @desc Devuelve los municipios de un estado.
+       * @param {string} stateId
+       * @returns {Promise<Array<{id:string, name:string, neighborhoods?:Array}>>}
+       */
+      fetchMunicipalities(stateId) {
+        return this.fetchStateData(stateId).then(function(data) { return data.municipalities || []; });
+      },
+
+      /**
+       * @desc Devuelve las colonias de un municipio.
+       * @param {string} stateId
+       * @param {string} municipalityId
+       * @returns {Promise<Array<{name:string, zip?:string}>>}
+       */
+      fetchNeighborhoods(stateId, municipalityId) {
+        return this.fetchStateData(stateId).then(function(data) {
+          var municipalities = data.municipalities || [];
+          for (var i = 0; i < municipalities.length; i++) {
+            var m = municipalities[i];
+            if (m && m.id === municipalityId) return m.neighborhoods || [];
+          }
+          return [];
+        });
+      }
+    },
+
     /** Cambia el tema: 'light', 'dark' o 'toggle'. Devuelve el tema aplicado. */
     theme(mode = "toggle") {
       const root = document.documentElement;
@@ -522,23 +584,23 @@
      */
     setTheme(config) {
       if (!config || (!config.light && !config.dark)) return;
-      customThemeConfig_ = config;
-      const style = document.getElementById("ak-custom-theme") || (function() {
-        const s = document.createElement("style");
+      var expanded = {};
+      if (config.light) expanded.light = deriveThemeVars_(config.light);
+      if (config.dark) expanded.dark = deriveThemeVars_(config.dark);
+      customThemeConfig_ = expanded;
+      var style = document.getElementById("ak-custom-theme") || (function() {
+        var s = document.createElement("style");
         s.id = "ak-custom-theme";
         document.head.appendChild(s);
         return s;
       })();
-      let css = "";
-      const buildRule = (selector, vars) => {
+      var css = "";
+      var buildRule = function(selector, vars) {
         if (!vars || !Object.keys(vars).length) return "";
-        const props = Object.entries(vars)
-          .map(([k, v]) => `${k}: ${v};`)
-          .join("\n    ");
-        return `${selector} {\n    ${props}\n  }`;
+        return selector + " {\n    " + Object.keys(vars).map(function(k) { return k + ": " + vars[k] + ";"; }).join("\n    ") + "\n  }";
       };
-      if (config.light) css += buildRule(":root", config.light) + "\n";
-      if (config.dark) css += buildRule('[data-theme="dark"]', config.dark);
+      if (expanded.light) css += buildRule(":root", expanded.light) + "\n";
+      if (expanded.dark) css += buildRule('[data-theme="dark"]', expanded.dark);
       style.textContent = css;
       applyCustomTheme_();
     },
@@ -4149,17 +4211,105 @@
   let customThemeConfig_ = null;
 
   /**
+   * @desc Deriva colores relacionados (hover, on-*, alpha) a partir de colores base.
+   *        Solo genera los derivados si no fueron explicitamente proporcionados.
+   * @param {Object} vars - Variables CSS base (ej: { '--ak-primary': '#2B7B41' })
+   * @return {Object} vars expandidas con derivados
+   */
+  function deriveThemeVars_(vars) {
+    if (!vars) return vars;
+    const result = Object.assign({}, vars);
+
+    var hexToRgb = function(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(function(c) { return c + c; }).join('');
+      return {
+        r: parseInt(hex.substring(0, 2), 16),
+        g: parseInt(hex.substring(2, 4), 16),
+        b: parseInt(hex.substring(4, 6), 16)
+      };
+    };
+
+    var darken = function(hex, amount) {
+      var rgb = hexToRgb(hex);
+      var factor = 1 - amount;
+      return 'rgb(' + Math.round(rgb.r * factor) + ', ' + Math.round(rgb.g * factor) + ', ' + Math.round(rgb.b * factor) + ')';
+    };
+
+    var luminance = function(hex) {
+      var rgb = hexToRgb(hex);
+      var rs = rgb.r / 255, gs = rgb.g / 255, bs = rgb.b / 255;
+      var rl = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.4);
+      var gl = gs <= 0.03928 ? gs / 12.92 : Math.pow((gs + 0.055) / 1.055, 2.4);
+      var bl = bs <= 0.03928 ? bs / 12.92 : Math.pow((bs + 0.055) / 1.055, 2.4);
+      return 0.2126 * rl + 0.7152 * gl + 0.0722 * bl;
+    };
+
+    var toRgba = function(hex, alpha) {
+      var rgb = hexToRgb(hex);
+      return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + alpha + ')';
+    };
+
+    var colorKeys = {
+      '--ak-primary':   { hover: '--ak-primary-hover',   on: '--ak-on-primary' },
+      '--ak-secondary': { hover: '--ak-secondary-hover', on: '--ak-on-secondary' },
+      '--ak-success':   { hover: '--ak-success-hover',   on: '--ak-on-success' },
+      '--ak-danger':    { hover: '--ak-danger-hover',    on: '--ak-on-danger' },
+      '--ak-warning':   { hover: '--ak-warning-hover',   on: '--ak-on-warning' },
+      '--ak-info':      { hover: '--ak-info-hover',      on: '--ak-on-info' }
+    };
+
+    var alphaKeys = {
+      '--ak-primary':   [{ v: '--ak-primary-alpha-04', a: 0.04 }, { v: '--ak-primary-alpha-06', a: 0.06 }, { v: '--ak-primary-alpha-08', a: 0.08 }, { v: '--ak-primary-alpha-10', a: 0.10 }, { v: '--ak-primary-alpha-12', a: 0.12 }, { v: '--ak-primary-alpha-13', a: 0.13 }, { v: '--ak-primary-alpha-15', a: 0.15 }, { v: '--ak-primary-alpha-30', a: 0.30 }, { v: '--ak-primary-alpha-50', a: 0.50 }],
+      '--ak-danger':    [{ v: '--ak-danger-alpha-10', a: 0.10 }, { v: '--ak-danger-alpha-12', a: 0.12 }, { v: '--ak-danger-alpha-13', a: 0.13 }, { v: '--ak-danger-alpha-15', a: 0.15 }, { v: '--ak-danger-alpha-30', a: 0.30 }],
+      '--ak-warning':   [{ v: '--ak-warning-alpha-15', a: 0.15 }, { v: '--ak-warning-alpha-18', a: 0.18 }, { v: '--ak-warning-alpha-40', a: 0.40 }],
+      '--ak-info':      [{ v: '--ak-info-alpha-15', a: 0.15 }, { v: '--ak-info-alpha-18', a: 0.18 }, { v: '--ak-info-alpha-40', a: 0.40 }]
+    };
+
+    Object.keys(colorKeys).forEach(function(key) {
+      var value = result[key];
+      if (!value) return;
+      var cfg = colorKeys[key];
+      if (!result[cfg.hover]) {
+        result[cfg.hover] = darken(value, 0.15);
+      }
+      if (!result[cfg.on]) {
+        result[cfg.on] = luminance(value) > 0.5 ? '#1A1A1A' : '#FFFFFF';
+      }
+    });
+
+    Object.keys(alphaKeys).forEach(function(key) {
+      var value = result[key];
+      if (!value) return;
+      alphaKeys[key].forEach(function(entry) {
+        if (!result[entry.v]) {
+          result[entry.v] = toRgba(value, entry.a);
+        }
+      });
+    });
+
+    // Deriva --ak-primary-light alpha 14 y 20 si no estan explicitos
+    var primaryLight = result['--ak-primary-light'];
+    if (primaryLight) {
+      if (!result['--ak-primary-alpha-14']) result['--ak-primary-alpha-14'] = toRgba(primaryLight, 0.14);
+      if (!result['--ak-primary-alpha-20']) result['--ak-primary-alpha-20'] = toRgba(primaryLight, 0.20);
+    }
+
+    return result;
+  }
+
+  /**
    * @desc Re-aplica el style custom según el tema actual.
    *        Necesario cuando se llama a theme() después de setTheme().
    */
   function applyCustomTheme_() {
     if (!customThemeConfig_) return;
-    const root = document.documentElement;
-    const isDark = root.getAttribute("data-theme") === "dark";
+    var root = document.documentElement;
+    var isDark = root.getAttribute("data-theme") === "dark";
     if (isDark && customThemeConfig_.dark) {
-      Object.entries(customThemeConfig_.dark).forEach(([k, v]) => root.style.setProperty(k, v));
+      Object.keys(customThemeConfig_.dark).forEach(function(k) { root.style.setProperty(k, customThemeConfig_.dark[k]); });
     } else if (!isDark && customThemeConfig_.light) {
-      Object.entries(customThemeConfig_.light).forEach(([k, v]) => root.style.setProperty(k, v));
+      Object.keys(customThemeConfig_.light).forEach(function(k) { root.style.setProperty(k, customThemeConfig_.light[k]); });
     }
   }
 
@@ -5177,6 +5327,169 @@
     });
   }
 
+  /**
+   * @desc Inicializa grupos de selects en cascada geo con data-ak-geo-name.
+   *        Los campos del grupo se identifican con data-ak-geo-state,
+   *        data-ak-geo-municipality, data-ak-geo-neighborhood, data-ak-geo-postalcode.
+   *        Todos deben compartir el mismo valor en data-ak-geo-name.
+   */
+  /** @desc Refresca un custom select si fue inicializado con data-ak-select. */
+  function refreshCustomSelect_(el) {
+    if (el && el.hasAttribute('data-ak-select') && registry.has(el)) {
+      registry.get(el).destroy();
+      AgrocityKit.select(el, parseDataOptions(el, 'akSelect'));
+    }
+  }
+
+  /**
+   * @desc Limpia y deshabilita todos los campos del grupo que están después
+   *        del campo que disparó el cambio.
+   */
+  function clearDownstreamFields_(groupName, currentGeoType) {
+    var order = ['state', 'municipality', 'neighborhood', 'postalcode'];
+    var currentIdx = order.indexOf(currentGeoType);
+    if (currentIdx < 0) return;
+    for (var i = currentIdx + 1; i < order.length; i++) {
+      var field = document.querySelector('[data-ak-geo-name="' + groupName + '"][data-ak-geo-' + order[i] + ']');
+      if (!field) continue;
+      if (field.tagName === 'SELECT') {
+        field.innerHTML = '<option value="">Seleccionar...</option>';
+        field.disabled = true;
+        refreshCustomSelect_(field);
+      } else {
+        field.value = '';
+      }
+    }
+  }
+
+  /**
+   * @desc Obtiene el valor de un campo del grupo por su geo type.
+   */
+  function getGeoFieldValue_(groupName, geoType) {
+    var el = document.querySelector('[data-ak-geo-name="' + groupName + '"][data-ak-geo-' + geoType + ']');
+    return el ? el.value : null;
+  }
+
+  function initGeoSelects_() {
+    var groups = {};
+
+    // Agrupar elementos por data-ak-geo-name
+    document.querySelectorAll('[data-ak-geo-name]').forEach(function(el) {
+      var name = el.getAttribute('data-ak-geo-name');
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(el);
+    });
+
+    Object.keys(groups).forEach(function(groupName) {
+      var els = groups[groupName];
+
+      // Identificar cada campo por su atributo
+      var stateEl = null;
+      var municipalityEl = null;
+      var neighborhoodEl = null;
+
+      els.forEach(function(el) {
+        if (el.hasAttribute('data-ak-geo-state')) stateEl = el;
+        else if (el.hasAttribute('data-ak-geo-municipality')) municipalityEl = el;
+        else if (el.hasAttribute('data-ak-geo-neighborhood')) neighborhoodEl = el;
+      });
+
+      // Cargar estados en el select de estado
+      if (stateEl) {
+        AgrocityKit.geo.fetchStates().then(function(states) {
+          var currentVal = stateEl.value;
+          stateEl.innerHTML = '<option value="">Seleccionar estado...</option>';
+          states.forEach(function(s) {
+            var opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = s.name;
+            stateEl.appendChild(opt);
+          });
+          if (currentVal) stateEl.value = currentVal;
+          refreshCustomSelect_(stateEl);
+        });
+      }
+
+      // Limpiar downstream fields al inicio
+      if (municipalityEl) {
+        municipalityEl.innerHTML = '<option value="">Seleccionar...</option>';
+        municipalityEl.disabled = true;
+      }
+      if (neighborhoodEl) {
+        neighborhoodEl.innerHTML = '<option value="">Seleccionar...</option>';
+        neighborhoodEl.disabled = true;
+      }
+    });
+
+    // Change handler delegado (global, usa group + attr)
+    document.addEventListener('change', function(e) {
+      var target = e.target;
+      var groupName = target.getAttribute('data-ak-geo-name');
+      if (!groupName) return;
+
+      // Determinar qué tipo de geo es este campo
+      var geoType = null;
+      if (target.hasAttribute('data-ak-geo-state')) geoType = 'state';
+      else if (target.hasAttribute('data-ak-geo-municipality')) geoType = 'municipality';
+      else if (target.hasAttribute('data-ak-geo-neighborhood')) geoType = 'neighborhood';
+      if (!geoType) return;
+
+      var value = target.value;
+
+      // Limpiar campos descendientes
+      clearDownstreamFields_(groupName, geoType);
+
+      if (!value) return;
+
+      if (geoType === 'state') {
+        var munEl = document.querySelector('[data-ak-geo-name="' + groupName + '"][data-ak-geo-municipality]');
+        if (!munEl) return;
+        munEl.disabled = true;
+        munEl.innerHTML = '<option value="">Cargando...</option>';
+        refreshCustomSelect_(munEl);
+        AgrocityKit.geo.fetchMunicipalities(value).then(function(items) {
+          munEl.innerHTML = '<option value="">Seleccionar municipio...</option>';
+          items.forEach(function(m) {
+            var opt = document.createElement('option');
+            opt.value = m.id;
+            opt.textContent = m.name;
+            munEl.appendChild(opt);
+          });
+          munEl.disabled = false;
+          refreshCustomSelect_(munEl);
+        });
+      } else if (geoType === 'municipality') {
+        var stateId = getGeoFieldValue_(groupName, 'state');
+        if (!stateId) return;
+        var neighEl = document.querySelector('[data-ak-geo-name="' + groupName + '"][data-ak-geo-neighborhood]');
+        if (!neighEl) return;
+        neighEl.disabled = true;
+        neighEl.innerHTML = '<option value="">Cargando...</option>';
+        refreshCustomSelect_(neighEl);
+        AgrocityKit.geo.fetchNeighborhoods(stateId, value).then(function(items) {
+          neighEl.innerHTML = '<option value="">Seleccionar colonia...</option>';
+          items.forEach(function(c) {
+            var opt = document.createElement('option');
+            opt.value = c.name;
+            opt.textContent = c.name + (c.zip ? ' (' + c.zip + ')' : '');
+            if (c.zip) opt.setAttribute('data-zip', c.zip);
+            neighEl.appendChild(opt);
+          });
+          neighEl.disabled = items.length === 0;
+          refreshCustomSelect_(neighEl);
+        });
+      } else if (geoType === 'neighborhood') {
+        var opt = target.options[target.selectedIndex];
+        var zip = opt ? opt.getAttribute('data-zip') || '' : '';
+        var zipEl = document.querySelector('[data-ak-geo-name="' + groupName + '"][data-ak-geo-postalcode]');
+        if (zipEl) {
+          zipEl.value = zip;
+          Helpers.emit(zipEl, 'change', {source:'agrocity-kit'});
+        }
+      }
+    });
+  }
+
   /* ==========================================================================
    * 6. AUTO-INIT
    * ======================================================================== */
@@ -5188,6 +5501,7 @@
   ready(() => {
     AgrocityKit.autoInit();
     wireDataAttributes();
+    initGeoSelects_();
   });
 
   // Exponer globalmente

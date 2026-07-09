@@ -160,6 +160,11 @@
           <a class="ak-drawer-sub-item" href="#ak-utilidades">Utilidades</a>
         </div>
 
+        <a class="ak-drawer-item" href="#geografia">
+          <span class="ak-drawer-item-icon">🗺️</span>
+          <span class="ak-drawer-item-text">Geografía</span>
+        </a>
+
         <button class="ak-drawer-item" data-ak-toggle="drawer-sub" data-ak-target="#subIconos">
           <span class="ak-drawer-item-icon">🎨</span>
           <span class="ak-drawer-item-text">Iconos</span>
@@ -239,6 +244,31 @@
     '--ak-surface-alt': '#3E322B'
   }
 });</pre>
+
+      <h3>Tema mínimo (con derivación automática)</h3>
+      <p>Ahora <code>setTheme()</code> genera automáticamente las variables <code>hover</code>, <code>on-*</code> y <code>alpha</code> a partir de los colores base. Solo necesitás definir los colores principales.</p>
+      <div class="ak-docs-card">
+        <div class="ak-docs-row">
+          <button class="ak-btn ak-btn-sm ak-btn-outline-primary" onclick="window.setMinimalTheme()">🌿 Aplicar tema bosque</button>
+          <button class="ak-btn ak-btn-sm ak-btn-outline-info" onclick="window.setOceanTheme()">🌊 Aplicar tema océano</button>
+          <button class="ak-btn ak-btn-sm ak-btn-outline-danger" onclick="window.resetCustomTheme()">↩️ Restaurar default</button>
+        </div>
+      </div>
+      <pre class="ak-docs-code">// Solo colores base — el resto se deriva automáticamente:
+AgrocityKit.setTheme({
+  light: {
+    '--ak-primary': '#1B6B3A',
+    '--ak-secondary': '#1A4B7A',
+    '--ak-bg': '#F0F7F4'
+  },
+  dark: {
+    '--ak-primary': '#4CAF66',
+    '--ak-secondary': '#6488BB',
+    '--ak-bg': '#0E1A14'
+  }
+});
+// Auto-genera: --ak-primary-hover, --ak-on-primary,
+// --ak-primary-alpha-04..50, --ak-secondary-hover, etc.</pre>
 
       <h3>Loader personalizado</h3>
       <p>Usá <code>AgrocityKit.initLoader({ brand: {...} })</code> para cambiar la marca del loader de inicio.</p>
@@ -2942,6 +2972,72 @@ Ak("#el").hasClass("active");   // true/false</pre>
     </section>
 
     <!-- ================================================================
+         GEOGRAFÍA — Selectores en cascada
+         ================================================================ -->
+    <section id="geografia">
+      <h2>Geografía</h2>
+      <p>Selectores en cascada: <strong>Estado → Municipio → Colonia</strong> con datos de México.</p>
+      <p>Agrupa campos con <code>data-ak-geo-name="group"</code>. Cada campo se identifica con <code>data-ak-geo-state</code>, <code>data-ak-geo-municipality</code>, <code>data-ak-geo-neighborhood</code> o <code>data-ak-geo-postalcode</code>. Al seleccionar un estado se limpian los campos siguientes.</p>
+
+      <pre class="ak-docs-code">&lt;!-- Todos los campos comparten el mismo data-ak-geo-name --&gt;
+&lt;select data-ak-geo-name="direccion" data-ak-geo-state
+        data-ak-select data-ak-search class="ak-form-select"&gt;
+  &lt;option value=""&gt;Seleccionar estado...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;select data-ak-geo-name="direccion" data-ak-geo-municipality
+        data-ak-select data-ak-search class="ak-form-select" disabled&gt;
+  &lt;option value=""&gt;Seleccionar...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;select data-ak-geo-name="direccion" data-ak-geo-neighborhood
+        data-ak-select data-ak-search class="ak-form-select" disabled&gt;
+  &lt;option value=""&gt;Seleccionar...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;input type="text" data-ak-geo-name="direccion" data-ak-geo-postalcode
+       class="ak-form-control" placeholder="C.P. auto-completable" readonly /&gt;</pre>
+
+      <div class="ak-docs-card">
+        <h4>Ejemplo en vivo</h4>
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Estado</label>
+            <select data-ak-geo-name="direccion" data-ak-geo-state data-ak-select data-ak-search class="ak-form-select">
+              <option value="">Seleccionar estado...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Municipio</label>
+            <select data-ak-geo-name="direccion" data-ak-geo-municipality data-ak-select data-ak-search class="ak-form-select" disabled>
+              <option value="">Primero selecciona un estado...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Colonia</label>
+            <select data-ak-geo-name="direccion" data-ak-geo-neighborhood data-ak-select data-ak-search class="ak-form-select" disabled>
+              <option value="">Primero selecciona un municipio...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Código Postal</label>
+            <input type="text" data-ak-geo-name="direccion" data-ak-geo-postalcode class="ak-form-control" placeholder="Se auto-completa" readonly />
+          </div>
+        </div>
+      </div>
+
+      <h3>API programática</h3>
+      <pre class="ak-docs-code">// Obtener lista de estados
+AgrocityKit.geo.fetchStates().then(function(states) { ... });
+
+// Obtener municipios de un estado (id: "09", "15", etc.)
+AgrocityKit.geo.fetchMunicipalities("09").then(function(items) { ... });
+
+// Obtener colonias de un municipio (stateId: "09", municipalityId: "002")
+AgrocityKit.geo.fetchNeighborhoods("09", "002").then(function(items) { ... });</pre>
+    </section>
+
+    <!-- ================================================================
          ICONOS
          ================================================================ -->
     <section id="iconos">
@@ -3074,6 +3170,70 @@ Ak(function(){
       }
     });
     AgrocityKit.showToast('Tema "tierra" aplicado', {type:'success', title:'setTheme()'});
+  };
+  window.setMinimalTheme = function(){
+    AgrocityKit.setTheme({
+      light: {
+        '--ak-primary': '#1B6B3A',
+        '--ak-primary-light': '#7BAF4A',
+        '--ak-secondary': '#1A4B7A',
+        '--ak-secondary-dark': '#0C2A4A',
+        '--ak-secondary-light': '#5A8ABA',
+        '--ak-bg': '#F0F7F4',
+        '--ak-surface': '#FFFFFF',
+        '--ak-surface-alt': '#E8F0EC',
+        '--ak-border': '#C8D8D0',
+        '--ak-border-strong': '#5A8ABA'
+      },
+      dark: {
+        '--ak-primary': '#4CAF66',
+        '--ak-primary-light': '#7BAF4A',
+        '--ak-secondary': '#6488BB',
+        '--ak-secondary-dark': '#1A3A5A',
+        '--ak-secondary-light': '#4B6A97',
+        '--ak-bg': '#0E1A14',
+        '--ak-surface': '#16231C',
+        '--ak-surface-alt': '#1E2D24',
+        '--ak-border': '#2A3D32',
+        '--ak-border-strong': '#4B6A97'
+      }
+    });
+    AgrocityKit.showToast('Tema "bosque" aplicado (con derivación automática)', {type:'success', title:'setTheme()'});
+  };
+  window.setOceanTheme = function(){
+    AgrocityKit.setTheme({
+      light: {
+        '--ak-primary': '#0D5E7A',
+        '--ak-primary-light': '#4A9ABA',
+        '--ak-secondary': '#1A3A5A',
+        '--ak-secondary-dark': '#0A1A2A',
+        '--ak-secondary-light': '#4A6A8A',
+        '--ak-danger': '#B84A3A',
+        '--ak-warning': '#D4A030',
+        '--ak-bg': '#F0F6FA',
+        '--ak-surface': '#FFFFFF',
+        '--ak-surface-alt': '#E4EDF4',
+        '--ak-border': '#C0D0DC',
+        '--ak-border-strong': '#4A6A8A',
+        '--ak-text-muted': '#5A6A7A'
+      },
+      dark: {
+        '--ak-primary': '#4ABADA',
+        '--ak-primary-light': '#0D5E7A',
+        '--ak-secondary': '#4A6A8A',
+        '--ak-secondary-dark': '#0A1A2A',
+        '--ak-secondary-light': '#3A5A7A',
+        '--ak-danger': '#D86A5A',
+        '--ak-warning': '#E4B84A',
+        '--ak-bg': '#0A1420',
+        '--ak-surface': '#12202E',
+        '--ak-surface-alt': '#1A2A3C',
+        '--ak-border': '#2A3A4A',
+        '--ak-border-strong': '#3A5A7A',
+        '--ak-text-muted': '#7A8A9A'
+      }
+    });
+    AgrocityKit.showToast('Tema "océano" aplicado (con derivación automática)', {type:'success', title:'setTheme()'});
   };
   window.resetCustomTheme = function(){
     var s = document.getElementById("ak-custom-theme");
