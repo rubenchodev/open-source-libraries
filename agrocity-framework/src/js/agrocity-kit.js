@@ -4657,7 +4657,16 @@
 
   /** Obtiene o asigna un atributo HTML */
   AkCollection.prototype.attr = function (name, value) {
-    if (arguments.length === 1) { return this[0] ? (this[0].getAttribute(name) || undefined) : undefined; }
+    if (arguments.length === 1) {
+      if (typeof name === 'object' && name !== null) {
+        var attrs = name;
+        return this.each(function () {
+          var el = this;
+          Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+        });
+      }
+      return this[0] ? (this[0].getAttribute(name) || undefined) : undefined;
+    }
     return this.each(function () { this.setAttribute(name, value); });
   };
 
