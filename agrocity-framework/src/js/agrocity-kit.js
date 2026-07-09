@@ -862,6 +862,7 @@
             container.getAttribute("data-ak-accept") ||
             input.getAttribute("accept");
           if (acceptAttr) {
+            input.accept = acceptAttr;
             const allowed = acceptAttr
               .split(",")
               .map((s) => s.trim().toLowerCase());
