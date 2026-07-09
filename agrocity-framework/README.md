@@ -1909,6 +1909,12 @@ AgrocityKit.icon('alert', 24, { class: 'ak-icon ak-icon-danger' });
 ```javascript
 // Tema
 AgrocityKit.theme('light' | 'dark' | 'toggle');
+AgrocityKit.setTheme({ light: { '--ak-primary': '...' }, dark: { '--ak-secondary': '...' } });
+
+// Loader
+AgrocityKit.loader(true, ['Iniciando...', 'Procesando...']);
+AgrocityKit.loader(false);
+AgrocityKit.initLoader({ brand: { name: 'MI<span>APP</span>', slogan: 'Mi slogan' } });
 
 // Custom Select
 AgrocityKit.select(selector, options);
@@ -2094,6 +2100,54 @@ function toggleTheme() {
 const saved = localStorage.getItem('ak-theme');
 if (saved) AgrocityKit.theme(saved);
 ```
+
+### `AgrocityKit.setTheme(config)`
+
+Configura colores personalizados para modo light y dark. Inyecta un bloque `<style>` con reglas `:root` y `[data-theme="dark"]`. Aplica inmediatamente según el tema actual.
+
+```javascript
+// Aplica tema "tierra" — todos los componentes que usen --ak-* se actualizan
+AgrocityKit.setTheme({
+  light: {
+    '--ak-primary': '#8B5E3C',
+    '--ak-primary-light': '#C49A6C',
+    '--ak-secondary': '#5C4033',
+    '--ak-secondary-dark': '#3E2723',
+    '--ak-secondary-light': '#8D6E63',
+    '--ak-bg': '#FFF8F0',
+    '--ak-surface': '#FFF8F0',
+    '--ak-surface-alt': '#F5EDE4'
+  },
+  dark: {
+    '--ak-primary': '#C49A6C',
+    '--ak-primary-light': '#8B5E3C',
+    '--ak-secondary': '#A1887F',
+    '--ak-secondary-dark': '#4E342E',
+    '--ak-secondary-light': '#8D6E63',
+    '--ak-bg': '#1A1410',
+    '--ak-surface': '#2C221C',
+    '--ak-surface-alt': '#3E322B'
+  }
+});
+```
+
+### `AgrocityKit.initLoader(config)`
+
+Configura la marca (nombre, slogan) del loader de pantalla completa antes de mostrarlo.
+
+```javascript
+AgrocityKit.initLoader({
+  brand: {
+    name: 'AGRO<span>CITY</span>',  // HTML permitido para acento
+    slogan: 'Sembrando tecnología'
+  }
+});
+
+// Luego usalo como siempre
+AgrocityKit.loader(true, ['Iniciando...', 'Cargando datos...']);
+```
+
+> **Nota:** los colores del loader usan variables `--ak-loader-*` que por defecto se definen en `.ak-loader-overlay`. Se adaptan automáticamente al tema claro/oscuro y a cualquier `setTheme()` que se haya aplicado.
 
 ---
 

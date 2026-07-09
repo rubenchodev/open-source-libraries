@@ -3566,15 +3566,49 @@ body.ak-modal-open { overflow: hidden; }
  * ========================================================================== */
 body.ak-loader-disable-scroll { overflow: hidden; }
 .ak-loader-overlay {
+  --ak-loader-overlay-bg: rgba(244, 247, 242, 0.95);
+  --ak-loader-orbit: rgba(31,78,121,0.25);
+  --ak-loader-petal-shadow: rgba(31,78,121,0.15);
+  --ak-loader-petal-1: #1f4e79;
+  --ak-loader-petal-2: #5fa73b;
+  --ak-loader-petal-3: #9ccb3b;
+  --ak-loader-accent-alt: #3f7fb3;
+  --ak-loader-bud-1: #9ccb3b;
+  --ak-loader-bud-2: #1f4e79;
+  --ak-loader-bud-ring: #f4f7f2;
+  --ak-loader-brand: #1f4e79;
+  --ak-loader-brand-accent: #5fa73b;
+  --ak-loader-slogan: #8a9a86;
+  --ak-loader-track: #e1e8dc;
+  --ak-loader-bar-gradient: linear-gradient(90deg, #1f4e79, #9ccb3b, #5fa73b);
+  --ak-loader-state: #6c8065;
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(244, 247, 242, 0.95);
+  background: var(--ak-loader-overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+[data-theme="dark"] .ak-loader-overlay {
+  --ak-loader-overlay-bg: rgba(20, 24, 28, 0.97);
+  --ak-loader-orbit: rgba(100,136,187,0.2);
+  --ak-loader-petal-shadow: rgba(0,0,0,0.3);
+  --ak-loader-petal-1: #4a8fc7;
+  --ak-loader-petal-2: #5fa73b;
+  --ak-loader-petal-3: #8aaf40;
+  --ak-loader-accent-alt: #6488BB;
+  --ak-loader-bud-1: #8aaf40;
+  --ak-loader-bud-2: #4a8fc7;
+  --ak-loader-bud-ring: #14181C;
+  --ak-loader-brand: #c9d1d9;
+  --ak-loader-brand-accent: #6abf3a;
+  --ak-loader-slogan: #8a9a86;
+  --ak-loader-track: #333A41;
+  --ak-loader-bar-gradient: linear-gradient(90deg, #4a8fc7, #8aaf40, #5fa73b);
+  --ak-loader-state: #A0A3A6;
 }
 .ak-loader-overlay.ak-loader--open { opacity: 1; }
 .ak-loader-overlay.ak-loader--closing { opacity: 0; }
@@ -3600,7 +3634,7 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   position: absolute;
   inset: -10px;
   border-radius: 50%;
-  border: 1px dashed rgba(31,78,121,0.25);
+  border: 1px dashed var(--ak-loader-orbit);
   animation: ak-loader-orbit 6s linear infinite reverse;
 }
 @keyframes ak-loader-orbit {
@@ -3615,19 +3649,19 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   height: 100%;
   border-radius: 0% 60% 60% 60%;
   transform-origin: 50% 50%;
-  filter: drop-shadow(0 2px 4px rgba(31,78,121,0.15));
+  filter: drop-shadow(0 2px 4px var(--ak-loader-petal-shadow));
   animation: ak-loader-grow 2.6s cubic-bezier(.65,0,.35,1) infinite;
 }
 .ak-loader__petal:nth-child(2) {
-  background: linear-gradient(135deg, #1f4e79, #3f7fb3);
+  background: linear-gradient(135deg, var(--ak-loader-petal-1), var(--ak-loader-accent-alt));
   animation-delay: 0s;
 }
 .ak-loader__petal:nth-child(3) {
-  background: linear-gradient(135deg, #5fa73b, #3f7fb3);
+  background: linear-gradient(135deg, var(--ak-loader-petal-2), var(--ak-loader-accent-alt));
   animation-delay: -0.87s;
 }
 .ak-loader__petal:nth-child(4) {
-  background: linear-gradient(135deg, #9ccb3b, #5fa73b);
+  background: linear-gradient(135deg, var(--ak-loader-petal-3), var(--ak-loader-petal-2));
   animation-delay: -1.74s;
 }
 @keyframes ak-loader-grow {
@@ -3642,10 +3676,10 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   position: absolute;
   top: 50%; left: 50%;
   width: 14px; height: 14px;
-  background: radial-gradient(circle at 35% 30%, #9ccb3b, #1f4e79);
+  background: radial-gradient(circle at 35% 30%, var(--ak-loader-bud-1), var(--ak-loader-bud-2));
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 6px #f4f7f2;
+  box-shadow: 0 0 0 6px var(--ak-loader-bud-ring);
   animation: ak-loader-breathe 2.6s ease-in-out infinite;
 }
 @keyframes ak-loader-breathe {
@@ -3658,14 +3692,14 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #1f4e79;
+  color: var(--ak-loader-brand);
 }
-.ak-loader__name span { color: #5fa73b; }
+.ak-loader__name span { color: var(--ak-loader-brand-accent); }
 .ak-loader__slogan {
   margin-top: 4px;
   font-size: 11px;
   letter-spacing: 3px;
-  color: #8a9a86;
+  color: var(--ak-loader-slogan);
   text-transform: uppercase;
 }
 
@@ -3673,7 +3707,7 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   width: 160px;
   height: 4px;
   border-radius: 4px;
-  background: #e1e8dc;
+  background: var(--ak-loader-track);
   overflow: hidden;
   position: relative;
 }
@@ -3684,7 +3718,7 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   height: 100%;
   width: 40%;
   border-radius: 4px;
-  background: linear-gradient(90deg, #1f4e79, #9ccb3b, #5fa73b);
+  background: var(--ak-loader-bar-gradient);
   background-size: 200% 100%;
   animation: ak-loader-slide 1.6s cubic-bezier(.65,0,.35,1) infinite,
              ak-loader-hue 1.6s linear infinite;
@@ -3709,7 +3743,7 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   text-align: center;
   font-style: italic;
   font-size: 12.5px;
-  color: #6c8065;
+  color: var(--ak-loader-state);
   opacity: 0;
   animation: ak-loader-cycle 8s ease-in-out infinite;
 }

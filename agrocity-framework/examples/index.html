@@ -208,6 +208,50 @@
         <button class="ak-btn ak-btn-sm ak-btn-secondary" onclick="AgrocityKit.theme('dark')">🌙 Oscuro</button>
         <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.theme('toggle')">↕️ Alternar</button>
       </div>
+
+      <h3>Tema personalizado</h3>
+      <p>Usá <code>AgrocityKit.setTheme({ light: {...}, dark: {...} })</code> para sobrescribir los tokens de color. Inyecta reglas <code>:root</code> y <code>[data-theme="dark"]</code> custom.</p>
+      <div class="ak-docs-card">
+        <div class="ak-docs-row">
+          <button class="ak-btn ak-btn-sm ak-btn-outline-primary" onclick="window.setCustomTheme()">🎨 Aplicar tema tierra</button>
+          <button class="ak-btn ak-btn-sm ak-btn-outline-danger" onclick="window.resetCustomTheme()">↩️ Restaurar default</button>
+        </div>
+      </div>
+      <pre class="ak-docs-code">AgrocityKit.setTheme({
+  light: {
+    '--ak-primary': '#8B5E3C',
+    '--ak-primary-light': '#C49A6C',
+    '--ak-secondary': '#5C4033',
+    '--ak-secondary-dark': '#3E2723',
+    '--ak-secondary-light': '#8D6E63',
+    '--ak-bg': '#FFF8F0',
+    '--ak-surface': '#FFF8F0',
+    '--ak-surface-alt': '#F5EDE4'
+  },
+  dark: {
+    '--ak-primary': '#C49A6C',
+    '--ak-primary-light': '#8B5E3C',
+    '--ak-secondary': '#A1887F',
+    '--ak-secondary-dark': '#4E342E',
+    '--ak-secondary-light': '#8D6E63',
+    '--ak-bg': '#1A1410',
+    '--ak-surface': '#2C221C',
+    '--ak-surface-alt': '#3E322B'
+  }
+});</pre>
+
+      <h3>Loader personalizado</h3>
+      <p>Usá <code>AgrocityKit.initLoader({ brand: {...} })</code> para cambiar la marca del loader de inicio.</p>
+      <div class="ak-docs-row">
+        <button class="ak-btn ak-btn-sm ak-btn-outline-primary" onclick="window.setBrand()">🔄 Cambiar marca</button>
+        <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="AgrocityKit.loader(true, ['Iniciando...', 'Cargando...']);setTimeout(function(){AgrocityKit.loader(false)},2500)">Mostrar loader 2.5s</button>
+      </div>
+      <pre class="ak-docs-code">AgrocityKit.initLoader({
+  brand: {
+    name: '🌄 TIERRA<span>APP</span>',
+    slogan: 'Conectando al agro'
+  }
+});</pre>
     </section>
 
     <!-- ================================================================
@@ -2998,6 +3042,59 @@ Ak(function(){
 
   window.addEventListener("scroll", updateActive);
   updateActive();
+
+  // ── Demo tema personalizado ──
+  window.setCustomTheme = function(){
+    AgrocityKit.setTheme({
+      light: {
+        '--ak-primary': '#8B5E3C',
+        '--ak-primary-light': '#C49A6C',
+        '--ak-secondary': '#5C4033',
+        '--ak-secondary-dark': '#3E2723',
+        '--ak-secondary-light': '#8D6E63',
+        '--ak-bg': '#FFF8F0',
+        '--ak-surface': '#FFF8F0',
+        '--ak-surface-alt': '#F5EDE4',
+        '--ak-text': '#2C221C',
+        '--ak-border': '#D4C5B0',
+        '--ak-border-strong': '#8D6E63'
+      },
+      dark: {
+        '--ak-primary': '#C49A6C',
+        '--ak-primary-light': '#8B5E3C',
+        '--ak-secondary': '#A1887F',
+        '--ak-secondary-dark': '#4E342E',
+        '--ak-secondary-light': '#8D6E63',
+        '--ak-bg': '#1A1410',
+        '--ak-surface': '#2C221C',
+        '--ak-surface-alt': '#3E322B',
+        '--ak-text': '#EFEBE7',
+        '--ak-border': '#4E423A',
+        '--ak-border-strong': '#8D6E63'
+      }
+    });
+    AgrocityKit.showToast('Tema "tierra" aplicado', {type:'success', title:'setTheme()'});
+  };
+  window.resetCustomTheme = function(){
+    var s = document.getElementById("ak-custom-theme");
+    if (s) s.remove();
+    document.documentElement.querySelectorAll('[style]').forEach(function(el){
+      if (el.tagName === 'HTML' && el.hasAttribute('style')) {
+        // clear inline styles set by applyCustomTheme_
+      }
+    });
+    // recargar para reset limpio
+    location.reload();
+  };
+  window.setBrand = function(){
+    AgrocityKit.initLoader({
+      brand: {
+        name: '🌄 TIERRA<span>APP</span>',
+        slogan: 'Conectando al agro'
+      }
+    });
+    AgrocityKit.showToast('Marca del loader actualizada', {type:'success', title:'initLoader()'});
+  };
 
   // Form validation: evento ak:form:valid
   document.addEventListener('ak:form:valid', function(e) {

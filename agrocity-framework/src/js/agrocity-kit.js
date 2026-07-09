@@ -510,7 +510,37 @@
       if (next === "dark") root.setAttribute("data-theme", "dark");
       else root.removeAttribute("data-theme");
       Helpers.emit(document, "ak:theme:change", { theme: next });
+      if (next !== current) applyCustomTheme_();
       return next;
+    },
+
+    /**
+     * @desc Configura colores personalizados globales para modo light y dark.
+     *       Inyecta un bloque <style> con :root y [data-theme="dark"].
+     *       Aplica inmediatamente según el tema actual.
+     * @param {Object} config - { light: { --ak-primary: '...', ... }, dark: { ... } }
+     */
+    setTheme(config) {
+      if (!config || (!config.light && !config.dark)) return;
+      customThemeConfig_ = config;
+      const style = document.getElementById("ak-custom-theme") || (function() {
+        const s = document.createElement("style");
+        s.id = "ak-custom-theme";
+        document.head.appendChild(s);
+        return s;
+      })();
+      let css = "";
+      const buildRule = (selector, vars) => {
+        if (!vars || !Object.keys(vars).length) return "";
+        const props = Object.entries(vars)
+          .map(([k, v]) => `${k}: ${v};`)
+          .join("\n    ");
+        return `${selector} {\n    ${props}\n  }`;
+      };
+      if (config.light) css += buildRule(":root", config.light) + "\n";
+      if (config.dark) css += buildRule('[data-theme="dark"]', config.dark);
+      style.textContent = css;
+      applyCustomTheme_();
     },
 
     /** Devuelve la instancia asociada a un elemento (o null). */
@@ -4115,6 +4145,36 @@
    * 6f. LOADER — clase AkLoader (pantalla completa)
    * ======================================================================== */
   let loaderInstance = null;
+  let loaderConfig_ = {};
+  let customThemeConfig_ = null;
+
+  /**
+   * @desc Re-aplica el style custom según el tema actual.
+   *        Necesario cuando se llama a theme() después de setTheme().
+   */
+  function applyCustomTheme_() {
+    if (!customThemeConfig_) return;
+    const root = document.documentElement;
+    const isDark = root.getAttribute("data-theme") === "dark";
+    if (isDark && customThemeConfig_.dark) {
+      Object.entries(customThemeConfig_.dark).forEach(([k, v]) => root.style.setProperty(k, v));
+    } else if (!isDark && customThemeConfig_.light) {
+      Object.entries(customThemeConfig_.light).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
+  }
+
+  /**
+   * @desc Configura la marca (nombre, slogan) del loader de pantalla completa.
+   * @param {Object} config - { brand: { name: 'AGRO<span>CITY</span>', slogan: 'Sembrando tecnología' } }
+   */
+  function initLoader(config = {}) {
+    if (config.brand) {
+      loaderConfig_.brand = {
+        name: config.brand.name || 'AGRO<span>CITY</span>',
+        slogan: config.brand.slogan || 'Sembrando tecnolog&iacute;a'
+      };
+    }
+  }
 
   /**
    * Loader de pantalla completa con animación agro (pétalos, barra, estados).
@@ -4130,6 +4190,9 @@
     /** Construye y muestra el overlay con la animación */
     _build() {
       const H = Helpers;
+      const brand = loaderConfig_.brand || {};
+      const brandName = brand.name || 'AGRO<span>CITY</span>';
+      const brandSlogan = brand.slogan || 'Sembrando tecnolog&iacute;a';
       this.overlay = H.el("div", { class: "ak-loader-overlay" });
       const wrap = H.el("div", { class: "ak-loader" });
 
@@ -4142,8 +4205,8 @@
           <div class="ak-loader__bud"></div>
         </div>
         <div class="ak-loader__brand">
-          <div class="ak-loader__name">AGRO<span>CITY</span></div>
-          <div class="ak-loader__slogan">Sembrando tecnolog&iacute;a</div>
+          <div class="ak-loader__name">${brandName}</div>
+          <div class="ak-loader__slogan">${brandSlogan}</div>
         </div>
         <div class="ak-loader__bar"></div>
         <div class="ak-loader__states">
@@ -4929,6 +4992,7 @@
   AgrocityKit.scrollspy = pluginFactory(AkScrollSpy);
   AgrocityKit.showToast = createToast;
   AgrocityKit.loader = createLoader;
+  AgrocityKit.initLoader = initLoader;
   AgrocityKit.alert = dialogAlert;
   AgrocityKit.confirm = dialogConfirm;
   AgrocityKit.prompt = dialogPrompt;
