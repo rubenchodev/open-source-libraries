@@ -1927,9 +1927,10 @@
       const table = this.target.tagName === "TABLE" ? this.target : this.target.querySelector("table");
       if (!table) return;
 
+      var ths = Array.from(table.querySelectorAll("thead th"));
+
       if (!this.opts.columns) {
-        const ths = Array.from(table.querySelectorAll("thead th"));
-        this.opts.columns = ths.map((th, i) => {
+        this.opts.columns = ths.map(function(th, i) {
           var col = {
             key: th.getAttribute("data-key") || "col" + i,
             label: th.textContent.trim(),
@@ -1943,18 +1944,34 @@
           var keys = Object.keys(attrs);
           if (keys.length) col.thAttrs = attrs;
           return col;
-        });
+        }.bind(this));
+      } else {
+        // Merge thAttrs y sortable desde los <th> originales
+        ths.forEach(function(th, i) {
+          var col = this.opts.columns[i];
+          if (!col) return;
+          if (col.sortable === undefined && th.hasAttribute("data-sortable")) {
+            col.sortable = th.getAttribute("data-sortable") !== "false";
+          }
+          var attrs = {};
+          Array.from(th.attributes).forEach(function(a) {
+            if (a.name === "data-key") return;
+            attrs[a.name] = a.value;
+          });
+          var keys = Object.keys(attrs);
+          if (keys.length) col.thAttrs = attrs;
+        }.bind(this));
       }
       if (!this.opts.data) {
         const rows = Array.from(table.querySelectorAll("tbody tr"));
-        this.opts.data = rows.map((tr) => {
+        this.opts.data = rows.map(function(tr) {
           const obj = {};
-          Array.from(tr.children).forEach((td, i) => {
+          Array.from(tr.children).forEach(function(td, i) {
             const col = this.opts.columns[i];
             if (col) obj[col.key] = td.textContent.trim();
-          });
+          }.bind(this));
           return obj;
-        });
+        }.bind(this));
       }
     }
 
