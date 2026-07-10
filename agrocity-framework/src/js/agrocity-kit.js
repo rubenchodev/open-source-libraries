@@ -5380,11 +5380,12 @@
     if (pendingVal) {
       el.removeAttribute('data-ak-geo-value');
       if (el.hasAttribute('data-ak-select') && registry.has(el)) {
+        el.value = pendingVal;
         registry.get(el).setValue(pendingVal);
       } else {
         el.value = pendingVal;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      el.dispatchEvent(new Event('change', { bubbles: true }));
     }
   }
 
@@ -5454,6 +5455,7 @@
           });
           if (currentVal) stateEl.value = currentVal;
           refreshCustomSelect_(stateEl);
+          applyGeoValueIfPresent_(stateEl);
         });
       }
 

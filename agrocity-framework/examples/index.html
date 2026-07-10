@@ -3007,6 +3007,7 @@ Ak("#el").hasClass("active");   // true/false</pre>
 
       <div class="ak-docs-card">
         <h4>Ejemplo en vivo</h4>
+        <p class="ak-text-muted ak-small" style="margin-bottom:8px;">Aguascalientes (01) → Municipio 001 → Colonia Centro</p>
         <div class="ak-row ak-g-3">
           <div class="ak-col-12 ak-col-md-3">
             <label class="ak-form-label">Estado</label>
@@ -3031,6 +3032,43 @@ Ak("#el").hasClass("active");   // true/false</pre>
             <input type="text" data-ak-geo-name="direccion" data-ak-geo-postalcode class="ak-form-control" placeholder="Se auto-completa" readonly />
           </div>
         </div>
+        <div class="ak-mt-2" style="display:flex;gap:8px;">
+          <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="cargarEjemploGeo()">Cargar ejemplo</button>
+          <button class="ak-btn ak-btn-sm ak-btn-light" onclick="restablecerGeo()">Restablecer</button>
+        </div>
+      </div>
+
+      <div class="ak-docs-card ak-mt-3">
+        <h4>Select nativo (sin <code>data-ak-select</code>)</h4>
+        <p class="ak-text-muted ak-small" style="margin-bottom:8px;">Misma cascada, sin custom select</p>
+        <div class="ak-row ak-g-3">
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Estado</label>
+            <select data-ak-geo-name="direccion-nativo" data-ak-geo-state class="ak-form-select">
+              <option value="">Seleccionar estado...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Municipio</label>
+            <select data-ak-geo-name="direccion-nativo" data-ak-geo-municipality class="ak-form-select" disabled>
+              <option value="">Primero selecciona un estado...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Colonia</label>
+            <select data-ak-geo-name="direccion-nativo" data-ak-geo-neighborhood class="ak-form-select" disabled>
+              <option value="">Primero selecciona un municipio...</option>
+            </select>
+          </div>
+          <div class="ak-col-12 ak-col-md-3">
+            <label class="ak-form-label">Código Postal</label>
+            <input type="text" data-ak-geo-name="direccion-nativo" data-ak-geo-postalcode class="ak-form-control" placeholder="Se auto-completa" readonly />
+          </div>
+        </div>
+        <div class="ak-mt-2" style="display:flex;gap:8px;">
+          <button class="ak-btn ak-btn-sm ak-btn-primary" onclick="cargarEjemploGeoNativo()">Cargar ejemplo</button>
+          <button class="ak-btn ak-btn-sm ak-btn-light" onclick="restablecerGeoNativo()">Restablecer</button>
+        </div>
       </div>
 
       <h4>Carga en cascada con <code>data-ak-geo-value</code></h4>
@@ -3047,6 +3085,32 @@ Ak("#el").hasClass("active");   // true/false</pre>
         data-ak-geo-value="CENTRO"&gt;
   &lt;!-- se llena y auto-selecciona colonia CENTRO --&gt;
 &lt;/select&gt;</pre>
+
+      <h4>Ejemplo con valores específicos</h4>
+      <p>Precargar <strong>Aguascalientes (01) → Municipio 001 → Colonia Centro</strong>:</p>
+
+      <pre class="ak-docs-code">&lt;select data-ak-geo-name="editDir" data-ak-geo-state
+        data-ak-select data-ak-search class="ak-form-select"
+        data-ak-geo-value="01"&gt;  &lt;!-- ← se auto-asigna al cargar estados --&gt;
+  &lt;option value=""&gt;Seleccionar estado...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;select data-ak-geo-name="editDir" data-ak-geo-municipality
+        data-ak-select data-ak-search class="ak-form-select"
+        data-ak-geo-value="001" disabled&gt;  &lt;!-- ← se auto-asigna al cargar municipios --&gt;
+  &lt;option value=""&gt;Seleccionar...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;select data-ak-geo-name="editDir" data-ak-geo-neighborhood
+        data-ak-select data-ak-search class="ak-form-select"
+        data-ak-geo-value="Centro" disabled&gt;  &lt;!-- ← se auto-asigna al cargar colonias --&gt;
+  &lt;option value=""&gt;Seleccionar...&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;input type="text" data-ak-geo-name="editDir" data-ak-geo-postalcode
+       class="ak-form-control" placeholder="C.P." readonly /&gt;</pre>
+
+      <p><strong>Orden de la cascada:</strong> cuando la página carga, la librería llena el select de estados, ve que tiene <code>data-ak-geo-value="01"</code>, selecciona "01" y dispara <code>change</code>. Eso llena municipios, ve <code>data-ak-geo-value="001"</code>, selecciona "001" y dispara <code>change</code>. Eso llena colonias, ve <code>data-ak-geo-value="Centro"</code>, selecciona "Centro" y el código postal se auto-completa.</p>
 
       <h3>API programática</h3>
       <pre class="ak-docs-code">// Obtener lista de estados
@@ -3297,6 +3361,83 @@ Ak(function(){
     document.getElementById("dynamicDemo").innerHTML = html;
     AgrocityKit.initElement(document.getElementById("dynamicDemo"));
     AgrocityKit.showToast("Componentes inicializados", {type:"success", delay:2000});
+  };
+
+  // Botones del demo de geografía
+  window.cargarEjemploGeo = function() {
+    var getEl = function(geoType) {
+      return document.querySelector('[data-ak-geo-name="direccion"][data-ak-geo-' + geoType + ']');
+    };
+    var stateEl = getEl('state');
+    var munEl = getEl('municipality');
+    var neighEl = getEl('neighborhood');
+
+    if (!stateEl) return;
+
+    if (munEl) munEl.setAttribute('data-ak-geo-value', '001');
+    if (neighEl) neighEl.setAttribute('data-ak-geo-value', 'Centro');
+
+    AgrocityKit.getInstance(stateEl).setValue('01');
+  };
+
+  // Nativo
+  window.cargarEjemploGeoNativo = function() {
+    var getEl = function(geoType) {
+      return document.querySelector('[data-ak-geo-name="direccion-nativo"][data-ak-geo-' + geoType + ']');
+    };
+    var stateEl = getEl('state');
+    if (!stateEl) return;
+    var munEl = getEl('municipality');
+    if (munEl) munEl.setAttribute('data-ak-geo-value', '001');
+    var neighEl = getEl('neighborhood');
+    if (neighEl) neighEl.setAttribute('data-ak-geo-value', 'Centro');
+    stateEl.value = '01';
+    stateEl.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+  window.restablecerGeoNativo = function() {
+    var getEl = function(geoType) {
+      return document.querySelector('[data-ak-geo-name="direccion-nativo"][data-ak-geo-' + geoType + ']');
+    };
+    var stateEl = getEl('state');
+    var munEl = getEl('municipality');
+    var neighEl = getEl('neighborhood');
+    var zipEl = getEl('postalcode');
+    if (stateEl) { stateEl.value = ''; stateEl.dispatchEvent(new Event('change', { bubbles: true })); }
+    if (munEl) { munEl.removeAttribute('data-ak-geo-value'); munEl.innerHTML = '<option value="">Primero selecciona un estado...</option>'; munEl.disabled = true; }
+    if (neighEl) { neighEl.removeAttribute('data-ak-geo-value'); neighEl.innerHTML = '<option value="">Primero selecciona un municipio...</option>'; neighEl.disabled = true; }
+    if (zipEl) zipEl.value = '';
+  };
+
+  window.restablecerGeo = function() {
+    var getEl = function(geoType) {
+      return document.querySelector('[data-ak-geo-name="direccion"][data-ak-geo-' + geoType + ']');
+    };
+    var stateEl = getEl('state');
+    var munEl = getEl('municipality');
+    var neighEl = getEl('neighborhood');
+    var zipEl = getEl('postalcode');
+
+    if (stateEl) {
+      var si = AgrocityKit.getInstance(stateEl);
+      if (si) si.setValue('');
+    }
+    if (munEl) {
+      munEl.removeAttribute('data-ak-geo-value');
+      munEl.innerHTML = '<option value="">Primero selecciona un estado...</option>';
+      munEl.disabled = true;
+      var mi = AgrocityKit.getInstance(munEl);
+      if (mi) mi.destroy();
+      AgrocityKit.select(munEl, {});
+    }
+    if (neighEl) {
+      neighEl.removeAttribute('data-ak-geo-value');
+      neighEl.innerHTML = '<option value="">Primero selecciona un municipio...</option>';
+      neighEl.disabled = true;
+      var ni = AgrocityKit.getInstance(neighEl);
+      if (ni) ni.destroy();
+      AgrocityKit.select(neighEl, {});
+    }
+    if (zipEl) zipEl.value = '';
   };
 });
 </script>
