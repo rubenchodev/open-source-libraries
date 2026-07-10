@@ -1929,11 +1929,21 @@
 
       if (!this.opts.columns) {
         const ths = Array.from(table.querySelectorAll("thead th"));
-        this.opts.columns = ths.map((th, i) => ({
-          key: th.getAttribute("data-key") || "col" + i,
-          label: th.textContent.trim(),
-          sortable: this.opts.sortable,
-        }));
+        this.opts.columns = ths.map((th, i) => {
+          var col = {
+            key: th.getAttribute("data-key") || "col" + i,
+            label: th.textContent.trim(),
+            sortable: this.opts.sortable,
+          };
+          var attrs = {};
+          Array.from(th.attributes).forEach(function(a) {
+            if (a.name === "data-key") return;
+            attrs[a.name] = a.value;
+          });
+          var keys = Object.keys(attrs);
+          if (keys.length) col.thAttrs = attrs;
+          return col;
+        });
       }
       if (!this.opts.data) {
         const rows = Array.from(table.querySelectorAll("tbody tr"));
@@ -2027,6 +2037,17 @@
       this.columns.forEach((col) => {
         const sortable = this.opts.sortable && col.sortable !== false;
         const th = H.el("th", { scope: "col" });
+        if (col.thAttrs) {
+          Object.keys(col.thAttrs).forEach(function(name) {
+            if (name === "class") {
+              col.thAttrs[name].split(/\s+/).forEach(function(cls) {
+                if (cls) th.classList.add(cls);
+              });
+            } else if (name !== "scope") {
+              th.setAttribute(name, col.thAttrs[name]);
+            }
+          });
+        }
         if (sortable) {
           th.classList.add("ak-dt__th-sortable");
           const dir =
