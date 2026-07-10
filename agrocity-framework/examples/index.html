@@ -1901,6 +1901,13 @@ AgrocityKit.formValidation('field', elementoInput);</pre>
   &lt;input type="time" data-ak-timepicker value="08:00" /&gt;
   &lt;input type="time" data-ak-timepicker value="17:00" /&gt;
 &lt;/div&gt;</pre>
+      <h4>API</h4>
+      <ul>
+        <li><code>getValue()</code> — Retorna la hora como string o <code>null</code>.</li>
+        <li><code>setValue('14:30')</code> o <code>setValue(new Date())</code> — Establece la hora (string o Date).</li>
+        <li><code>show()</code>, <code>hide()</code>, <code>toggle()</code> — Control manual del overlay.</li>
+        <li><code>destroy()</code> — Elimina el TimePicker.</li>
+      </ul>
       <details style="margin:12px 0;"><summary style="cursor:pointer;font-size:0.85rem;color:var(--ak-primary);font-weight:600;">📋 Ver tabla de clases</summary>
       <table class="ak-docs-table">
         <tr><th>Clase</th><th>Descripción</th></tr>
@@ -3025,6 +3032,21 @@ Ak("#el").hasClass("active");   // true/false</pre>
           </div>
         </div>
       </div>
+
+      <h4>Carga en cascada con <code>data-ak-geo-value</code></h4>
+      <p>Para precargar valores (ej. al editar), agrega <code>data-ak-geo-value</code> en los campos <code>municipality</code> y <code>neighborhood</code>. Apenas se poblen las opciones, se asigna ese valor y se dispara <code>change</code> automáticamente para continuar la cascada. El atributo se elimina tras aplicarse.</p>
+
+      <pre class="ak-docs-code">&lt;select data-ak-geo-name="dir" data-ak-geo-state&gt;
+  &lt;!-- se llena con estados --&gt;
+&lt;/select&gt;
+&lt;select data-ak-geo-name="dir" data-ak-geo-municipality
+        data-ak-geo-value="015"&gt;
+  &lt;!-- se llena y auto-selecciona municipio 015 --&gt;
+&lt;/select&gt;
+&lt;select data-ak-geo-name="dir" data-ak-geo-neighborhood
+        data-ak-geo-value="CENTRO"&gt;
+  &lt;!-- se llena y auto-selecciona colonia CENTRO --&gt;
+&lt;/select&gt;</pre>
 
       <h3>API programática</h3>
       <pre class="ak-docs-code">// Obtener lista de estados

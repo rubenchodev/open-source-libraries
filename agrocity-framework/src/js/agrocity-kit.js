@@ -2693,6 +2693,8 @@
         if (this.opts.todayHighlight && dateStr === todayStr) classes.push("ak-datepicker__day--today");
         if (this.state.selectedDate && dateStr === this._fmtDate(this.state.selectedDate)) {
           classes.push("ak-datepicker__day--selected");
+        } else if (!this.state.selectedDate && dateStr === todayStr) {
+          classes.push("ak-datepicker__day--selected");
         }
         if (this._isDisabled(date)) classes.push("ak-datepicker__day--disabled");
 
@@ -2988,11 +2990,18 @@
 
     /** @returns {string|null} Fecha formateada o null. */
     getValue() { return this.input.value || null; }
-    /** @param {string} dateStr - Fecha en formato configurado */
-    setValue(dateStr) {
-      const d = this._parseDate(dateStr);
+    /** @param {string|Date} date - Fecha en formato configurado o Date */
+    setValue(date) {
+      if (date instanceof Date) {
+        this.state.selectedDate = new Date(date);
+        this.input.value = this._fmtDate(date);
+        this.state.viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        if (this.state.open) { this.state.viewLevel = V_DAYS; this._render(); }
+        return;
+      }
+      const d = this._parseDate(date);
       this.state.selectedDate = d;
-      this.input.value = dateStr || "";
+      this.input.value = date || "";
       if (d) { this.state.viewDate = new Date(d.getFullYear(), d.getMonth(), 1); }
       if (this.state.open) { this.state.viewLevel = V_DAYS; this._render(); }
     }
@@ -3411,8 +3420,19 @@
 
     /** @returns {string|null} Hora formateada o null. */
     getValue() { return this.input.value || null; }
-    /** @param {string} val - Hora en formato HH:mm */
+    /** @param {string|Date} val - Hora en formato HH:mm o Date */
     setValue(val) {
+      if (val instanceof Date) {
+        var h24 = val.getHours();
+        var m = String(val.getMinutes()).padStart(2, "0");
+        if (this.opts.ampm) {
+          var h12 = h24 % 12 || 12;
+          var ampm = h24 >= 12 ? "PM" : "AM";
+          val = String(h12).padStart(2, "0") + ":" + m + " " + ampm;
+        } else {
+          val = String(h24).padStart(2, "0") + ":" + m;
+        }
+      }
       this.input.value = val || "";
       this._parseFromValue();
       if (this.state.open) this._renderPicker();
@@ -5352,6 +5372,23 @@
   }
 
   /**
+   * @desc Si el elemento tiene data-ak-geo-value, asigna ese valor,
+   *        remueve el atributo y dispara change para continuar la cascada.
+   */
+  function applyGeoValueIfPresent_(el) {
+    var pendingVal = el.getAttribute('data-ak-geo-value');
+    if (pendingVal) {
+      el.removeAttribute('data-ak-geo-value');
+      if (el.hasAttribute('data-ak-select') && registry.has(el)) {
+        registry.get(el).setValue(pendingVal);
+      } else {
+        el.value = pendingVal;
+      }
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  /**
    * @desc Limpia y deshabilita todos los campos del grupo que están después
    *        del campo que disparó el cambio.
    */
@@ -5467,6 +5504,7 @@
           });
           munEl.disabled = false;
           refreshCustomSelect_(munEl);
+          applyGeoValueIfPresent_(munEl);
         });
       } else if (geoType === 'municipality') {
         var stateId = getGeoFieldValue_(groupName, 'state');
@@ -5487,6 +5525,7 @@
           });
           neighEl.disabled = items.length === 0;
           refreshCustomSelect_(neighEl);
+          applyGeoValueIfPresent_(neighEl);
         });
       } else if (geoType === 'neighborhood') {
         var opt = target.options[target.selectedIndex];

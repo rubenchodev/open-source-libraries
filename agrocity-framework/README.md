@@ -379,7 +379,7 @@ document.getElementById('mi-input').addEventListener('ak:datepicker:change', (e)
 
 **API:**
 - `getValue()` — Retorna `YYYY-MM-DD` o `null`.
-- `setValue('2026-07-15')` — Establece una fecha.
+- `setValue('2026-07-15')` o `setValue(new Date())` — Establece una fecha (string o Date).
 - `refresh()` — Re-renderiza si está abierto (útil tras cambiar `minDate`/`maxDate`).
 - `show()`, `hide()`, `toggle()` — Control manual del overlay.
 - `destroy()` — Elimina el DatePicker.
@@ -438,12 +438,80 @@ AgrocityKit.timepicker('#mi-input', {
 });
 ```
 
+**API:**
+- `getValue()` — Retorna la hora como string (`HH:mm` o `HH:mm AM/PM`) o `null`.
+- `setValue('14:30')` o `setValue(new Date())` — Establece la hora (string o Date).
+- `show()`, `hide()`, `toggle()` — Control manual del overlay.
+- `destroy()` — Elimina el TimePicker.
+
 **Eventos:**
 ```javascript
 document.getElementById('mi-input').addEventListener('ak:timepicker:change', (e) => {
   console.log('Hora seleccionada:', e.detail.value);
 });
 ```
+
+---
+
+### Geo (cascada de selects México)
+
+Agrupa selects en cascada para Estado → Municipio → Colonia + Código Postal. Todos los campos del grupo comparten el mismo `data-ak-geo-name`.
+
+```html
+<div class="ak-row">
+  <div class="ak-col-4">
+    <select data-ak-geo-name="direccion" data-ak-geo-state
+            data-ak-select data-ak-search>
+      <option value="">Seleccionar estado...</option>
+    </select>
+  </div>
+  <div class="ak-col-4">
+    <select data-ak-geo-name="direccion" data-ak-geo-municipality
+            data-ak-select data-ak-search disabled>
+      <option value="">Seleccionar municipio...</option>
+    </select>
+  </div>
+  <div class="ak-col-4">
+    <select data-ak-geo-name="direccion" data-ak-geo-neighborhood
+            data-ak-select data-ak-search disabled>
+      <option value="">Seleccionar colonia...</option>
+    </select>
+  </div>
+</div>
+```
+
+**Carga en cascada con `data-ak-geo-value`:**
+
+Para precargar valores (ej. al editar), agrega `data-ak-geo-value` en los campos `municipality` y `neighborhood`. Apenas se poblen las opciones, se asigna ese valor y se dispara `change` automáticamente para continuar la cascada:
+
+```html
+<select data-ak-geo-name="dir" data-ak-geo-state>
+  <!-- se llena con estados -->
+</select>
+<select data-ak-geo-name="dir" data-ak-geo-municipality
+        data-ak-geo-value="015">
+  <!-- se llena y auto-selecciona municipio 015 -->
+</select>
+<select data-ak-geo-name="dir" data-ak-geo-neighborhood
+        data-ak-geo-value="CENTRO">
+  <!-- se llena y auto-selecciona colonia CENTRO -->
+</select>
+```
+
+**API programática:**
+```javascript
+AgrocityKit.geo.fetchStates().then(function(states) { ... });
+AgrocityKit.geo.fetchMunicipalities("09").then(function(items) { ... });
+AgrocityKit.geo.fetchNeighborhoods("09", "002").then(function(items) { ... });
+```
+
+**Atributos data:**
+- `data-ak-geo-name` — Nombre del grupo (compartido por todos los campos)
+- `data-ak-geo-state` — Select de estado
+- `data-ak-geo-municipality` — Select de municipio
+- `data-ak-geo-neighborhood` — Select de colonia
+- `data-ak-geo-postalcode` — Input de código postal (solo lectura)
+- `data-ak-geo-value` — Valor a auto-asignar tras poblar opciones (solo municipality y neighborhood)
 
 ---
 
