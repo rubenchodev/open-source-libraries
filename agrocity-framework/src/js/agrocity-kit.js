@@ -1933,7 +1933,7 @@
           var col = {
             key: th.getAttribute("data-key") || "col" + i,
             label: th.textContent.trim(),
-            sortable: this.opts.sortable,
+            sortable: th.hasAttribute("data-sortable") ? th.getAttribute("data-sortable") !== "false" : this.opts.sortable,
           };
           var attrs = {};
           Array.from(th.attributes).forEach(function(a) {
@@ -2008,6 +2008,17 @@
         role: "table",
         "aria-rowcount": this.data.length,
       });
+      var origTable = this.target.tagName === "TABLE" ? this.target : this.target.querySelector("table");
+      if (origTable) {
+        Array.from(origTable.attributes).forEach(function(a) {
+          var n = a.name;
+          if (n === "class") {
+            a.value.split(/\s+/).forEach(function(c) { if (c) this.table.classList.add(c); }.bind(this));
+          } else if (n !== "role" && n !== "aria-rowcount" && !n.startsWith("data-ak-")) {
+            this.table.setAttribute(n, a.value);
+          }
+        }.bind(this));
+      }
       this.thead = H.el("thead");
       this.tbody = H.el("tbody");
       this.table.appendChild(this.thead);

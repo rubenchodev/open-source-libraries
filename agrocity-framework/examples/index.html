@@ -1127,6 +1127,41 @@ AgrocityKit.formValidation('field', elementoInput);</pre>
     &lt;tr&gt;&lt;td&gt;Juan&lt;/td&gt;&lt;td&gt;30&lt;/td&gt;&lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;</pre>
+
+      <h4>Atributos preservados en <code>&lt;th&gt;</code></h4>
+      <p>Clases, estilos y <code>data-*</code> escritos en el <code>&lt;th&gt;</code> original se mantienen en el renderizado. Usá <code>data-sortable="false"</code> para deshabilitar orden en una columna.</p>
+      <div data-ak-datatable data-ak-page-size="5" style="max-width:700px;">
+        <table class="ak-table ak-table-striped ak-table-hover">
+          <thead>
+            <tr>
+              <th class="ak-text-primary" style="min-width:120px;" data-sortable="false">Cultivo</th>
+              <th>Región</th>
+              <th data-type="number" style="max-width:100px;">Área</th>
+              <th data-sortable="false" class="ak-text-muted">Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Maíz</td><td>Jalisco</td><td>12.5</td><td>—</td></tr>
+            <tr><td>Trigo</td><td>Sonora</td><td>8.0</td><td>—</td></tr>
+            <tr><td>Soya</td><td>Sinaloa</td><td>20.0</td><td>—</td></tr>
+            <tr><td>Arroz</td><td>Veracruz</td><td>15.3</td><td>—</td></tr>
+            <tr><td>Café</td><td>Chiapas</td><td>5.8</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <pre class="ak-docs-code">&lt;table data-ak-datatable&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th class="ak-text-primary" style="min-width:120px;" data-sortable="false"&gt;Cultivo&lt;/th&gt;
+      &lt;th&gt;Región&lt;/th&gt;
+      &lt;th data-type="number" style="max-width:100px;"&gt;Área&lt;/th&gt;
+      &lt;th data-sortable="false" class="ak-text-muted"&gt;Notas&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Maíz&lt;/td&gt;&lt;td&gt;Jalisco&lt;/td&gt;&lt;td&gt;12.5&lt;/td&gt;&lt;td&gt;—&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
     </section>
 
     <!-- ================================================================
@@ -3363,21 +3398,32 @@ Ak(function(){
     AgrocityKit.showToast("Componentes inicializados", {type:"success", delay:2000});
   };
 
+  /**
+   * Establece los valores de los geo selects (estado, municipio, colonia)
+   * usando data-ak-geo-value para tolerar la carga asíncrona de opciones.
+   * Si el select de estado ya tiene opciones (fetch completado), llama a
+   * setValue inmediato para arrancar la cascada.
+   * @param {string} geoName - Valor del atributo data-ak-geo-name
+   * @param {{state:string, municipality?:string, neighborhood?:string}} address
+   */
+  window.setGeoSelects = function(geoName, address) {
+    if (!address || !address.state) return;
+    var stateEl = document.querySelector('[data-ak-geo-name="' + geoName + '"][data-ak-geo-state]');
+    var munEl = document.querySelector('[data-ak-geo-name="' + geoName + '"][data-ak-geo-municipality]');
+    var neighEl = document.querySelector('[data-ak-geo-name="' + geoName + '"][data-ak-geo-neighborhood]');
+    if (!stateEl) return;
+    stateEl.setAttribute('data-ak-geo-value', address.state);
+    if (munEl && address.municipality) munEl.setAttribute('data-ak-geo-value', address.municipality);
+    if (neighEl && address.neighborhood) neighEl.setAttribute('data-ak-geo-value', address.neighborhood);
+    if (stateEl.options.length > 1) {
+      var inst = AgrocityKit.select(stateEl);
+      if (inst) inst.setValue(address.state);
+    }
+  };
+
   // Botones del demo de geografía
   window.cargarEjemploGeo = function() {
-    var getEl = function(geoType) {
-      return document.querySelector('[data-ak-geo-name="direccion"][data-ak-geo-' + geoType + ']');
-    };
-    var stateEl = getEl('state');
-    var munEl = getEl('municipality');
-    var neighEl = getEl('neighborhood');
-
-    if (!stateEl) return;
-
-    if (munEl) munEl.setAttribute('data-ak-geo-value', '001');
-    if (neighEl) neighEl.setAttribute('data-ak-geo-value', 'Centro');
-
-    AgrocityKit.getInstance(stateEl).setValue('01');
+    window.setGeoSelects('direccion', { state:'01', municipality:'001', neighborhood:'Centro' });
   };
 
   // Nativo
