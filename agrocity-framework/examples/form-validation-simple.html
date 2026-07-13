@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Validation Simple — Agrocity Kit</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    .ak-app-main { padding: 32px 40px; }
+  </style>
+</head>
+<body class="ak-body ak-app">
+  <nav class="ak-navbar">
+    <div class="ak-container-fluid ak-d-flex ak-align-items-center ak-justify-content-between">
+      <span class="ak-h5 ak-m-0 ak-text-white">Agrocity Kit — Validación simple</span>
+    </div>
+  </nav>
+  <div class="ak-app-body">
+    <main class="ak-app-main">
+      <div class="ak-container" style="max-width: 600px;">
+        <h2 class="ak-h3 ak-text-primary ak-fw-bold ak-mb-3">Formulario de ejemplo</h2>
+        <p class="ak-text-muted ak-mb-4">Completa el campo requerido y envía para ver la validación en acción.</p>
+
+        <form id="demoForm" class="ak-form" data-ak-validation novalidate>
+          <div class="ak-card ak-mb-4">
+            <div class="ak-card-body ak-d-flex ak-flex-column ak-gap-3">
+              <div>
+                <label class="ak-form-label ak-fw-semibold" for="inputName">Nombre <span class="ak-text-danger">*</span></label>
+                <input type="text" id="inputName" name="name" class="ak-form-control"
+                  data-ak-validate="required"
+                  data-ak-msg="Este campo es obligatorio"
+                  placeholder="Ingresa tu nombre" required />
+              </div>
+
+              <div>
+                <label class="ak-form-label ak-fw-semibold" for="inputEmail">Correo electrónico <span class="ak-text-danger">*</span></label>
+                <input type="email" id="inputEmail" name="email" class="ak-form-control"
+                  data-ak-validate="required|email"
+                  data-ak-msg-required="El correo es obligatorio"
+                  data-ak-msg-email="Ingresa un correo válido"
+                  placeholder="correo@ejemplo.com" required />
+              </div>
+
+              <div>
+                <label class="ak-form-label ak-fw-semibold" for="inputAge">Edad</label>
+                <input type="number" id="inputAge" name="age" class="ak-form-control"
+                  data-ak-validate="min:18|max:120"
+                  data-ak-msg-min="Debes ser mayor de 18 años"
+                  data-ak-msg-max="Edad no válida"
+                  placeholder="18" />
+              </div>
+            </div>
+          </div>
+
+          <div class="ak-d-flex ak-justify-content-end ak-gap-2">
+            <button class="ak-btn ak-btn-outline-danger" type="button" id="btnReset">
+              <span data-ak-icon="refresh"></span> Restablecer
+            </button>
+            <button class="ak-btn ak-btn-primary" type="submit">Enviar</button>
+          </div>
+        </form>
+
+        <div id="resultMessage" class="ak-alert ak-alert-success ak-d-none ak-mt-4">
+          <span data-ak-icon="check"></span>
+          <span id="resultText">Formulario válido — datos enviados correctamente.</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+  <script>
+    Ak(function() {
+      var form = document.getElementById('demoForm');
+      var resultMsg = document.getElementById('resultMessage');
+      var resultText = document.getElementById('resultText');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var isValid = AgrocityKit.formValidation('validate', form);
+
+        if (isValid) {
+          var data = {
+            name: document.getElementById('inputName').value.trim(),
+            email: document.getElementById('inputEmail').value.trim(),
+            age: document.getElementById('inputAge').value
+          };
+
+          console.log('Formulario válido — datos:', data);
+          AgrocityKit.alert('Formulario enviado correctamente');
+          resultText.textContent = 'Datos: ' + JSON.stringify(data, null, 2);
+          resultMsg.classList.remove('ak-d-none');
+        } else {
+          console.warn('Formulario inválido — corrige los errores');
+        }
+      });
+
+      document.getElementById('btnReset').addEventListener('click', function() {
+        AgrocityKit.formValidation('reset', form);
+        resultMsg.classList.add('ak-d-none');
+        console.log('Formulario restablecido');
+      });
+    });
+  </script>
+</body>
+</html>

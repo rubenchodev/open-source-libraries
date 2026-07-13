@@ -4446,7 +4446,7 @@
    * @class
    * @param {string[]} [messages] - Textos rotativos de estado
    */
-  class AkLoader {
+   class AkLoader {
     constructor(messages = []) {
       this.messages = messages.length ? messages : ["Loading application", "Please wait"];
       this._build();
@@ -4474,15 +4474,51 @@
           <div class="ak-loader__slogan">${brandSlogan}</div>
         </div>
         <div class="ak-loader__bar"></div>
-        <div class="ak-loader__states">
-          ${this.messages.map(m => `<span class="ak-loader__state">${H.escapeHtml(m)}</span>`).join("")}
-        </div>
+        <div class="ak-loader__states"></div>
       `;
+
+      this._renderStates(wrap);
 
       this.overlay.appendChild(wrap);
       document.body.appendChild(this.overlay);
       document.body.classList.add("ak-loader-disable-scroll");
       requestAnimationFrame(() => this.overlay.classList.add("ak-loader--open"));
+    }
+
+    /** Renderiza o actualiza los mensajes de estado en el DOM. */
+    _renderStates(root) {
+      const H = Helpers;
+      const container = (root || this.overlay).querySelector('.ak-loader__states');
+      if (!container) return;
+      const existing = container.querySelectorAll('.ak-loader__state');
+      this.messages.forEach((msg, i) => {
+        if (existing[i]) {
+          existing[i].textContent = msg;
+        } else {
+          const span = document.createElement('span');
+          span.className = 'ak-loader__state';
+          span.textContent = msg;
+          container.appendChild(span);
+        }
+      });
+      for (let i = this.messages.length; i < existing.length; i++) {
+        existing[i].remove();
+      }
+      // Si hay un solo mensaje, evitar el ciclo de animacion (siempre visible)
+      container.querySelectorAll('.ak-loader__state').forEach(function(el, idx) {
+        el.classList.toggle('ak-loader__state--static', container.children.length === 1);
+      });
+    }
+
+    /**
+     * Actualiza los mensajes de estado sin cerrar/reabrir el loader.
+     * @param {string[]} messages - Nuevos textos rotativos
+     * @returns {AkLoader} this - para encadenamiento
+     */
+    setMessages(messages) {
+      this.messages = messages.length ? messages : ["Loading application", "Please wait"];
+      this._renderStates();
+      return this;
     }
 
     /** Cierra el loader con fade-out y restaura el scroll */
@@ -4498,6 +4534,7 @@
 
   /**
    * Muestra u oculta el loader de pantalla completa.
+   * Si ya hay un loader abierto, actualiza sus mensajes sin recargar la animación.
    * @param {boolean} show - true para mostrar, false para ocultar
    * @param {string[]} [messages] - Textos rotativos de estado
    * @returns {AkLoader|undefined}
@@ -4507,7 +4544,10 @@
       if (loaderInstance) { loaderInstance.close(); loaderInstance = null; }
       return;
     }
-    if (loaderInstance) { loaderInstance.close(); loaderInstance = null; }
+    if (loaderInstance) {
+      if (messages.length) loaderInstance.setMessages(messages);
+      return loaderInstance;
+    }
     loaderInstance = new AkLoader(messages);
     return loaderInstance;
   }
@@ -4572,7 +4612,17 @@
     el.appendChild(content);
 
     document.body.appendChild(el);
-    requestAnimationFrame(() => el.classList.add("ak-show"));
+    requestAnimationFrame(() => {
+      el.classList.add("ak-show");
+      // Enfocar el botón primario (el último del footer) o el input en prompt
+      if (o.type === "prompt") {
+        const input = body.querySelector("input");
+        if (input) { input.focus(); input.select(); }
+      } else {
+        const primaryBtn = footer.querySelector(".ak-btn:last-child");
+        if (primaryBtn) primaryBtn.focus();
+      }
+    });
 
     let closed = false;
     /** @param {*} value - Valor a pasar al callback */
@@ -4591,7 +4641,6 @@
 
     const keyHandler = (e) => {
       if (e.key === "Escape") { e.preventDefault(); hide(); }
-      if (e.key === "Enter") { e.preventDefault(); closeWith(null); }
     };
     document.addEventListener("keydown", keyHandler);
 
@@ -4693,16 +4742,13 @@
         }},
       ],
     });
-    setTimeout(() => {
-      const input = d.body.querySelector("input");
-      if (input) {
-        input.focus();
-        input.select();
-        input.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") { e.preventDefault(); d.closeWith(input.value); }
-        });
-      }
-    }, 100);
+    // Enter en el input confirma el prompt
+    var inputEl = d.body.querySelector("input");
+    if (inputEl) {
+      inputEl.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") { e.preventDefault(); d.closeWith(this.value); }
+      });
+    }
   }
 
   /* ---- jQuery-lite: Ak() wrapper utilitario -------------------------- */

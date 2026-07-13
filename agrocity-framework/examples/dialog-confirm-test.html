@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Test — Agrocity Kit</title>
+  <link rel="stylesheet" href="../dist/css/agrocity-kit.min.css" />
+  <style>
+    .ak-app-main { padding: 32px 40px; }
+    .log-container {
+      background: #1a1a2e; color: #00ff88; font-family: monospace;
+      padding: 16px; border-radius: var(--ak-radius); font-size: 0.85rem;
+      max-height: 300px; overflow-y: auto; margin-top: 16px;
+    }
+    .log-entry { padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  </style>
+</head>
+<body class="ak-body ak-app">
+  <nav class="ak-navbar">
+    <div class="ak-container-fluid ak-d-flex ak-align-items-center ak-justify-content-between">
+      <span class="ak-h5 ak-m-0 ak-text-white">Agrocity Kit — Confirm Test</span>
+    </div>
+  </nav>
+  <div class="ak-app-body">
+    <main class="ak-app-main">
+      <div class="ak-container" style="max-width: 700px;">
+        <h2 class="ak-h3 ak-text-primary ak-fw-bold ak-mb-3">Prueba de <code>AgrocityKit.confirm()</code></h2>
+        <p class="ak-text-muted ak-mb-4">Prueba llamadas secuenciales y anidadas para verificar que no hay bloqueo.</p>
+
+        <div class="ak-d-flex ak-flex-wrap ak-gap-2 ak-mb-4">
+          <button class="ak-btn ak-btn-primary" id="btnSimple">Confirm simple</button>
+          <button class="ak-btn ak-btn-secondary" id="btnSequential">3 confirm seguidos</button>
+          <button class="ak-btn ak-btn-info" id="btnNested">Confirm anidado</button>
+          <button class="ak-btn ak-btn-outline-danger" id="btnClearLog">Limpiar log</button>
+        </div>
+
+        <div class="log-container" id="log"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../dist/js/agrocity-kit.min.js"></script>
+  <script>
+    Ak(function() {
+      var log = document.getElementById('log');
+
+      function addLog(msg) {
+        var entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      document.getElementById('btnSimple').addEventListener('click', function() {
+        addLog('▶ Abriendo confirm simple...');
+        AgrocityKit.confirm('¿Deseas continuar con la operación?', function(confirmed) {
+          addLog('✓ Callback simple: ' + (confirmed ? 'Aceptó' : 'Canceló'));
+        });
+      });
+
+      document.getElementById('btnSequential').addEventListener('click', function() {
+        addLog('▶ Iniciando secuencia de 3 confirm...');
+
+        AgrocityKit.confirm('Paso 1 de 3: ¿Continuar?', function(c1) {
+          addLog('Paso 1: ' + (c1 ? 'Aceptó' : 'Canceló'));
+          if (!c1) { addLog('⛔ Secuencia abortada'); return; }
+
+          AgrocityKit.confirm('Paso 2 de 3: ¿Continuar?', function(c2) {
+            addLog('Paso 2: ' + (c2 ? 'Aceptó' : 'Canceló'));
+            if (!c2) { addLog('⛔ Secuencia abortada'); return; }
+
+            AgrocityKit.confirm('Paso 3 de 3: ¿Finalizar?', function(c3) {
+              addLog('Paso 3: ' + (c3 ? 'Aceptó' : 'Canceló'));
+              addLog(c3 ? '✅ Secuencia completada' : '⛔ Secuencia abortada');
+            });
+          });
+        });
+      });
+
+      document.getElementById('btnNested').addEventListener('click', function() {
+        addLog('▶ Abriendo confirm con callback que abre otro...');
+        AgrocityKit.confirm('¿Eliminar registro?', function(confirmed) {
+          if (!confirmed) { addLog('Canceló eliminación'); return; }
+          addLog('▶ Aceptó eliminar, confirmando nuevamente...');
+
+          AgrocityKit.confirm({
+            title: 'Confirmar eliminación',
+            message: 'Esta acción no se puede deshacer. ¿Estás seguro?',
+            confirmText: 'Sí, eliminar',
+            confirmVariant: 'danger',
+            cancelText: 'No, cancelar',
+            callback: function(c2) {
+              addLog(c2
+                ? '✅ Registro eliminado'
+                : '⛔ Eliminación cancelada');
+            }
+          });
+        });
+      });
+
+      document.getElementById('btnClearLog').addEventListener('click', function() {
+        log.innerHTML = '';
+      });
+    });
+  </script>
+</body>
+</html>

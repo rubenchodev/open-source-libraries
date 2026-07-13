@@ -782,8 +782,11 @@ AgrocityKit.passwordToggle(root);
 AgrocityKit.fileInput(root);
 AgrocityKit.formValidation('init', formSelector, { onSuccess, onError });
 AgrocityKit.formValidation('field', fieldElement);
+AgrocityKit.formValidation('validate', formSelector); // fuerza validación completa, retorna true/false
+AgrocityKit.formValidation('reset', formSelector); // limpia estado visual de validación
 AgrocityKit.showToast(message, { type, position, duration, title });
 AgrocityKit.loader(show, [messages]);
+AgrocityKit.loader(true).setMessages(['nuevos', 'mensajes']); // actualiza sin reiniciar animación
 AgrocityKit.alert(msg);
 AgrocityKit.confirm(msg, callback);
 AgrocityKit.prompt(msg, defaultValue, callback);

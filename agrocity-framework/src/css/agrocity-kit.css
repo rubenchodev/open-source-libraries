@@ -3889,6 +3889,11 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   opacity: 0;
   animation: ak-loader-cycle 8s ease-in-out infinite;
 }
+.ak-loader__state--static {
+  position: static;
+  opacity: 1;
+  animation: none;
+}
 .ak-loader__state:nth-child(1) { animation-delay: 0s; }
 .ak-loader__state:nth-child(2) { animation-delay: 2s; }
 .ak-loader__state:nth-child(3) { animation-delay: 4s; }
