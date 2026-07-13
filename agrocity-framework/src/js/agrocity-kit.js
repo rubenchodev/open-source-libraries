@@ -143,6 +143,193 @@
       return window.matchMedia("(max-width: 640px)").matches;
     },
 
+    /** Encuentra el contenedor visual de un campo para mostrar feedback de validación. */
+    getValidationContainer(el) {
+      if (el.type === 'file' || el.closest('.ak-form-file')) {
+        return el.closest('.ak-form-file') || el;
+      }
+      if (el.hasAttribute('data-ak-select')) {
+        var next = el.nextElementSibling;
+        return (next && next.classList.contains('ak-select')) ? next : el;
+      }
+      if (el.closest('.ak-select')) {
+        return el.closest('.ak-select');
+      }
+      if (el.closest('.ak-datepicker')) {
+        return el.closest('.ak-datepicker');
+      }
+      if (el.closest('.ak-timepicker')) {
+        return el.closest('.ak-timepicker');
+      }
+      if (el.closest('.ak-password-wrap')) {
+        return el.closest('.ak-password-wrap');
+      }
+      if (el.closest('.ak-input-group')) {
+        return el.closest('.ak-input-group');
+      }
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        return el.closest('.ak-form-check') || el;
+      }
+      return el;
+    },
+
+    /** Obtiene el valor actual de un campo considerando su tipo (checkbox, radio, file, select). */
+    getValidationValue(el) {
+      if (el.type === 'file') {
+        return el.files && el.files.length > 0 ? 'filled' : '';
+      }
+      if (el.closest('.ak-form-file')) {
+        const input = el.closest('.ak-form-file').querySelector('.ak-form-file-input');
+        return input && input.files && input.files.length > 0 ? 'filled' : '';
+      }
+      if (el.hasAttribute('data-ak-select')) {
+        return el.value || '';
+      }
+      if (el.type === 'checkbox') {
+        return el.checked ? (el.value || 'on') : '';
+      }
+      if (el.type === 'radio') {
+        if (!el.name) return el.checked ? (el.value || 'on') : '';
+        const form = el.form;
+        const selector = 'input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]';
+        const radios = form ? form.querySelectorAll(selector) : document.querySelectorAll(selector);
+        for (var i = 0; i < radios.length; i++) {
+          if (radios[i].checked) return radios[i].value || 'on';
+        }
+        return '';
+      }
+      return el.value;
+    },
+
+    /** Encuentra el input accesible para focus dentro de un contenedor (útil en custom select). */
+    getValidationControl(el) {
+      if (el.hasAttribute('data-ak-select')) {
+        var container = el.nextElementSibling;
+        if (!container || !container.classList.contains('ak-select')) container = el;
+        var search = container.querySelector('.ak-select__search');
+        return search || el;
+      }
+      return el;
+    },
+
+    /** Obtiene el mensaje de error para una regla específica o el genérico. */
+    getValidationMsg(el, rule, fallback) {
+      return el.getAttribute('data-ak-msg-' + rule) || el.getAttribute('data-ak-msg') || fallback;
+    },
+
+    /** Parsea el string data-ak-validate a objeto {regla: valor}. */
+    parseValidationRules(el) {
+      const str = el.getAttribute('data-ak-validate');
+      if (!str) return {};
+      return str.split('|').reduce((acc, r) => {
+        const [k, ...v] = r.split(':');
+        acc[k] = v.length ? v.join(':') : true;
+        return acc;
+      }, {});
+    },
+
+    /** Valida un campo individual, actualiza clases visuales y retorna true/false. */
+    validateField(el) {
+      const rules = Helpers.parseValidationRules(el);
+      if (!Object.keys(rules).length) return true;
+
+      const container = Helpers.getValidationContainer(el);
+      const value = Helpers.getValidationValue(el);
+      const isEmpty = !value || (typeof value === 'string' && value.trim() === '');
+      let valid = true;
+      let errorMsg = '';
+
+      if (rules.required && isEmpty) {
+        valid = false;
+        errorMsg = Helpers.getValidationMsg(el, 'required', 'Este campo es obligatorio');
+      }
+
+      if (valid && rules.email && !isEmpty) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          valid = false;
+          errorMsg = Helpers.getValidationMsg(el, 'email', 'Formato de email inválido');
+        }
+      }
+
+      if (valid && rules.min && !isEmpty) {
+        if (el.type === 'number') {
+          if (parseFloat(value) < parseFloat(rules.min)) {
+            valid = false;
+            errorMsg = Helpers.getValidationMsg(el, 'min', 'Valor mínimo ' + rules.min);
+          }
+        } else if (value.length < parseInt(rules.min, 10)) {
+          valid = false;
+          errorMsg = Helpers.getValidationMsg(el, 'min', 'Mínimo ' + rules.min + ' caracteres');
+        }
+      }
+
+      if (valid && rules.max && !isEmpty) {
+        if (el.type === 'number') {
+          if (parseFloat(value) > parseFloat(rules.max)) {
+            valid = false;
+            errorMsg = Helpers.getValidationMsg(el, 'max', 'Valor máximo ' + rules.max);
+          }
+        } else if (value.length > parseInt(rules.max, 10)) {
+          valid = false;
+          errorMsg = Helpers.getValidationMsg(el, 'max', 'Máximo ' + rules.max + ' caracteres');
+        }
+      }
+
+      if (valid && rules.pattern && !isEmpty) {
+        try {
+          if (!new RegExp(rules.pattern).test(value)) {
+            valid = false;
+            errorMsg = Helpers.getValidationMsg(el, 'pattern', 'Formato inválido');
+          }
+        } catch (_) {}
+      }
+
+      container.classList.toggle('ak-is-invalid', !valid);
+      container.classList.remove('ak-is-valid');
+
+      if (el.type === 'radio' && valid && el.name) {
+        var radios = (el.form || document).querySelectorAll('input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]');
+        radios.forEach(function(r) {
+          if (r !== el) {
+            var c = Helpers.getValidationContainer(r);
+            c.classList.remove('ak-is-invalid', 'ak-is-valid');
+          }
+        });
+      }
+
+      const parent = container.parentElement;
+      if (!parent) return valid;
+
+      const label = parent.querySelector('.ak-form-label');
+      if (label) {
+        label.classList.toggle('ak-text-danger', !valid);
+        if (valid) label.classList.remove('ak-text-success');
+      }
+
+      if (container.classList.contains('ak-select')) {
+        container.classList.toggle('ak-has-error', !valid);
+        const errMsg = container.querySelector('.ak-select__error-msg');
+        if (errMsg) errMsg.textContent = !valid ? errorMsg : '';
+        return valid;
+      }
+
+      let invalidEl = parent.querySelector('.ak-invalid-feedback');
+      if (!invalidEl && parent !== el.form) {
+        invalidEl = document.createElement('div');
+        invalidEl.className = 'ak-invalid-feedback';
+        parent.appendChild(invalidEl);
+      }
+
+      if (!valid && invalidEl) {
+        invalidEl.textContent = errorMsg;
+        invalidEl.style.display = 'block';
+      } else if (invalidEl) {
+        invalidEl.style.display = 'none';
+      }
+
+      return valid;
+    },
+
     /** Inicializa validación reactiva en un formulario. */
     formValidationInit(target, options) {
       const forms = Helpers.resolveElements(target);
@@ -165,192 +352,7 @@
           label.appendChild(span);
         });
 
-        const getContainer = (el) => {
-          if (el.type === 'file' || el.closest('.ak-form-file')) {
-            return el.closest('.ak-form-file') || el;
-          }
-          if (el.hasAttribute('data-ak-select')) {
-            var next = el.nextElementSibling;
-            return (next && next.classList.contains('ak-select')) ? next : el;
-          }
-          if (el.closest('.ak-select')) {
-            return el.closest('.ak-select');
-          }
-          if (el.closest('.ak-datepicker')) {
-            return el.closest('.ak-datepicker');
-          }
-          if (el.closest('.ak-timepicker')) {
-            return el.closest('.ak-timepicker');
-          }
-          if (el.closest('.ak-password-wrap')) {
-            return el.closest('.ak-password-wrap');
-          }
-          if (el.closest('.ak-input-group')) {
-            return el.closest('.ak-input-group');
-          }
-          if (el.type === 'checkbox' || el.type === 'radio') {
-            return el.closest('.ak-form-check') || el;
-          }
-          return el;
-        };
-
-        const getValue = (el) => {
-          if (el.type === 'file') {
-            return el.files && el.files.length > 0 ? 'filled' : '';
-          }
-          if (el.closest('.ak-form-file')) {
-            const input = el.closest('.ak-form-file').querySelector('.ak-form-file-input');
-            return input && input.files && input.files.length > 0 ? 'filled' : '';
-          }
-          if (el.hasAttribute('data-ak-select')) {
-            return el.value || '';
-          }
-          if (el.type === 'checkbox') {
-            return el.checked ? (el.value || 'on') : '';
-          }
-          if (el.type === 'radio') {
-            if (!el.name) return el.checked ? (el.value || 'on') : '';
-            const form = el.form;
-            const selector = 'input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]';
-            const radios = form ? form.querySelectorAll(selector) : document.querySelectorAll(selector);
-            for (var i = 0; i < radios.length; i++) {
-              if (radios[i].checked) return radios[i].value || 'on';
-            }
-            return '';
-          }
-          return el.value;
-        };
-
-        const getControl = (el) => {
-          if (el.hasAttribute('data-ak-select')) {
-            var container = el.nextElementSibling;
-            if (!container || !container.classList.contains('ak-select')) container = el;
-            var search = container.querySelector('.ak-select__search');
-            return search || el;
-          }
-          return el;
-        };
-
-        const getMsg = (el, rule, fallback) => {
-          return el.getAttribute('data-ak-msg-' + rule) || el.getAttribute('data-ak-msg') || fallback;
-        };
-
-        const parseRules = (el) => {
-          const str = el.getAttribute('data-ak-validate');
-          if (!str) return {};
-          return str.split('|').reduce((acc, r) => {
-            const [k, ...v] = r.split(':');
-            acc[k] = v.length ? v.join(':') : true;
-            return acc;
-          }, {});
-        };
-
-        const validateField = (el) => {
-          const rules = parseRules(el);
-          if (!Object.keys(rules).length) return true;
-
-          const container = getContainer(el);
-          const value = getValue(el);
-          const isEmpty = !value || (typeof value === 'string' && value.trim() === '');
-          let valid = true;
-          let errorMsg = '';
-
-          if (rules.required && isEmpty) {
-            valid = false;
-            errorMsg = getMsg(el, 'required', 'Este campo es obligatorio');
-          }
-
-          if (valid && rules.email && !isEmpty) {
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-              valid = false;
-              errorMsg = getMsg(el, 'email', 'Formato de email inválido');
-            }
-          }
-
-          if (valid && rules.min && !isEmpty) {
-            if (el.type === 'number') {
-              if (parseFloat(value) < parseFloat(rules.min)) {
-                valid = false;
-                errorMsg = getMsg(el, 'min', 'Valor mínimo ' + rules.min);
-              }
-            } else if (value.length < parseInt(rules.min, 10)) {
-              valid = false;
-              errorMsg = getMsg(el, 'min', 'Mínimo ' + rules.min + ' caracteres');
-            }
-          }
-
-          if (valid && rules.max && !isEmpty) {
-            if (el.type === 'number') {
-              if (parseFloat(value) > parseFloat(rules.max)) {
-                valid = false;
-                errorMsg = getMsg(el, 'max', 'Valor máximo ' + rules.max);
-              }
-            } else if (value.length > parseInt(rules.max, 10)) {
-              valid = false;
-              errorMsg = getMsg(el, 'max', 'Máximo ' + rules.max + ' caracteres');
-            }
-          }
-
-          if (valid && rules.pattern && !isEmpty) {
-            try {
-              if (!new RegExp(rules.pattern).test(value)) {
-                valid = false;
-                errorMsg = getMsg(el, 'pattern', 'Formato inválido');
-              }
-            } catch (_) { /* ignore invalid regex */ }
-          }
-
-          // Actualizar clases visuales (solo error)
-          container.classList.toggle('ak-is-invalid', !valid);
-          container.classList.remove('ak-is-valid');
-
-          // Radio group: limpiar error de todos los radios del mismo grupo al validar uno
-          if (el.type === 'radio' && valid && el.name) {
-            var radios = form.querySelectorAll('input[type="radio"][name="' + el.name.replace(/["\\]/g, '\\$&') + '"]');
-            radios.forEach(function(r) {
-              if (r !== el) {
-                var c = getContainer(r);
-                c.classList.remove('ak-is-invalid');
-                c.classList.remove('ak-is-valid');
-              }
-            });
-          }
-
-          // Mostrar feedback y label (auto-crea si no existe)
-          const parent = container.parentElement;
-          if (!parent) return valid;
-
-          const label = parent.querySelector('.ak-form-label');
-          if (label) {
-            label.classList.toggle('ak-text-danger', !valid);
-            if (valid) label.classList.remove('ak-text-success');
-          }
-
-          // Custom Select: usar sistema de error nativo (.ak-has-error + .ak-select__error-msg)
-          if (container.classList.contains('ak-select')) {
-            container.classList.toggle('ak-has-error', !valid);
-            const errMsg = container.querySelector('.ak-select__error-msg');
-            if (errMsg) errMsg.textContent = !valid ? errorMsg : '';
-            return valid;
-          }
-
-          let invalidEl = parent.querySelector('.ak-invalid-feedback');
-
-          if (!invalidEl && parent !== form) {
-            invalidEl = document.createElement('div');
-            invalidEl.className = 'ak-invalid-feedback';
-            parent.appendChild(invalidEl);
-          }
-
-          if (!valid && invalidEl) {
-            invalidEl.textContent = errorMsg;
-            invalidEl.style.display = 'block';
-          } else if (invalidEl) {
-            invalidEl.style.display = 'none';
-          }
-
-          return valid;
-        };
+        
 
         // Eventos en tiempo real
         form.querySelectorAll('[data-ak-validate]').forEach(el => {
@@ -362,7 +364,7 @@
               if (form.classList.contains('ak-was-validated') ||
                   el.classList.contains('ak-is-invalid') ||
                   el.classList.contains('ak-is-valid')) {
-                validateField(el);
+                Helpers.validateField(el);
               }
             });
           });
@@ -374,13 +376,13 @@
           form.classList.add('ak-was-validated');
           const errors = [];
           form.querySelectorAll('[data-ak-validate]').forEach(el => {
-            if (!validateField(el)) errors.push(el);
+            if (!Helpers.validateField(el)) errors.push(el);
           });
 
           if (errors.length) {
             if (opts.onError) opts.onError(form, errors);
             const first = errors[0];
-            const input = getControl(first);
+            const input = Helpers.getValidationControl(first);
             if (input && input.focus) input.focus();
             return;
           }
@@ -1101,13 +1103,56 @@
         return Helpers.formValidationInit(target, options);
       }
       if (action === 'field') {
-        // Force re-validate a single field
         if (!target || !target.closest) return true;
         const form = target.closest('[data-ak-validation]') || target.closest('form');
         if (!form || !form._akFvInit) return true;
-        // Trigger validation by dispatching blur
         target.dispatchEvent(new Event('blur', { bubbles: true }));
         return !target.classList.contains('ak-is-invalid');
+      }
+      if (action === 'reset') {
+        const forms = Helpers.resolveElements(target);
+        forms.forEach(form => {
+          if (!form || !form._akFvInit) return;
+          form.classList.remove('ak-was-validated');
+          form.querySelectorAll('[data-ak-validate]').forEach(el => {
+            const container = Helpers.getValidationContainer(el);
+            container.classList.remove('ak-is-invalid', 'ak-is-valid');
+            const parent = container.parentElement;
+            if (!parent) return;
+            const label = parent.querySelector('.ak-form-label');
+            if (label) label.classList.remove('ak-text-danger', 'ak-text-success');
+            if (container.classList.contains('ak-select')) {
+              container.classList.remove('ak-has-error');
+              const errMsg = container.querySelector('.ak-select__error-msg');
+              if (errMsg) errMsg.textContent = '';
+            }
+            const invalidEl = parent.querySelector('.ak-invalid-feedback');
+            if (invalidEl) {
+              invalidEl.textContent = '';
+              invalidEl.style.display = 'none';
+            }
+          });
+        });
+        return;
+      }
+      if (action === 'validate') {
+        const forms = Helpers.resolveElements(target);
+        const results = forms.map(form => {
+          if (!form || !form._akFvInit) return true;
+          form.classList.add('ak-was-validated');
+          const errors = [];
+          form.querySelectorAll('[data-ak-validate]').forEach(el => {
+            if (!Helpers.validateField(el)) errors.push(el);
+          });
+          if (errors.length) {
+            const first = errors[0];
+            const control = Helpers.getValidationControl(first);
+            if (control && control.focus) control.focus();
+            return false;
+          }
+          return true;
+        });
+        return results.length === 1 ? results[0] : results;
       }
     },
 

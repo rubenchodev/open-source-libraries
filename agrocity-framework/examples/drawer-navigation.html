@@ -255,6 +255,9 @@
 
           <div class="ak-d-flex ak-justify-content-end ak-gap-2">
             <button class="ak-btn ak-btn-secondary" type="button">Cancelar</button>
+            <button class="ak-btn ak-btn-outline-danger" type="button" id="btnResetForm21">
+              <span data-ak-icon="refresh"></span> Restablecer
+            </button>
             <button class="ak-btn ak-btn-primary" type="submit">Guardar expediente</button>
           </div>
         </form>
@@ -833,6 +836,11 @@
     document.getElementById('btnNewProcedure22').addEventListener('click', function() {
       currentProcedurePanel_ = 'procedurePanel22';
       AgrocityKit.modal('#modalNuevaSolicitud').show();
+    });
+
+    // ─── Botón "Restablecer" formulario ────────────────────────────────────
+    document.getElementById('btnResetForm21').addEventListener('click', function() {
+      AgrocityKit.formValidation('reset', '#formProcedure21');
     });
 
     document.getElementById('btnGuardarSolicitud').addEventListener('click', function() {
