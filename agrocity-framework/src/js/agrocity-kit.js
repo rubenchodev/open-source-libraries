@@ -1923,7 +1923,8 @@
 
     /** @desc Extrae data/columns desde una <table> HTML si no se proveyeron. */
     _extractDataIfNeeded() {
-      if (this.opts.columns && this.opts.data) return;
+      var hasData = this.opts.data && Array.isArray(this.opts.data) && this.opts.data.length;
+      if (this.opts.columns && hasData) return;
       const table = this.target.tagName === "TABLE" ? this.target : this.target.querySelector("table");
       if (!table) return;
 
@@ -1946,11 +1947,10 @@
           return col;
         }.bind(this));
       } else {
-        // Merge thAttrs y sortable desde los <th> originales
         ths.forEach(function(th, i) {
           var col = this.opts.columns[i];
           if (!col) return;
-          if (col.sortable === undefined && th.hasAttribute("data-sortable")) {
+          if (th.hasAttribute("data-sortable")) {
             col.sortable = th.getAttribute("data-sortable") !== "false";
           }
           var attrs = {};
