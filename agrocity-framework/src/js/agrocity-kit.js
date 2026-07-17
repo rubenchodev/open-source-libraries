@@ -541,27 +541,32 @@
       /**
        * @desc Devuelve los municipios de un estado.
        * @param {string} stateId
-       * @returns {Promise<Array<{id:string, name:string, neighborhoods?:Array}>>}
+       * @returns {Promise<Array<{id:string, name:string}>>}
        */
       fetchMunicipalities(stateId) {
         return this.fetchStateData(stateId).then(function(data) { return data.municipalities || []; });
       },
 
       /**
-       * @desc Devuelve las colonias de un municipio.
+       * @desc Devuelve las colonias de un municipio desde colonias/{stateId}{munId}.json.
        * @param {string} stateId
        * @param {string} municipalityId
        * @returns {Promise<Array<{name:string, zip?:string}>>}
        */
       fetchNeighborhoods(stateId, municipalityId) {
-        return this.fetchStateData(stateId).then(function(data) {
-          var municipalities = data.municipalities || [];
-          for (var i = 0; i < municipalities.length; i++) {
-            var m = municipalities[i];
-            if (m && m.id === municipalityId) return m.neighborhoods || [];
-          }
-          return [];
-        });
+        var key = stateId + municipalityId;
+        if (this.cache[key]) return Promise.resolve(this.cache[key]);
+        if (this.loading[key]) return this.loading[key];
+        this.loading[key] = fetch(this.baseUrl + 'colonias/' + key + '.json')
+          .then(function(r) { if (!r.ok) return { neighborhoods: [] }; return r.json(); })
+          .then(function(data) {
+            var neighborhoods = data.neighborhoods || [];
+            this.cache[key] = neighborhoods;
+            delete this.loading[key];
+            return neighborhoods;
+          }.bind(this))
+          .catch(function(e) { delete this.loading[key]; Helpers.warn('geo.fetchNeighborhoods: ' + e.message); return []; }.bind(this));
+        return this.loading[key];
       }
     },
 

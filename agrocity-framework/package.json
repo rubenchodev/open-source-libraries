@@ -7,7 +7,10 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "preview": "npx http-server examples -o"
+    "preview": "npx http-server examples -o",
+    "sync:mxgeo": "node scripts/sync-mxgeo.js",
+    "sync:mxgeo:dry": "node scripts/sync-mxgeo.js --dry-run",
+    "sync:mxgeo:fast": "node scripts/sync-mxgeo.js --skip-colonias"
   },
   "devDependencies": {
     "terser": "^5.39.0",
