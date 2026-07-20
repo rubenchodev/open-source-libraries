@@ -1568,6 +1568,8 @@
         this.items.forEach((i) => (i.selected = false));
         item.selected = true;
       }
+      this.state.query = '';
+      if (this.searchInput) this.searchInput.value = '';
       this._syncNativeFromItems();
       this._renderOptions();
       this._renderValue();
@@ -1884,9 +1886,29 @@
         disabled: !!it.disabled,
         selected: !!it.selected,
       }));
-      this._syncNativeFromItems();
+      this.native.innerHTML = '';
+      this.items.forEach((it) => {
+        const opt = document.createElement('option');
+        opt.value = it.value;
+        opt.textContent = it.label;
+        opt.selected = it.selected;
+        this.native.appendChild(opt);
+      });
       this._renderOptions();
       this._renderValue();
+      Helpers.emit(this.native, 'change', { source: 'agrocity-kit' });
+    }
+
+    /** @desc Relee las opciones del <select> nativo y re-renderiza. */
+    refresh() {
+      this._readNativeOptions();
+      if (this.opts.remoteUrl || this.opts.remote) {
+        this._loadRemote(this.state.query);
+      } else {
+        this._renderOptions();
+      }
+      this._renderValue();
+      this._applyStates();
     }
 
     /** Muestra/oculta estado de carga. */

@@ -1984,15 +1984,32 @@ AgrocityKit.formValidation('field', elementoInput);</pre>
         </div>
       </div>
 
-      <h3>DatePicker con hora</h3>
-      <p>Combina fecha y hora usando <code>data-ak-datetime</code>. Usa los mismos data-atributos del datepicker más formato con hora.</p>
-      <div style="max-width:240px;">
-        <label class="ak-form-label">Fecha y hora</label>
-        <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm" data-ak-placeholder="DD/MM/AAAA HH:mm" />
+      <h3>DatePicker con hora (datetime)</h3>
+      <p>El DatePicker se convierte automáticamente en selector de fecha y hora cuando el <code>format</code> incluye <code>HH</code> (horas) o <code>mm</code> (minutos). Aparece un botón de reloj &#x1F550; en el pie del calendario que alterna a la vista de selección de hora.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="max-width:240px;">
+          <label class="ak-form-label">Formato 24h</label>
+          <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm" data-ak-placeholder="DD/MM/AAAA HH:mm" />
+        </div>
+        <div style="max-width:240px;">
+          <label class="ak-form-label">Formato ISO</label>
+          <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="YYYY-MM-DD HH:mm" data-ak-placeholder="AAAA-MM-DD HH:mm" />
+        </div>
+        <div style="max-width:180px;">
+          <label class="ak-form-label">Solo minutos</label>
+          <input type="text" class="ak-form-control" data-ak-datepicker data-ak-format="DD/MM/YYYY mm" data-ak-placeholder="DD/MM/AAAA mm" />
+        </div>
       </div>
+      <p class="ak-text-muted" style="font-size:0.85rem;margin-top:4px;">
+        <strong>Navegación:</strong> En vista días, haz clic en el botón de reloj en el footer para ir al selector de hora. Ajusta con flechas del teclado o clic. La selección completa se guarda al cerrar o al presionar "Hoy".
+      </p>
 
       <pre class="ak-docs-code">&lt;!-- DatePicker simple --&gt;
 &lt;input type="text" data-ak-datepicker data-ak-format="DD/MM/YYYY" /&gt;
+
+&lt;!-- DatePicker con hora (formato incluye HH:mm) --&gt;
+&lt;input type="text" data-ak-datepicker data-ak-format="DD/MM/YYYY HH:mm"
+       data-ak-placeholder="DD/MM/AAAA HH:mm" /&gt;
 
 &lt;!-- DateRange --&gt;
 &lt;div data-ak-date-range&gt;
@@ -2000,14 +2017,12 @@ AgrocityKit.formValidation('field', elementoInput);</pre>
   &lt;input type="text" data-ak-datepicker data-ak-placeholder="Fin" /&gt;
 &lt;/div&gt;
 
-&lt;!-- JS init --&gt;
+&lt;!-- JS init con datetime --&gt;
 &lt;script&gt;
   AgrocityKit.datepicker('#miInput', {
-    format: 'YYYY-MM-DD',
-    minDate: '2024-01-01',
-    maxDate: '2026-12-31',
-    autoclose: true,
-    todayHighlight: true
+    format: 'DD/MM/YYYY HH:mm',
+    placeholder: 'Fecha y hora...',
+    autoclose: false   // no cerrar para permitir ajustar hora
   });
 &lt;/script&gt;</pre>
 

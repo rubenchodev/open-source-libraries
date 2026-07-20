@@ -307,6 +307,39 @@ AgrocityKit.select('#mi-select', {
 });
 ```
 
+**API de la instancia:**
+
+```javascript
+const sel = AgrocityKit.select('#mi-select');
+
+sel.getValue();              // Retorna valor(es) seleccionados
+sel.setValue('valor');       // Establece valor programáticamente
+sel.setOptions([             // Reemplaza opciones dinámicamente
+  { value: '1', label: 'Uno', selected: true },
+  { value: '2', label: 'Dos' },
+]);
+sel.refresh();               // Relee <option> del nativo y re-renderiza
+sel.clear();                 // Limpia toda la selección
+sel.open();                  // Abre el dropdown
+sel.close();                 // Cierra el dropdown
+sel.toggle();                // Alterna el dropdown
+sel.setLoading(true);        // Estado de carga
+sel.setDisabled(true);       // Deshabilitar
+sel.setReadonly(true);       // Solo lectura
+sel.setError('Mensaje');     // Estado error
+sel.destroy();               // Elimina y restaura <select> nativo
+```
+
+**Eventos:**
+
+```javascript
+document.getElementById('mi-select').addEventListener('ak:select:change', (e) => {
+  console.log('Selección:', e.detail.value);
+});
+document.getElementById('mi-select').addEventListener('ak:select:open', () => {});
+document.getElementById('mi-select').addEventListener('ak:select:close', () => {});
+```
+
 ### Checks, Radios y Switches
 
 ```html
@@ -378,11 +411,52 @@ document.getElementById('mi-input').addEventListener('ak:datepicker:change', (e)
 - Teclado: flechas para moverse entre días, Enter para seleccionar.
 
 **API:**
-- `getValue()` — Retorna `YYYY-MM-DD` o `null`.
+- `getValue()` — Retorna `YYYY-MM-DD` (o `YYYY-MM-DD HH:mm` en modo datetime) o `null`.
 - `setValue('2026-07-15')` o `setValue(new Date())` — Establece una fecha (string o Date).
 - `refresh()` — Re-renderiza si está abierto (útil tras cambiar `minDate`/`maxDate`).
 - `show()`, `hide()`, `toggle()` — Control manual del overlay.
 - `destroy()` — Elimina el DatePicker.
+
+---
+
+### DatePicker con hora (datetime)
+
+El DatePicker se convierte automáticamente en selector de fecha y hora cuando el formato incluye `HH` (horas) o `mm` (minutos). Aparece un botón de reloj en el pie del calendario que alterna a la vista de selección de hora.
+
+```html
+<!-- Formato 24h -->
+<input type="text" class="ak-form-control" data-ak-datepicker
+       data-ak-format="DD/MM/YYYY HH:mm"
+       data-ak-placeholder="DD/MM/AAAA HH:mm" />
+
+<!-- Formato ISO -->
+<input type="text" class="ak-form-control" data-ak-datepicker
+       data-ak-format="YYYY-MM-DD HH:mm" />
+
+<!-- Solo minutos, sin horas -->
+<input type="text" class="ak-form-control" data-ak-datepicker
+       data-ak-format="DD/MM/YYYY mm" />
+```
+
+**Via JS:**
+```javascript
+AgrocityKit.datepicker('#mi-input', {
+  format: 'DD/MM/YYYY HH:mm',
+  placeholder: 'Fecha y hora...',
+  autoclose: false,     // no cerrar automáticamente para permitir ajustar hora
+});
+```
+
+**Navegación:**
+- En vista días, hay un botón de reloj en el footer con la hora actual.
+- Haz clic en el botón para cambiar a la vista de selección de hora.
+- Ajusta hora y minuto con las flechas del teclado o haciendo clic.
+- La selección completa (fecha + hora) se guarda al cerrar o al hacer clic en "Hoy".
+
+**API específica:**
+- `getValue()` — Retorna `YYYY-MM-DD HH:mm` o `null`.
+- `setValue('2026-07-15 14:30')` — Fecha y hora en formato string.
+- `setValue(new Date())` — También acepta objetos Date.
 
 ---
 
