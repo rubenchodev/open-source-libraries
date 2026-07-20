@@ -3878,6 +3878,7 @@ body.ak-loader-disable-scroll { overflow: hidden; }
   position: relative;
   width: 230px;
   height: 16px;
+  text-align: center;
 }
 .ak-loader__state {
   position: absolute;
