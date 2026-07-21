@@ -1,7 +1,6 @@
 # 🌍 Cities JSON - Rogelio Salmona Pre-registration
 
-Banco de datos geográficos con **227 países** y **~77,000 ciudades** para el formulario de pre-registro del Premio Latinoamericano de Arquitectura Rogelio Salmona.
-
+Banco de datos geográficos con **223 países** y **~168,000 ciudades**
 ## 🚀 Instalación
 
 ### Desde CDN (jsDelivr)
@@ -23,12 +22,6 @@ Banco de datos geográficos con **227 países** y **~77,000 ciudades** para el f
 
 > **Nota:** Si experimentas problemas de caché, purga el CDN en https://www.jsdelivr.com/tools/purge
 
-### Local
-
-```html
-<script src="ruta/a/geoData/citiesJson.js"></script>
-```
-
 ## 📦 Estructura del objeto
 
 ```js
@@ -44,21 +37,17 @@ const G_CITIES_OBJECT = {
 
 | Métrica | Valor |
 |---------|-------|
-| Países | 227 |
-| Total ciudades | 76,869 |
-| País con más ciudades | US (13,718) |
-| Archivo | ~960 KB |
+| Países | 223 |
+| Total ciudades | 168,707 |
+| País con más ciudades | US (11,940) |
+| Archivo | ~2.26 MB |
 
 ## 🗺️ Países con más ciudades
 
 | Código | País | Ciudades |
 |--------|------|----------|
-| US | United States | 13,718 |
-| FR | France | 12,548 |
-| DE | Germany | 7,249 |
-| IT | Italy | 4,395 |
-| GB | United Kingdom | 2,926 |
-
-## 📄 Licencia
-
-Uso interno para el proyecto Fundación Rogelio Salmona.
+| US | United States | 11,940 |
+| MX | Mexico | 8,048 |
+| ES | Spain | 8,342 |
+| IT | Italy | 9,636 |
+| DE | Germany | 6,846 |
