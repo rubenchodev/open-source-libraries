@@ -122,6 +122,28 @@
     return this.each(function () { this.removeEventListener(type, fn); });
   };
 
+  /** Atajo para addEventListener de eventos comunes */
+  function shortcutEvent_(type) {
+    return function (fn) {
+      if (fn) return this.each(function () { this.addEventListener(type, fn); });
+      var el = this[0];
+      if (el) el.dispatchEvent(new Event(type, { bubbles: true, cancelable: true }));
+      return this;
+    };
+  }
+
+  QCollection.prototype.click = shortcutEvent_("click");
+  QCollection.prototype.change = shortcutEvent_("change");
+  QCollection.prototype.dblclick = shortcutEvent_("dblclick");
+  QCollection.prototype.blur = shortcutEvent_("blur");
+  QCollection.prototype.keydown = shortcutEvent_("keydown");
+  QCollection.prototype.keyup = shortcutEvent_("keyup");
+  QCollection.prototype.mouseenter = shortcutEvent_("mouseenter");
+  QCollection.prototype.mouseleave = shortcutEvent_("mouseleave");
+  QCollection.prototype.resize = shortcutEvent_("resize");
+  QCollection.prototype.scroll = shortcutEvent_("scroll");
+  QCollection.prototype.select = shortcutEvent_("select");
+
   /** Asigna handler submit o dispara submit */
   QCollection.prototype.submit = function (fn) {
     if (fn) return this.each(function () { this.addEventListener("submit", fn); });
@@ -130,6 +152,22 @@
       el.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
     }
     return this;
+  };
+
+  /** Asigna handler focus o enfoca el primer elemento */
+  QCollection.prototype.focus = function (fn) {
+    if (fn) return this.each(function () { this.addEventListener("focus", fn); });
+    var el = this[0];
+    if (el) el.focus({ preventScroll: true });
+    return this;
+  };
+
+  /** Asigna handlers hover (mouseenter + mouseleave) */
+  QCollection.prototype.hover = function (fnIn, fnOut) {
+    return this.each(function () {
+      this.addEventListener("mouseenter", fnIn);
+      if (fnOut) this.addEventListener("mouseleave", fnOut);
+    });
   };
 
   /** Busca descendientes por selector CSS */
@@ -276,13 +314,6 @@
     return this.each(function () {
       this.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: detail }));
     });
-  };
-
-  /** Enfoca el primer elemento */
-  QCollection.prototype.focus = function () {
-    var el = this[0];
-    if (el) el.focus({ preventScroll: true });
-    return this;
   };
 
   /** Vacía contenido interno */
