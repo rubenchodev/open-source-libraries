@@ -1,0 +1,13 @@
+{
+  "name": "framework-web",
+  "version": "1.0.0",
+  "description": "Framework web ligero: jQuery-lite + módulo geo MX",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node build.js --watch",
+    "fetch-localidades": "node scripts/fetch-localidades.js"
+  },
+  "devDependencies": {
+    "terser": "^5.0.0"
+  }
+}
