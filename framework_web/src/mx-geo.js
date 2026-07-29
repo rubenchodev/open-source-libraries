@@ -171,13 +171,28 @@
 
   function applyPendingValue_(el) {
     var id = el.getAttribute("data-mxgeo-id");
+    var val = el.getAttribute("data-mxgeo-value");
     if (id) {
       el.removeAttribute("data-mxgeo-id");
       var opt = Array.from(el.options).find(function (o) { return o.dataset.mxgeoId === id; });
       if (opt) el.value = opt.value;
-      emit(el, "mxgeo:value-set", { value: id });
-      if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, id);
-      el.dispatchEvent(new Event("change", { bubbles: true }));
+    } else if (val) {
+      el.removeAttribute("data-mxgeo-value");
+      el.value = val;
+    }
+    if (id || val) {
+      emit(el, "mxgeo:value-set", { value: id || val });
+      if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, id || val);
+      // Cascade to next level only if we have an ID
+      if (id) {
+        var groupName = el.getAttribute("data-mxgeo-group");
+        var geoType = null;
+        if (el.hasAttribute("data-mxgeo-state")) geoType = "state";
+        else if (el.hasAttribute("data-mxgeo-municipality")) geoType = "municipality";
+        if (groupName && geoType) {
+          cascadeFrom_(groupName, geoType, id);
+        }
+      }
     }
   }
 
@@ -189,7 +204,6 @@
       var sel = '[data-mxgeo-group="' + groupName + '"][data-mxgeo-' + order[i] + "]";
       var field = document.querySelector(sel);
       if (!field) continue;
-      field.removeAttribute("data-mxgeo-id");
       if (field.tagName === "SELECT") {
         field.innerHTML = '<option value="">Seleccionar...</option>';
         field.disabled = true;
@@ -232,12 +246,12 @@
       // Cargar estados
       if (stateEl) {
         MXGeo.fetchStates().then(function (states) {
-          var cur = stateEl.getAttribute("data-mxgeo-id") || stateEl.value;
+          var cur = stateEl.getAttribute("data-mxgeo-id") || stateEl.getAttribute("data-mxgeo-value") || stateEl.value;
           stateEl.innerHTML = '<option value="">Seleccionar estado...</option>';
           states.forEach(function (s) { stateEl.appendChild(createOption_(s, stateEl)); });
           if (cur) {
             if (MXGeo.config.useTextAsValue) {
-              var opt = Array.from(stateEl.options).find(function (o) { return o.dataset.mxgeoId === cur; });
+              var opt = Array.from(stateEl.options).find(function (o) { return o.dataset.mxgeoId === cur || o.value === cur; });
               if (opt) stateEl.value = opt.value;
             } else {
               stateEl.value = cur;
@@ -262,6 +276,40 @@
     });
   }
 
+  function cascadeFrom_(groupName, geoType, id) {
+    if (geoType === "state") {
+      var munSel = '[data-mxgeo-group="' + groupName + '"][data-mxgeo-municipality]';
+      var munEl = document.querySelector(munSel);
+      if (!munEl) return;
+      munEl.disabled = true;
+      munEl.innerHTML = '<option value="">Cargando...</option>';
+      refreshSelect_(munEl, "municipality");
+      MXGeo.fetchMunicipalities(id).then(function (items) {
+        munEl.innerHTML = '<option value="">Seleccionar municipio...</option>';
+        items.forEach(function (m) { munEl.appendChild(createOption_(m, munEl)); });
+        munEl.disabled = false;
+        refreshSelect_(munEl, "municipality");
+        applyPendingValue_(munEl);
+      });
+    } else if (geoType === "municipality") {
+      var stateId = getFieldValue_(groupName, "state");
+      if (!stateId) return;
+      var locSel = '[data-mxgeo-group="' + groupName + '"][data-mxgeo-locality]';
+      var locEl = document.querySelector(locSel);
+      if (!locEl) return;
+      locEl.disabled = true;
+      locEl.innerHTML = '<option value="">Cargando...</option>';
+      refreshSelect_(locEl, "locality");
+      MXGeo.fetchLocalities(stateId, id).then(function (items) {
+        locEl.innerHTML = '<option value="">Seleccionar localidad...</option>';
+        items.forEach(function (l) { locEl.appendChild(createOption_(l, locEl)); });
+        locEl.disabled = items.length === 0;
+        refreshSelect_(locEl, "locality");
+        applyPendingValue_(locEl);
+      });
+    }
+  }
+
   /* ---- Delegación de eventos (change) ---- */
   function wireEvents_() {
     document.addEventListener("change", function (e) {
@@ -279,39 +327,7 @@
       clearDownstreamFields_(groupName, geoType);
       if (!id) return;
 
-      if (geoType === "state") {
-        var munSel =
-          '[data-mxgeo-group="' + groupName + '"][data-mxgeo-municipality]';
-        var munEl = document.querySelector(munSel);
-        if (!munEl) return;
-        munEl.disabled = true;
-        munEl.innerHTML = '<option value="">Cargando...</option>';
-        refreshSelect_(munEl, "municipality");
-        MXGeo.fetchMunicipalities(id).then(function (items) {
-          munEl.innerHTML = '<option value="">Seleccionar municipio...</option>';
-          items.forEach(function (m) { munEl.appendChild(createOption_(m, munEl)); });
-          munEl.disabled = false;
-          refreshSelect_(munEl, "municipality");
-          applyPendingValue_(munEl);
-        });
-      } else if (geoType === "municipality") {
-        var stateId = getFieldValue_(groupName, "state");
-        if (!stateId) return;
-        var locSel =
-          '[data-mxgeo-group="' + groupName + '"][data-mxgeo-locality]';
-        var locEl = document.querySelector(locSel);
-        if (!locEl) return;
-        locEl.disabled = true;
-        locEl.innerHTML = '<option value="">Cargando...</option>';
-        refreshSelect_(locEl, "locality");
-        MXGeo.fetchLocalities(stateId, id).then(function (items) {
-          locEl.innerHTML = '<option value="">Seleccionar localidad...</option>';
-          items.forEach(function (l) { locEl.appendChild(createOption_(l, locEl)); });
-          locEl.disabled = items.length === 0;
-          refreshSelect_(locEl, "locality");
-          applyPendingValue_(locEl);
-        });
-      }
+      cascadeFrom_(groupName, geoType, id);
     });
   }
 

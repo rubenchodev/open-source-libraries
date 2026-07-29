@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MXGeo + Materialize</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <div class="container">
+    <h3 class="center-align">Dirección</h3>
+    <div class="row">
+      <div class="input-field col s12">
+        <select data-mxgeo-group="dir" data-mxgeo-state data-mxgeo-text-value></select>
+        <label>Estado</label>
+      </div>
+      <div class="input-field col s12">
+        <select data-mxgeo-group="dir" data-mxgeo-municipality data-mxgeo-text-value></select>
+        <label>Municipio</label>
+      </div>
+      <div class="input-field col s12">
+        <select data-mxgeo-group="dir" data-mxgeo-locality data-mxgeo-text-value></select>
+        <label>Localidad</label>
+      </div>
+    </div>
+    <div class="row center-align">
+      <button class="btn waves-effect waves-light" onclick="cargarEjemplo()">
+        Cargar ejemplo
+      </button>
+      <button class="btn waves-effect waves-light red" onclick="limpiar()" style="margin-left:1em">
+        Limpiar
+      </button>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <h5>Valores actuales</h5>
+        <pre id="valores" class="grey lighten-3" style="padding:1em;"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="dist/mx-geo.min.js"></script>
+  <script>
+    MXGeo.config.onPopulated = function(el) {
+      M.FormSelect.init(el);
+    };
+    MXGeo.config.onValueSet = function(el) {
+      M.FormSelect.init(el);
+    };
+
+    function selText(el) {
+      return el.selectedIndex > 0 ? (el.options[el.selectedIndex] || {}).textContent : '(sin selección)';
+    }
+
+    function mostrarValores() {
+      var stateEl = document.querySelector('[data-mxgeo-state]');
+      var munEl = document.querySelector('[data-mxgeo-municipality]');
+      var locEl = document.querySelector('[data-mxgeo-locality]');
+      document.getElementById('valores').textContent =
+        'Estado: '      + selText(stateEl) + ' (' + (stateEl.value || '') + ')\n' +
+        'Municipio: '   + selText(munEl)   + ' (' + (munEl.value || '') + ')\n' +
+        'Localidad: '   + selText(locEl)   + ' (' + (locEl.value || '') + ')';
+    }
+
+    document.addEventListener('mxgeo:value-set', mostrarValores);
+
+    function cargarEjemplo() {
+      var stateEl = document.querySelector('[data-mxgeo-state]');
+      var munEl = document.querySelector('[data-mxgeo-municipality]');
+      var locEl = document.querySelector('[data-mxgeo-locality]');
+
+      // Demostración de data-mxgeo-value (busca por texto en option.value)
+      locEl.setAttribute("data-mxgeo-value", "Aguascalientes");
+
+      // Cascada desde estado por ID
+      munEl.setAttribute("data-mxgeo-id", "001");
+      stateEl.setAttribute("data-mxgeo-id", "01");
+
+      // Fallback: si el valor exacto no existe, toma la primera opción
+      locEl.addEventListener('mxgeo:populated', function() {
+        if (locEl.selectedIndex < 1 && locEl.options.length > 1) {
+          locEl.value = locEl.options[1].value;
+          M.FormSelect.init(locEl);
+        }
+      }, { once: true });
+
+      var opt = Array.from(stateEl.options).find(function(o) { return o.dataset.mxgeoId === "01"; });
+      if (opt) {
+        stateEl.value = opt.value;
+        M.FormSelect.init(stateEl);
+        stateEl.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    function limpiar() {
+      var stateEl = document.querySelector('[data-mxgeo-state]');
+      stateEl.value = '';
+      M.FormSelect.init(stateEl);
+      stateEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  </script>
+</body>
+</html>
