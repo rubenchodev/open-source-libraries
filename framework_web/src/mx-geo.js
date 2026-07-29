@@ -137,28 +137,29 @@
     },
   };
 
+  /* ---- Configuración de hooks para integración con librerías externas ---- */
+  MXGeo.config = {
+    onPopulated: null,   // function(el, type) — type: "state"|"municipality"|"locality"
+    onValueSet: null,    // function(el, value)
+    afterInit: null,     // function(groupName)
+  };
+
   /* ==========================================================================
    * Auto-vinculación a selects del DOM
    * ======================================================================== */
 
-  function refreshSelect_(el) {
-    // Si el framework detecta AgrocityKit, lo usa para refrescar custom select
-    if (window.AgrocityKit && window.AgrocityKit.select && el.hasAttribute("data-ak-select")) {
-      var inst = AgrocityKit.getInstance(el);
-      if (inst) inst.destroy();
-      AgrocityKit.select(el, {});
-    }
+  function refreshSelect_(el, type) {
+    if (type) emit(el, "mxgeo:populated", { type: type });
+    if (MXGeo.config.onPopulated) MXGeo.config.onPopulated(el, type || null);
   }
 
   function applyPendingValue_(el) {
     var val = el.getAttribute("data-mxgeo-value");
     if (val) {
       el.removeAttribute("data-mxgeo-value");
-      if (window.AgrocityKit && window.AgrocityKit.select && el.hasAttribute("data-ak-select")) {
-        var inst = AgrocityKit.getInstance(el);
-        if (inst) { inst.setValue(val); return; }
-      }
       el.value = val;
+      emit(el, "mxgeo:value-set", { value: val });
+      if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, val);
       el.dispatchEvent(new Event("change", { bubbles: true }));
     }
   }
@@ -222,7 +223,7 @@
             stateEl.appendChild(opt);
           });
           if (cur) stateEl.value = cur;
-          refreshSelect_(stateEl);
+          refreshSelect_(stateEl, "state");
           applyPendingValue_(stateEl);
         });
       }
@@ -236,6 +237,8 @@
         localityEl.innerHTML = '<option value="">Seleccionar...</option>';
         localityEl.disabled = true;
       }
+
+      if (MXGeo.config.afterInit) MXGeo.config.afterInit(groupName);
     });
   }
 
@@ -263,7 +266,7 @@
         if (!munEl) return;
         munEl.disabled = true;
         munEl.innerHTML = '<option value="">Cargando...</option>';
-        refreshSelect_(munEl);
+        refreshSelect_(munEl, "municipality");
         MXGeo.fetchMunicipalities(value).then(function (items) {
           munEl.innerHTML = '<option value="">Seleccionar municipio...</option>';
           items.forEach(function (m) {
@@ -273,7 +276,7 @@
             munEl.appendChild(opt);
           });
           munEl.disabled = false;
-          refreshSelect_(munEl);
+          refreshSelect_(munEl, "municipality");
           applyPendingValue_(munEl);
         });
       } else if (geoType === "municipality") {
@@ -285,7 +288,7 @@
         if (!locEl) return;
         locEl.disabled = true;
         locEl.innerHTML = '<option value="">Cargando...</option>';
-        refreshSelect_(locEl);
+        refreshSelect_(locEl, "locality");
         MXGeo.fetchLocalities(stateId, value).then(function (items) {
           locEl.innerHTML = '<option value="">Seleccionar localidad...</option>';
           items.forEach(function (l) {
@@ -295,7 +298,7 @@
             locEl.appendChild(opt);
           });
           locEl.disabled = items.length === 0;
-          refreshSelect_(locEl);
+          refreshSelect_(locEl, "locality");
           applyPendingValue_(locEl);
         });
       }
