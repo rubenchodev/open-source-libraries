@@ -179,11 +179,11 @@
     } else if (val) {
       el.removeAttribute("data-mxgeo-value");
       el.value = val;
+      id = getSelectedId_(el);
     }
     if (id || val) {
       emit(el, "mxgeo:value-set", { value: id || val });
       if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, id || val);
-      // Cascade to next level only if we have an ID
       if (id) {
         var groupName = el.getAttribute("data-mxgeo-group");
         var geoType = null;
