@@ -139,14 +139,30 @@
 
   /* ---- Configuración de hooks para integración con librerías externas ---- */
   MXGeo.config = {
-    onPopulated: null,   // function(el, type) — type: "state"|"municipality"|"locality"
-    onValueSet: null,    // function(el, value)
-    afterInit: null,     // function(groupName)
+    useTextAsValue: false, // true → &lt;option value="Nombre"&gt;
+    onPopulated: null,     // function(el, type) — "state"|"municipality"|"locality"
+    onValueSet: null,      // function(el, value)
+    afterInit: null,       // function(groupName)
   };
 
   /* ==========================================================================
    * Auto-vinculación a selects del DOM
    * ======================================================================== */
+
+  function createOption_(item, parent) {
+    var useText = (parent && parent.hasAttribute("data-mxgeo-text-value")) || MXGeo.config.useTextAsValue;
+    var opt = document.createElement("option");
+    opt.value = useText ? item.name : item.id;
+    opt.textContent = item.name;
+    opt.dataset.mxgeoId = item.id;
+    return opt;
+  }
+
+  function getSelectedId_(el) {
+    if (!el || el.selectedIndex < 0) return null;
+    var opt = el.options[el.selectedIndex];
+    return opt ? (opt.dataset.mxgeoId || null) : null;
+  }
 
   function refreshSelect_(el, type) {
     if (type) emit(el, "mxgeo:populated", { type: type });
@@ -154,12 +170,13 @@
   }
 
   function applyPendingValue_(el) {
-    var val = el.getAttribute("data-mxgeo-value");
-    if (val) {
-      el.removeAttribute("data-mxgeo-value");
-      el.value = val;
-      emit(el, "mxgeo:value-set", { value: val });
-      if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, val);
+    var id = el.getAttribute("data-mxgeo-id");
+    if (id) {
+      el.removeAttribute("data-mxgeo-id");
+      var opt = Array.from(el.options).find(function (o) { return o.dataset.mxgeoId === id; });
+      if (opt) el.value = opt.value;
+      emit(el, "mxgeo:value-set", { value: id });
+      if (MXGeo.config.onValueSet) MXGeo.config.onValueSet(el, id);
       el.dispatchEvent(new Event("change", { bubbles: true }));
     }
   }
@@ -172,6 +189,7 @@
       var sel = '[data-mxgeo-group="' + groupName + '"][data-mxgeo-' + order[i] + "]";
       var field = document.querySelector(sel);
       if (!field) continue;
+      field.removeAttribute("data-mxgeo-id");
       if (field.tagName === "SELECT") {
         field.innerHTML = '<option value="">Seleccionar...</option>';
         field.disabled = true;
@@ -186,7 +204,7 @@
     var el = document.querySelector(
       '[data-mxgeo-group="' + groupName + '"][data-mxgeo-' + type + "]"
     );
-    return el ? el.value : null;
+    return el ? getSelectedId_(el) : null;
   }
 
   /** Inicializa grupos de selects geográficos */
@@ -214,15 +232,17 @@
       // Cargar estados
       if (stateEl) {
         MXGeo.fetchStates().then(function (states) {
-          var cur = stateEl.value;
+          var cur = stateEl.getAttribute("data-mxgeo-id") || stateEl.value;
           stateEl.innerHTML = '<option value="">Seleccionar estado...</option>';
-          states.forEach(function (s) {
-            var opt = document.createElement("option");
-            opt.value = s.id;
-            opt.textContent = s.name;
-            stateEl.appendChild(opt);
-          });
-          if (cur) stateEl.value = cur;
+          states.forEach(function (s) { stateEl.appendChild(createOption_(s, stateEl)); });
+          if (cur) {
+            if (MXGeo.config.useTextAsValue) {
+              var opt = Array.from(stateEl.options).find(function (o) { return o.dataset.mxgeoId === cur; });
+              if (opt) stateEl.value = opt.value;
+            } else {
+              stateEl.value = cur;
+            }
+          }
           refreshSelect_(stateEl, "state");
           applyPendingValue_(stateEl);
         });
@@ -255,9 +275,9 @@
       else if (target.hasAttribute("data-mxgeo-locality")) geoType = "locality";
       if (!geoType) return;
 
-      var value = target.value;
+      var id = getSelectedId_(target);
       clearDownstreamFields_(groupName, geoType);
-      if (!value) return;
+      if (!id) return;
 
       if (geoType === "state") {
         var munSel =
@@ -267,14 +287,9 @@
         munEl.disabled = true;
         munEl.innerHTML = '<option value="">Cargando...</option>';
         refreshSelect_(munEl, "municipality");
-        MXGeo.fetchMunicipalities(value).then(function (items) {
+        MXGeo.fetchMunicipalities(id).then(function (items) {
           munEl.innerHTML = '<option value="">Seleccionar municipio...</option>';
-          items.forEach(function (m) {
-            var opt = document.createElement("option");
-            opt.value = m.id;
-            opt.textContent = m.name;
-            munEl.appendChild(opt);
-          });
+          items.forEach(function (m) { munEl.appendChild(createOption_(m, munEl)); });
           munEl.disabled = false;
           refreshSelect_(munEl, "municipality");
           applyPendingValue_(munEl);
@@ -289,14 +304,9 @@
         locEl.disabled = true;
         locEl.innerHTML = '<option value="">Cargando...</option>';
         refreshSelect_(locEl, "locality");
-        MXGeo.fetchLocalities(stateId, value).then(function (items) {
+        MXGeo.fetchLocalities(stateId, id).then(function (items) {
           locEl.innerHTML = '<option value="">Seleccionar localidad...</option>';
-          items.forEach(function (l) {
-            var opt = document.createElement("option");
-            opt.value = l.id;
-            opt.textContent = l.name;
-            locEl.appendChild(opt);
-          });
+          items.forEach(function (l) { locEl.appendChild(createOption_(l, locEl)); });
           locEl.disabled = items.length === 0;
           refreshSelect_(locEl, "locality");
           applyPendingValue_(locEl);
