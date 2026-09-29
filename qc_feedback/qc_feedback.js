@@ -125,7 +125,7 @@
         <style>
           * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
           :host { all: initial; --qc-primary: ${colors.primary}; --qc-panel: ${colors.panel}; --qc-border: ${colors.border}; --qc-text: ${colors.text}; --qc-muted: ${colors.muted}; }
-          .qc-fab { position: fixed; width: ${sz}px; height: ${sz}px; border: none; border-radius: 50%; cursor: pointer; z-index: 99999999; color: white; background: var(--qc-primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,.2); transition: .25s; }
+          .qc-fab { position: fixed; width: ${sz}px; height: ${sz}px; border: none; border-radius: 50%; cursor: pointer; z-index: 99999999; color: white; background: var(--qc-primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 0px 8px rgba(255,255,255,1); transition: .25s; }
           .qc-fab:hover { transform: scale(1.08); }
           .qc-fab svg { width: 28px; height: 28px; }
           .qc-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 999999999; display: none; align-items: ${this.config.position.includes('top') ? 'flex-start' : 'flex-end'}; justify-content: ${this.config.position.includes('left') ? 'flex-start' : 'flex-end'}; padding: 20px; }
@@ -1455,7 +1455,7 @@
       const fab = this.shadowRoot.querySelector(".qc-fab");
       const cfg = this.config;
       const p = cfg.position;
-      
+
       const formatVal = (val) => !isNaN(val) ? `${val}px` : val;
 
       if (p.includes("bottom")) fab.style.bottom = cfg.bottom ? formatVal(cfg.bottom) : "24px";
