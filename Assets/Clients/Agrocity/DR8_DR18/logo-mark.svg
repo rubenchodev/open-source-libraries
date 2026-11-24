@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="48" y1="36" x2="464" y2="476" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F2D5E"/>
+      <stop offset="52%" stop-color="#0B57D0"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(150 110) rotate(52) scale(360)">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#0B57D0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="docGrad" x1="128" y1="96" x2="352" y2="404" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F1F5F9"/>
+    </linearGradient>
+    <linearGradient id="barGrad" x1="168" y1="220" x2="300" y2="336" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E40AF"/>
+      <stop offset="100%" stop-color="#0B57D0"/>
+    </linearGradient>
+    <linearGradient id="dropGrad" x1="334" y1="232" x2="404" y2="394" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="55%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="276" y1="96" x2="348" y2="168" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#93C5FD"/>
+    </linearGradient>
+    <filter id="softShadow" x="96" y="80" width="320" height="360" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#061530" flood-opacity="0.32"/>
+    </filter>
+    <filter id="dropShadow" x="274" y="216" width="152" height="202" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#061530" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Base squircle -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#bgGrad)"/>
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#glowGrad)"/>
+  <rect x="26" y="26" width="460" height="460" rx="106" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="4"/>
+
+  <!-- Subtle engineering blueprint grid -->
+  <g stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2">
+    <line x1="24" y1="148" x2="488" y2="148"/>
+    <line x1="24" y1="256" x2="488" y2="256"/>
+    <line x1="24" y1="364" x2="488" y2="364"/>
+    <line x1="148" y1="24" x2="148" y2="488"/>
+    <line x1="256" y1="24" x2="256" y2="488"/>
+    <line x1="364" y1="24" x2="364" y2="488"/>
+  </g>
+
+  <!-- Official DR Proposal Document -->
+  <g filter="url(#softShadow)">
+    <path d="M132 122C132 107.641 143.641 96 158 96H282L356 170V376C356 390.359 344.359 402 330 402H158C143.641 402 132 390.359 132 376V122Z" fill="url(#docGrad)"/>
+    <!-- Document corner fold -->
+    <path d="M282 96V148C282 160.15 291.85 170 304 170H356L282 96Z" fill="url(#foldGrad)"/>
+  </g>
+
+  <!-- Header lines on document -->
+  <rect x="168" y="152" width="76" height="14" rx="7" fill="#0B57D0" fill-opacity="0.22"/>
+  <rect x="168" y="182" width="126" height="12" rx="6" fill="#94A3B8" fill-opacity="0.38"/>
+
+  <!-- Ascending economic / APU cost bars -->
+  <rect x="168" y="294" width="32" height="66" rx="8" fill="#60A5FA"/>
+  <rect x="214" y="260" width="32" height="100" rx="8" fill="#2563EB"/>
+  <rect x="260" y="222" width="32" height="138" rx="8" fill="url(#barGrad)"/>
+
+  <!-- Precision trend line above bars -->
+  <path d="M174 268L222 232L276 196" stroke="#0EA5E9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="276" cy="196" r="8" fill="#0284C7"/>
+
+  <!-- Hydraulic irrigation drop crest (with crisp white halo) -->
+  <g filter="url(#dropShadow)">
+    <path d="M350 228C350 228 408 294.5 408 338C408 370.033 382.033 396 350 396C317.967 396 292 370.033 292 338C292 294.5 350 228 350 228Z" fill="url(#dropGrad)" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/>
+    <!-- Highlight & precision wave inside droplet -->
+    <path d="M336 286C325 300 318 316 318 330" stroke="#FFFFFF" stroke-opacity="0.72" stroke-width="7" stroke-linecap="round"/>
+    <path d="M312 352C325 364 341 364 353 354C365 344 378 345 389 354" stroke="#E0F2FE" stroke-width="6.5" stroke-linecap="round"/>
+  </g>
+</svg>

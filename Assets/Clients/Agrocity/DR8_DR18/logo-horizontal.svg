@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="200" viewBox="0 0 840 200" fill="none">
+  <defs>
+    <linearGradient id="hBg" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F2D5E"/>
+      <stop offset="55%" stop-color="#0B57D0"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="hDrop" x1="126" y1="90" x2="162" y2="152" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <linearGradient id="hFold" x1="108" y1="44" x2="136" y2="72" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#93C5FD"/>
+    </linearGradient>
+  </defs>
+  <!-- Mark -->
+  <rect x="16" y="16" width="168" height="168" rx="40" fill="url(#hBg)"/>
+  <rect x="18" y="18" width="164" height="164" rx="38" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2"/>
+  <path d="M54 53C54 47.48 58.48 43 64 43H109L136 70V145C136 150.52 131.52 155 126 155H64C58.48 155 54 150.52 54 145V53Z" fill="#FFFFFF"/>
+  <path d="M109 43V62C109 66.42 112.58 70 117 70H136L109 43Z" fill="url(#hFold)"/>
+  <rect x="67" y="64" width="28" height="5.5" rx="2.75" fill="#0B57D0" fill-opacity="0.22"/>
+  <rect x="67" y="75" width="46" height="5" rx="2.5" fill="#94A3B8" fill-opacity="0.4"/>
+  <rect x="67" y="116" width="12" height="24" rx="3" fill="#60A5FA"/>
+  <rect x="84" y="103" width="12" height="37" rx="3" fill="#2563EB"/>
+  <rect x="101" y="89" width="12" height="51" rx="3" fill="#1E3A8A"/>
+  <path d="M70 106L88 92L107 79" stroke="#0EA5E9" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M135 90C135 90 156 114.5 156 130.5C156 142.37 146.6 152 135 152C123.4 152 114 142.37 114 130.5C114 114.5 135 90 135 90Z" fill="url(#hDrop)" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M121 135C126 140 132 140 137 136C141 132 146 132 150 136" stroke="#E0F2FE" stroke-width="2.6" stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="216" y="90" fill="#0F172A" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="38" font-weight="700" letter-spacing="-0.8">Propuestas económicas</text>
+  <rect x="216" y="108" width="132" height="34" rx="17" fill="#E8F0FE" stroke="#C2D7FA" stroke-width="1.5"/>
+  <text x="282" y="130" text-anchor="middle" fill="#0B57D0" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="0.4">DR 8 – DR 18</text>
+  <text x="366" y="130" fill="#475569" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Ingeniería hidráulica · Precios unitarios</text>
+</svg>
